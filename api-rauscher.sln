@@ -33,7 +33,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CrossCutting.IoC", "api-rau
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "5 - Authentication", "5 - Authentication", "{7A4C4F9C-AF62-47CC-9A4D-445B18812D7F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "APIs.Security.JWT", "..\rauscherapp\APIs.Security.JWT\APIs.Security.JWT.csproj", "{A91685C0-5C48-4EC2-A223-46C6B28009D6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "APIs.Security.JWT", "api-rauscher\APIs.Security.JWT\APIs.Security.JWT.csproj", "{A91685C0-5C48-4EC2-A223-46C6B28009D6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data.Commoditites.Api", "api-rauscher\Data.Commodities\Data.Commoditites.Api\Data.Commoditites.Api.csproj", "{10C6D887-857B-46AC-8A21-DC6C3EE656FF}"
 EndProject

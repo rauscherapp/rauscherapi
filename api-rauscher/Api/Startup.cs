@@ -54,7 +54,7 @@ namespace Api
         Seconds = 3600, // 1 hour in seconds
       };
 
-      tokenConfigurations.GenerateKey();
+      tokenConfigurations.GenerateSecretJwtKey();
 
       services.AddJwtSecurity(tokenConfigurations);
 

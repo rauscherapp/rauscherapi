@@ -50,7 +50,7 @@
 	</ItemGroup>
   
   <ItemGroup>
-	<ProjectReference Include="..\..\..\rauscherapp\APIs.Security.JWT\APIs.Security.JWT.csproj" />
+	<ProjectReference Include="..\APIs.Security.JWT\APIs.Security.JWT.csproj" />
 	<ProjectReference Include="..\Application\Application.csproj" />
 	<ProjectReference Include="..\CrossCutting.Bus\CrossCutting.Bus.csproj" />
 	<ProjectReference Include="..\CrossCutting.IoC\CrossCutting.IoC.csproj" />
