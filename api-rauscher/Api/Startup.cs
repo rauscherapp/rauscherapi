@@ -13,7 +13,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Polly;
+using Serilog;
 using System;
+using System.Configuration;
 
 namespace Api
 {
@@ -36,6 +38,8 @@ namespace Api
     {
       services.AddHealthChecks();
 
+      services.AddApplicationInsightsTelemetry(Configuration.GetValue<string>("ApplicationInsights:InstrumentationKey"));
+
       services.AddCors();
 
       // WebAPI Config
@@ -53,6 +57,9 @@ namespace Api
         Issuer = "RauscherApp",
         Seconds = 3600, // 1 hour in seconds
       };
+
+      services.AddLogging(loggingBuilder =>
+          loggingBuilder.AddSerilog(dispose: true));
 
       tokenConfigurations.GenerateSecretJwtKey();
 
@@ -166,8 +173,8 @@ namespace Api
       });
 
       app.UseHealthChecks("/health");
+
+      app.UseSerilogRequestLogging();
     }
-
-
   }
 }

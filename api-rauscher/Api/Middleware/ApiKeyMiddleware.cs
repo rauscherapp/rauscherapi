@@ -1,53 +1,56 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
+﻿using Data.Context;
+using Microsoft.AspNetCore.Http;
 using System;
+using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
 
 public class ApiKeyMiddleware
 {
   private readonly RequestDelegate _next;
-  private readonly ILogger<ApiKeyMiddleware> _logger;
-  private readonly IConfiguration _configuration;
-  private const string ApiKeyHeaderName = "ApiKey";
 
-  public ApiKeyMiddleware(RequestDelegate next, ILogger<ApiKeyMiddleware> logger, IConfiguration configuration)
+  public ApiKeyMiddleware(RequestDelegate next)
   {
     _next = next;
-    _logger = logger;
-    _configuration = configuration;
   }
 
-  public async Task InvokeAsync(HttpContext context)
+  public async Task InvokeAsync(HttpContext context, RauscherDbContext dbContext)
   {
-    try
+
+    if (!context.Request.Headers.TryGetValue("ApiKey", out var extractedApiKey))
     {
-      if (!context.Request.Headers.TryGetValue(ApiKeyHeaderName, out var extractedApiKey))
-      {
-        _logger.LogWarning("API Key was not provided.");
-        context.Response.StatusCode = 401; // Unauthorized
-        await context.Response.WriteAsync("API Key is missing.");
-        return;
-      }
-
-      var apiKey = _configuration["ApiKey"];
-
-      if (string.IsNullOrEmpty(apiKey) || !apiKey.Equals(extractedApiKey))
-      {
-        _logger.LogWarning("Unauthorized client: Invalid API Key.");
-        context.Response.StatusCode = 401; // Unauthorized
-        await context.Response.WriteAsync("Unauthorized client.");
-        return;
-      }
-
-      // Proceed to the next middleware
-      await _next(context);
+      context.Response.StatusCode = 401; // Unauthorized
+      return;
     }
-    catch (Exception ex)
+
+    var apiCredential = dbContext.ApiCredentialss.FirstOrDefault(c => c.Apikey == extractedApiKey.ToString());
+
+    if (apiCredential == null || !IsValidSecret(apiCredential.Apisecrethash, context))
     {
-      _logger.LogError($"An error occurred in {nameof(ApiKeyMiddleware)}: {ex.Message}");
-      context.Response.StatusCode = 500; // Internal Server Error
-      await context.Response.WriteAsync("An internal server error occurred.");
+      context.Response.StatusCode = 401; // Unauthorized
+      return;
+    }
+
+    await _next(context);
+  }
+
+  private bool IsValidSecret(string storedSecretHash, HttpContext context)
+  {
+    // Extract the secret from the request header
+    if (!context.Request.Headers.TryGetValue("ApiSecret", out var providedSecret))
+    {
+      return false;
+    }
+
+    // Hash the provided secret
+    using (var sha256 = SHA256.Create())
+    {
+      var hashedBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(providedSecret));
+      var hashedSecret = BitConverter.ToString(hashedBytes).Replace("-", "").ToLowerInvariant();
+
+      // Compare the hashed secret with the stored hash
+      return hashedSecret == storedSecretHash;
     }
   }
 }

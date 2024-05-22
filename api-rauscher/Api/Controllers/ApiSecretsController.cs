@@ -40,9 +40,9 @@ namespace Api.Controllers
     [HttpPost("Secrets")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [AllowAnonymous]
-    public async Task<IActionResult> Secret([FromQuery] FolderParameters parameters)
+    public async Task<IActionResult> Secret([FromQuery] CustomerSecretParameters parameters)
     {      
-      var result = await _apiCredentialsAppService.GerarApiCredentials(parameters.SLUG);
+      var result = await _apiCredentialsAppService.GerarApiCredentials(parameters.Document);
       return ResponseAction(result);
     }
   }
