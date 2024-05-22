@@ -1,4 +1,5 @@
-﻿using System.Security.Cryptography.X509Certificates;
+﻿using System.Security.Cryptography;
+using System.Security.Cryptography.X509Certificates;
 
 namespace APIs.Security.JWT;
 
@@ -23,6 +24,16 @@ public class TokenConfigurations
     public string? Issuer { get; set; }
     public int Seconds { get; set; }
     public string? SecretJwtKey { get; set; }
+
+  public void GenerateSecretJwtKey(int keySize = 32)
+  {
+    using (var rng = new RNGCryptoServiceProvider())
+    {
+      var key = new byte[keySize];
+      rng.GetBytes(key);
+      SecretJwtKey = Convert.ToBase64String(key);
+    }
+  }
 }
 
 public class Token
