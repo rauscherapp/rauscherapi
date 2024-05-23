@@ -24,15 +24,12 @@ namespace Api.Controllers
   {
     private readonly IApiCredentialsAppService _apiCredentialsAppService;
     private readonly IMediatorHandler _bus;
-    private readonly IMapper _mapper;
 
     public ApiSecretsController(
         IMediatorHandler bus,
-        IMapper mapper,
         INotificationHandler<DomainNotification> notifications,
         IApiCredentialsAppService apiCredentialsAppService) : base(notifications, bus)
     {
-      _mapper = mapper;
       _bus = bus;
       _apiCredentialsAppService = apiCredentialsAppService;
     }

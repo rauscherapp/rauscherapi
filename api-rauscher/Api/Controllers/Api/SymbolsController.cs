@@ -1,10 +1,8 @@
 ﻿using Application.Interfaces;
-using Application.Services;
 using Application.ViewModels;
 using AutoMapper;
 using Domain.Core.Bus;
 using Domain.Core.Notifications;
-using Domain.QueryParameters;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -42,9 +40,9 @@ namespace Api.Controllers
     [HttpPost("SymbolsApi")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [AllowAnonymous]
-    public async Task<IActionResult> Secret([FromQuery] SymbolsViewModel parameters)
+    public async Task<IActionResult> Post([FromQuery] SymbolsViewModel parameters)
     {
-      //var result = await _symbolsAppService.AtualizarSymbolsApi(parameters);
+      var result1 = await _symbolsAppService.AtualizarSymbolsApi(parameters);
       var result = await _commoditiesRateAppService.CadastrarCommoditiesRate(new CommoditiesRateViewModel());
       return CreateResponse(result);
     }

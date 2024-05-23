@@ -19,7 +19,8 @@ namespace Data.Context
       //this.Database.EnsureCreated();
     }
     //ConfigureDbSet 
- public virtual DbSet<CommoditiesRate> CommoditiesRates { get; set; } 
+    public virtual DbSet<EventRegistry> EventRegistrys { get; set; }
+    public virtual DbSet<CommoditiesRate> CommoditiesRates { get; set; }
     public virtual DbSet<Symbols> Symbolss { get; set; }
     public virtual DbSet<ApiCredentials> ApiCredentialss { get; set; }
     public virtual DbSet<Post> Posts { get; set; }
@@ -40,7 +41,8 @@ namespace Data.Context
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
       //ConfigureMap 
- modelBuilder.ApplyConfiguration(new CommoditiesRateMap()); 
+      modelBuilder.ApplyConfiguration(new EventRegistryMap());
+      modelBuilder.ApplyConfiguration(new CommoditiesRateMap());
       modelBuilder.ApplyConfiguration(new SymbolsMap());
       modelBuilder.ApplyConfiguration(new ApiCredentialsMap());
       modelBuilder.ApplyConfiguration(new PostMap());

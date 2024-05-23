@@ -6,7 +6,6 @@ using Domain.Interfaces;
 using Domain.Models;
 using Domain.Repositories;
 using MediatR;
-using System;
 using System.Threading;
 using System.Threading.Tasks;
 
