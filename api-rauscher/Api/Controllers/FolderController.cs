@@ -47,7 +47,7 @@ namespace Api.Controllers
       var folders = await _folderAppService.ListarFolder(parameters);
       Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(folders.PaginationMetadata));
       var result = _mapper.Map<IEnumerable<FolderViewModel>>(folders.Data).ShapeData(parameters.Fields);
-      return ResponseAction(result);
+      return CreateResponse(result);
     }
 
     [HttpGet()]
@@ -58,7 +58,7 @@ namespace Api.Controllers
     public async Task<IActionResult> ObterFolder(Guid id)
     {
       var result = await _folderAppService.ObterFolder(id);
-      return ResponseAction(result);
+      return CreateResponse(result);
     }
 
 
@@ -72,11 +72,11 @@ namespace Api.Controllers
         return BadRequest(new
         {
           success = false,
-          errors = GetNotifications()
+          errors = GetNotificationMessages()
         });
       }
       var result = await _folderAppService.CadastrarFolder(folderViewModel);
-      return ResponseAction(result);
+      return CreateResponse(result);
     }
     [HttpPut("UpdateFolder/{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -88,11 +88,11 @@ namespace Api.Controllers
         return BadRequest(new
         {
           success = false,
-          errors = GetNotifications()
+          errors = GetNotificationMessages()
         });
       }
       var result = await _folderAppService.AtualizarFolder(FolderViewModel);
-      return ResponseAction(result);
+      return CreateResponse(result);
     }
     [HttpDelete("DeleteFolder/{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -104,11 +104,11 @@ namespace Api.Controllers
         return BadRequest(new
         {
           success = false,
-          errors = GetNotifications()
+          errors = GetNotificationMessages()
         });
       }
       var result = await _folderAppService.ExcluirFolder(id);
-      return ResponseAction(result);
+      return CreateResponse(result);
     }
   }
 }

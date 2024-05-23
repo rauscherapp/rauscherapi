@@ -1,6 +1,5 @@
 ﻿using Application.Helpers;
 using Application.Interfaces;
-using Application.Services;
 using Application.ViewModels;
 using AutoMapper;
 using Domain.Core.Bus;
@@ -50,7 +49,7 @@ namespace Api.Controllers
 
       Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(posts.PaginationMetadata));
       var result = _mapper.Map<IEnumerable<PostViewModel>>(posts.Data).ShapeData(parameters.Fields);
-      return ResponseAction(result);
+      return CreateResponse(result);
     }
 
 
@@ -62,7 +61,7 @@ namespace Api.Controllers
     public async Task<IActionResult> ObterFolder(Guid id)
     {
       var result = await _postAppService.ObterPost(id);
-      return ResponseAction(result);
+      return CreateResponse(result);
     }
 
     [HttpPost("CreatePost")]
@@ -75,11 +74,11 @@ namespace Api.Controllers
         return BadRequest(new
         {
           success = false,
-          errors = GetNotifications()
+          errors = GetNotificationMessages()
         });
       }
       var result = await _postAppService.CadastrarPost(postViewModel);
-      return ResponseAction(result);
+      return CreateResponse(result);
     }
     [HttpPut("UpdatePost/{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -91,11 +90,11 @@ namespace Api.Controllers
         return BadRequest(new
         {
           success = false,
-          errors = GetNotifications()
+          errors = GetNotificationMessages()
         });
       }
       var result = await _postAppService.AtualizarPost(PostViewModel);
-      return ResponseAction(result);
+      return CreateResponse(result);
     }
     [HttpDelete("DeletePost/{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -107,11 +106,11 @@ namespace Api.Controllers
         return BadRequest(new
         {
           success = false,
-          errors = GetNotifications()
+          errors = GetNotificationMessages()
         });
       }
       var result = await _postAppService.ExcluirPost(id);
-      return ResponseAction(result);
+      return CreateResponse(result);
     }
   }
 }

@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Domain.Commands.CommoditiesRate
+﻿namespace Domain.Commands.CommoditiesRate
 {
-    internal class AtualizarRatesCommand
-    {
-    }
+  internal class AtualizarRatesCommand
+  {
+  }
 }
