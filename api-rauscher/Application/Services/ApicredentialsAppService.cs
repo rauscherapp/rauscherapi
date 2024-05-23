@@ -67,7 +67,7 @@ namespace Application.Services
 		public async Task<PagedResponse<ApicredentialsViewModel>> ListarApicredentials(ApiCredentialsParameters parameters)
 		{
 			_logger.LogInformation("Handling: {MethodName}", nameof(ListarApicredentials));
-			var data = await _mediator.Send(new ListarApicredentialsQuery(parameters));
+			var data = await _mediator.Send(new ListarApiCredentialsQuery(parameters));
 			var resultadoDB = data.Select(x => _mapper.Map<ApiCredentials, ApicredentialsViewModel>(x));
 			
 			var viewModelPagedList = PagedList<ApicredentialsViewModel>.Create(resultadoDB.AsQueryable(), parameters.PageNumber, parameters.PageSize);
@@ -77,7 +77,7 @@ namespace Application.Services
 		public async Task<ApicredentialsViewModel> ObterApicredentials(string apiKey)
 		{
 			_logger.LogInformation("Handling: {MethodName}", nameof(ObterApicredentials));
-			var data = await _mediator.Send(new ObterApicredentialsQuery(apiKey));
+			var data = await _mediator.Send(new ObterApiCredentialsQuery(apiKey));
 			var resultadoDB = _mapper.Map<ApiCredentials, ApicredentialsViewModel>(data);
 			if (resultadoDB == null) return resultadoDB;
 			

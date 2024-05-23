@@ -35,11 +35,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "5 - Authentication", "5 - A
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "APIs.Security.JWT", "api-rauscher\APIs.Security.JWT\APIs.Security.JWT.csproj", "{A91685C0-5C48-4EC2-A223-46C6B28009D6}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Data.Commoditites.Api", "api-rauscher\Data.Commodities\Data.Commoditites.Api\Data.Commoditites.Api.csproj", "{10C6D887-857B-46AC-8A21-DC6C3EE656FF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Data.Commodities.Api", "api-rauscher\Data.Commodities\Data.Commoditites.Api\Data.Commodities.Api.csproj", "{10C6D887-857B-46AC-8A21-DC6C3EE656FF}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4.3 - Commodities", "4.3 - Commodities", "{9B0AFBF3-7460-447F-9C8D-D3823BF31C24}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4.4 - Stripe", "4.4 - Stripe", "{6A2FA8E2-22AB-4BE1-82F8-0B2C97887001}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data.Stripe.Api", "api-rauscher\Data.Stripe\Data.Stripe.Api.csproj", "{50F1CE03-C4EC-417C-80A5-D0A0939051B2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -83,6 +85,10 @@ Global
 		{10C6D887-857B-46AC-8A21-DC6C3EE656FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{10C6D887-857B-46AC-8A21-DC6C3EE656FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{10C6D887-857B-46AC-8A21-DC6C3EE656FF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{50F1CE03-C4EC-417C-80A5-D0A0939051B2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{50F1CE03-C4EC-417C-80A5-D0A0939051B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{50F1CE03-C4EC-417C-80A5-D0A0939051B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{50F1CE03-C4EC-417C-80A5-D0A0939051B2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -106,6 +112,7 @@ Global
 		{10C6D887-857B-46AC-8A21-DC6C3EE656FF} = {9B0AFBF3-7460-447F-9C8D-D3823BF31C24}
 		{9B0AFBF3-7460-447F-9C8D-D3823BF31C24} = {07394689-747E-410D-9307-030762D86E8D}
 		{6A2FA8E2-22AB-4BE1-82F8-0B2C97887001} = {07394689-747E-410D-9307-030762D86E8D}
+		{50F1CE03-C4EC-417C-80A5-D0A0939051B2} = {6A2FA8E2-22AB-4BE1-82F8-0B2C97887001}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {AC74E1D8-823B-4022-B974-BA9E71D491A1}

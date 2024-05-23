@@ -1,7 +1,7 @@
 ﻿using Domain.Models;
 using System.Linq;
 
-namespace Data.Commoditites.Api.Mapping
+namespace Data.Commodities.Api.Mapping
 {
   public static class CommoditiesRateMapping
   {

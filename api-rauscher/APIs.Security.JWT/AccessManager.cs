@@ -25,7 +25,7 @@ public class AccessManager
     _tokenConfigurations = tokenConfigurations;
   }
 
-  public (User?, bool) ValidateCredentials(User user)
+  public (UserRequest?, bool) ValidateCredentials(UserRequest user)
   {
     bool credenciaisValidas = false;
     if (user is not null && !String.IsNullOrWhiteSpace(user.Email))
@@ -55,7 +55,7 @@ public class AccessManager
 
     return (user, credenciaisValidas);
   }
-  public bool CreateUser(User userRequest)
+  public bool CreateUser(UserRequest userRequest)
   {
     bool userCreated = false;
     if (_userManager.FindByEmailAsync(userRequest.Email!).Result == null)
@@ -82,7 +82,7 @@ public class AccessManager
     return userCreated;
   }
 
-  public Token GenerateToken(User user)
+  public Token GenerateToken(UserRequest user)
   {
     ClaimsIdentity identity = new(
         new GenericIdentity(user.Email!, "Login"),

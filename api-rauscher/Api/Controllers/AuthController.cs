@@ -29,9 +29,9 @@ namespace Api.Controllers
     }
 
     [HttpPost("register")]
-    public async Task<IActionResult> Register([FromBody] User model)
+    public async Task<IActionResult> Register([FromBody] UserRequest model)
     {
-      var user = new User { Email = model.Email };
+      var user = new UserRequest { Email = model.Email };
       var result = _accessManager.CreateUser(model);
 
       if (result)
@@ -51,7 +51,7 @@ namespace Api.Controllers
     }
 
     [HttpPost("login")]
-    public async Task<IActionResult> Login([FromBody] User model)
+    public async Task<IActionResult> Login([FromBody] UserRequest model)
     {
       var result = _accessManager.ValidateCredentials(model);
 
