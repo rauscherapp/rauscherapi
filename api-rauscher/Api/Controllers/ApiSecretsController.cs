@@ -43,7 +43,7 @@ namespace Api.Controllers
     public async Task<IActionResult> Secret([FromQuery] CustomerSecretParameters parameters)
     {      
       var result = await _apiCredentialsAppService.GerarApiCredentials(parameters.Document);
-      return ResponseAction(result);
+      return CreateResponse(result);
     }
   }
 }
