@@ -19,6 +19,7 @@ namespace Data.Context
       //this.Database.EnsureCreated();
     }
     //ConfigureDbSet 
+    public virtual DbSet<AppParameters> AppParameters { get; set; }
     public virtual DbSet<EventRegistry> EventRegistrys { get; set; }
     public virtual DbSet<CommoditiesRate> CommoditiesRates { get; set; }
     public virtual DbSet<Symbols> Symbolss { get; set; }
@@ -41,6 +42,7 @@ namespace Data.Context
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
       //ConfigureMap 
+      modelBuilder.ApplyConfiguration(new AppParametersMap());
       modelBuilder.ApplyConfiguration(new EventRegistryMap());
       modelBuilder.ApplyConfiguration(new CommoditiesRateMap());
       modelBuilder.ApplyConfiguration(new SymbolsMap());

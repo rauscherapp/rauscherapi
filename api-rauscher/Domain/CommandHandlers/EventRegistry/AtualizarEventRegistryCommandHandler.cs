@@ -33,28 +33,27 @@ namespace Domain.CommandHandlers
       }
       var eventregistry = _eventregistryRepository.GetById(message.EventRegistryId);
       eventregistry.EventRegistryId = message.EventRegistryId;
-      eventregistry.Eventname = message.Eventname;
-      eventregistry.Eventdescription = message.Eventdescription;
-      eventregistry.Eventtype = message.Eventtype;
-      eventregistry.Eventdate = message.Eventdate;
-      eventregistry.Eventlocation = message.Eventlocation;
-      eventregistry.Eventlink = message.Eventlink;
+      eventregistry.EventName = message.Eventname;
+      eventregistry.EventDescription = message.Eventdescription;
+      eventregistry.EventType = message.Eventtype;
+      eventregistry.EventDate = message.Eventdate;
+      eventregistry.EventLocation = message.Eventlocation;
+      eventregistry.EventLink = message.Eventlink;
 
       _eventregistryRepository.Update(eventregistry);
 
       if (Commit())
       {
         Bus.RaiseEvent(new AtualizarEventRegistryEvent(
-message.EventRegistryId,
-message.Eventname,
-message.Eventdescription,
-message.Eventtype,
-message.Eventdate,
-message.Eventlocation,
-message.Eventlink
-));
+          message.EventRegistryId,
+          message.Eventname,
+          message.Eventdescription,
+          message.Eventtype,
+          message.Eventdate,
+          message.Eventlocation,
+          message.Eventlink
+          ));
       }
-
       return Task.FromResult(true);
     }
 

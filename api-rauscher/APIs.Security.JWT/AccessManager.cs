@@ -25,9 +25,10 @@ public class AccessManager
     _tokenConfigurations = tokenConfigurations;
   }
 
-  public (UserRequest?, bool) ValidateCredentials(UserRequest user)
+  public (UserResponse? user, bool isValid) ValidateCredentials(UserRequest user)
   {
     bool credenciaisValidas = false;
+    var userResponse = new UserResponse();
     if (user is not null && !String.IsNullOrWhiteSpace(user.Email))
     {
       // Verifica a existência do usuário nas tabelas do
@@ -50,10 +51,13 @@ public class AccessManager
         user.Avatar = userIdentity.Avatar;
         user.Status = userIdentity.Status;
         user.Name = userIdentity.NomeCompleto;
+        userResponse.Email = userIdentity.Email;
+        userResponse.Name = userIdentity.NomeCompleto;
+        userResponse.HasValidStripeSubscription = userIdentity.HasValidStripeSubscription;
       }
     }
 
-    return (user, credenciaisValidas);
+    return (userResponse, credenciaisValidas);
   }
   public bool CreateUser(UserRequest userRequest)
   {
@@ -82,7 +86,7 @@ public class AccessManager
     return userCreated;
   }
 
-  public Token GenerateToken(UserRequest user)
+  public Token GenerateToken(UserResponse user)
   {
     ClaimsIdentity identity = new(
         new GenericIdentity(user.Email!, "Login"),

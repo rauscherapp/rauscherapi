@@ -6,28 +6,28 @@ namespace Domain.Models
 	{
 		public EventRegistry(
 		Guid eventRegistryId,
-		string eventname,
-		string eventdescription,
-		string eventtype,
-		DateTime eventdate,
-		string eventlocation,
-		string eventlink
+		string eventName,
+		string eventDescription,
+		string eventType,
+		DateTime eventDate,
+		string eventLocation,
+		string eventLink
 		)
 		{
 			EventRegistryId = eventRegistryId;
-			Eventname = eventname;
-			Eventdescription = eventdescription;
-			Eventtype = eventtype;
-			Eventdate = eventdate;
-			Eventlocation = eventlocation;
-			Eventlink = eventlink;
+			EventName = eventName;
+			EventDescription = eventDescription;
+			EventType = eventType;
+			EventDate = eventDate;
+			EventLocation = eventLocation;
+			EventLink = eventLink;
 		}
 		public Guid EventRegistryId { get; set; }
-		public string Eventname { get; set; }
-		public string Eventdescription { get; set; }
-		public string Eventtype { get; set; }
-		public DateTime Eventdate { get; set; }
-		public string Eventlocation { get; set; }
-		public string Eventlink { get; set; }
+		public string EventName { get; set; }
+    public string EventDescription { get; set; }
+		public string EventType { get; set; }
+		public DateTime EventDate { get; set; }
+		public string EventLocation { get; set; }
+		public string EventLink { get; set; }
 	}
 }

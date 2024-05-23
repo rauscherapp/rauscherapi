@@ -11,13 +11,10 @@
   <ItemGroup>
     <Compile Remove="Commands\Rate\**" />
     <Compile Remove="EventHandlers\**" />
-    <Compile Remove="NewFolder\**" />
     <EmbeddedResource Remove="Commands\Rate\**" />
     <EmbeddedResource Remove="EventHandlers\**" />
-    <EmbeddedResource Remove="NewFolder\**" />
     <None Remove="Commands\Rate\**" />
     <None Remove="EventHandlers\**" />
-    <None Remove="NewFolder\**" />
   </ItemGroup>
 
 	<ItemGroup>
