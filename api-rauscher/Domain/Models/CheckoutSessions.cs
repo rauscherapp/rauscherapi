@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
-namespace StripeApi.Model
+namespace Domain.Model
 {
   /// <summary>
   /// Represents a Stripe Checkout Session.

@@ -9,4 +9,5 @@ public class ApplicationUser : IdentityUser
     public string? Avatar { get; set; }
     public string? Status { get; set; }
     public DateTime? DataNascimento { get; set; }
+    public Boolean HasValidStripeSubscription { get; set; }
 }

@@ -1,17 +1,22 @@
-﻿using Microsoft.Extensions.Logging;
-using StripeApi.Model;
+﻿using Domain.Model;
+using Domain.Repository;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using StripeApi.Options;
 
 namespace StripeApi.Service
 {
-  public class StripeCheckoutSessionService
+  public class StripeCheckoutSessionService : IStripeCheckoutSessionService
   {
     private readonly StripeService _stripeService;
     private readonly ILogger<StripeCheckoutSessionService> _logger;
+    private readonly string _priceId;
 
-    public StripeCheckoutSessionService(StripeService stripeService, ILogger<StripeCheckoutSessionService> logger)
+    public StripeCheckoutSessionService(StripeService stripeService, ILogger<StripeCheckoutSessionService> logger, IOptions<StripeApiOptions> options)
     {
       _stripeService = stripeService ?? throw new ArgumentNullException(nameof(stripeService));
       _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+      _priceId = options.Value.PriceId;
     }
 
     public async Task<CheckoutSession> CreateCheckoutSessionAsync(
