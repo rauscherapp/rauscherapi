@@ -21,14 +21,14 @@ namespace Domain.Core.Notifications
             return Task.CompletedTask;
         }
 
-        public virtual List<DomainNotification> GetNotifications()
+        public virtual List<DomainNotification> GetNotificationMessages()
         {
             return _notifications;
         }
 
         public virtual bool HasNotifications()
         {
-            return GetNotifications().Count > 0;
+            return GetNotificationMessages().Count > 0;
         }
 
         public void Dispose()

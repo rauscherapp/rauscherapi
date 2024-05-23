@@ -1,4 +1,6 @@
-﻿using APIs.Security.JWT;
+﻿using Api.Controllers;
+using APIs.Security.JWT;
+using Application.Interfaces;
 using Domain.Core.Bus;
 using Domain.Core.Notifications;
 using MediatR;
@@ -6,7 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
-namespace Api.Controllers
+namespace Application.Controllers
 {
   [ApiController]
   [Route("api/v{version:apiVersion}")]
@@ -15,50 +17,39 @@ namespace Api.Controllers
   [AllowAnonymous]
   public class AuthController : ApiController
   {
-    private readonly AccessManager _accessManager;
-    private readonly IMediatorHandler _bus;
+    private readonly IAuthService _authService;
 
     public AuthController(
-      INotificationHandler<DomainNotification> notifications,
-      IMediatorHandler bus,
-      AccessManager accessManager)
-      : base(notifications, bus)
+        INotificationHandler<DomainNotification> notifications,
+        IMediatorHandler bus,
+        IAuthService authService)
+        : base(notifications, bus)
     {
-      _bus = bus;
-      _accessManager = accessManager;
+      _authService = authService;
     }
 
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] UserRequest model)
     {
-      var user = new UserRequest { Email = model.Email };
-      var result = _accessManager.CreateUser(model);
+      var result = await _authService.Register(model);
 
       if (result)
       {
-        var resultValidation = _accessManager.ValidateCredentials(user);
-        if(resultValidation.Item2)
-          return Ok();
-
-        ModelState.AddModelError(string.Empty, "Erro ao logar no sistema");
-
-        return BadRequest(ModelState);
+        return Ok();
       }
 
       ModelState.AddModelError(string.Empty, "Erro criar usuario no sistema");
-
       return BadRequest(ModelState);
     }
 
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] UserRequest model)
     {
-      var result = _accessManager.ValidateCredentials(model);
+      var result = await _authService.Login(model);
 
-      if (result.Item2)
+      if (result.IsValid)
       {
-        var token = _accessManager.GenerateToken(result.Item1);
-        return Ok(token.AccessToken);
+        return Ok(result.Token);
       }
       else
       {
