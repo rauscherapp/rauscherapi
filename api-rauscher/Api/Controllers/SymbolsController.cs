@@ -46,7 +46,7 @@ namespace Api.Controllers
     {
       //var result = await _symbolsAppService.AtualizarSymbolsApi(parameters);
       var result = await _commoditiesRateAppService.CadastrarCommoditiesRate(new CommoditiesRateViewModel());
-      return ResponseAction(result);
+      return CreateResponse(result);
     }
   }
 }

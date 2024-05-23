@@ -8,16 +8,16 @@ using System.Threading.Tasks;
 
 namespace Domain.QueryHandlers
 {
-  public class ObterApicredentialsQueryHandler : IRequestHandler<ObterApicredentialsQuery, ApiCredentials>
+  public class ObterApiCredentialsQueryHandler : IRequestHandler<ObterApiCredentialsQuery, ApiCredentials>
   {
-    private readonly ILogger<ObterApicredentialsQueryHandler> _logger;
+    private readonly ILogger<ObterApiCredentialsQueryHandler> _logger;
     private readonly IApiCredentialsRepository _apicredentialsRepository;
-    public ObterApicredentialsQueryHandler(ILogger<ObterApicredentialsQueryHandler> logger, IApiCredentialsRepository apicredentialsRepository)
+    public ObterApiCredentialsQueryHandler(ILogger<ObterApiCredentialsQueryHandler> logger, IApiCredentialsRepository apicredentialsRepository)
     {
       _apicredentialsRepository = apicredentialsRepository;
       _logger = logger;
     }
-    public async Task<ApiCredentials> Handle(ObterApicredentialsQuery request, CancellationToken cancellationToken)
+    public async Task<ApiCredentials> Handle(ObterApiCredentialsQuery request, CancellationToken cancellationToken)
     {
       _logger.LogInformation("Handling: {MethodName} | params: {@Request}", nameof(Handle), request.ApiKey);
 
