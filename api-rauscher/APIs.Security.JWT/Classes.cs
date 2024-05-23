@@ -2,7 +2,7 @@
 
 namespace APIs.Security.JWT;
 
-public class User
+public class UserRequest
 {
 
   public string? Email { get; set; }
@@ -42,5 +42,5 @@ public class Token
   public string? Expiration { get; set; }
   public string? AccessToken { get; set; }
   public string? Message { get; set; }
-  public User? User { get; set; }
+  public UserRequest? User { get; set; }
 }
