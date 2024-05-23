@@ -61,6 +61,10 @@
 	<Content Update="appsettings.json">
 	  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	</Content>
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Folder Include="Controllers\App\" />
   </ItemGroup> 
   
 </Project>
