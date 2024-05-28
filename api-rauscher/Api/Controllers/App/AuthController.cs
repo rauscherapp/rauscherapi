@@ -8,10 +8,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
-namespace Application.Controllers
+namespace App.Controllers
 {
   [ApiController]
-  [Route("api/v{version:apiVersion}")]
+  [Route("app/v{version:apiVersion}")]
   [Produces("application/json", "application/xml")]
   [Consumes("application/json", "application/xml")]
   [AllowAnonymous]
@@ -28,24 +28,10 @@ namespace Application.Controllers
       _authService = authService;
     }
 
-    [HttpPost("register")]
-    public async Task<IActionResult> Register([FromBody] UserRequest model)
-    {
-      var result = await _authService.Register(model);
-
-      if (result)
-      {
-        return Ok();
-      }
-
-      ModelState.AddModelError(string.Empty, "Erro criar usuario no sistema");
-      return BadRequest(ModelState);
-    }
-
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] UserRequest model)
     {
-      var result = await _authService.Login(model);
+      var result = await _authService.AppLogin(model);
 
       if (result.IsValid)
       {

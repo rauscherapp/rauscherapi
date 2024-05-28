@@ -16,10 +16,12 @@ using Domain.Core.Events;
 using Domain.Core.Notifications;
 using Domain.Interfaces;
 using Domain.Models;
+using Domain.Options;
 using Domain.Queries;
 using Domain.QueryHandlers;
 using Domain.QueryParameters;
 using Domain.Repositories;
+using Domain.Repository;
 using Domain.Services;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -27,6 +29,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.Extensions.DependencyInjection;
+using System.Linq;
 
 namespace CrossCutting.IoC
 {
@@ -34,15 +37,17 @@ namespace CrossCutting.IoC
   {
     public static void RegisterServices(IServiceCollection services)
     {
-      //ASPNET
+      // ASP.NET Core dependencies
       services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
       services.AddSingleton<ILoggerFactoryWrapper, LoggerFactoryWrapper>();
       services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
+
+      // Correctly register IUrlHelper to handle cases where ActionContext might be null
       services.AddScoped<IUrlHelper>(x =>
       {
         var actionContext = x.GetRequiredService<IActionContextAccessor>().ActionContext;
         var factory = x.GetRequiredService<IUrlHelperFactory>();
-        return factory.GetUrlHelper(actionContext);
+        return actionContext == null ? null : factory.GetUrlHelper(actionContext);
       });
 
       // Domain Bus (Mediator)
@@ -50,19 +55,29 @@ namespace CrossCutting.IoC
       services.AddScoped<IEventBusRabbitMQ, EventBusRabbitMQ>();
       services.AddTransient<IPropertyCheckerService, PropertyCheckerService>();
 
-
-      //Application 
- services.AddScoped<ICommoditiesRateAppService, CommoditiesRateAppService>(); 
+      // Application services
+      //services.AddScoped<StripeService>();
+      //services.AddScoped<IStripeCheckoutSessionService, StripeCheckoutSessionService>();
+      services.AddScoped<IAuthService, AuthService>();
+      services.AddScoped<IEventRegistryAppService, EventRegistryAppService>();
+      services.AddScoped<IAppParametersAppService, AppParametersAppService>();
+      services.AddScoped<ICommoditiesRateAppService, CommoditiesRateAppService>();
       services.AddScoped<ISymbolsAppService, SymbolsAppService>();
       services.AddScoped<IApiCredentialsAppService, ApicredentialsAppService>();
       services.AddScoped<IPostAppService, PostAppService>();
       services.AddScoped<IFolderAppService, FolderAppService>();
       services.AddScoped<IUriAppService, UriAppService>();
 
-      // Domain - Commands 
- services.AddScoped<IRequestHandler<ExcluirCommoditiesRateCommand, bool>, ExcluirCommoditiesRateCommandHandler>(); 
- services.AddScoped<IRequestHandler<CadastrarCommoditiesRateCommand, bool>, CadastrarCommoditiesRateCommandHandler>(); 
- services.AddScoped<IRequestHandler<AtualizarCommoditiesRateCommand, bool>, AtualizarCommoditiesRateCommandHandler>(); 
+      // Domain - Commands
+      services.AddScoped<IRequestHandler<ExcluirEventRegistryCommand, bool>, ExcluirEventRegistryCommandHandler>();
+      services.AddScoped<IRequestHandler<CadastrarEventRegistryCommand, bool>, CadastrarEventRegistryCommandHandler>();
+      services.AddScoped<IRequestHandler<AtualizarEventRegistryCommand, bool>, AtualizarEventRegistryCommandHandler>();
+      services.AddScoped<IRequestHandler<ExcluirAppParametersCommand, bool>, ExcluirAppParametersCommandHandler>();
+      services.AddScoped<IRequestHandler<CadastrarAppParametersCommand, bool>, CadastrarAppParametersCommandHandler>();
+      services.AddScoped<IRequestHandler<AtualizarAppParametersCommand, bool>, AtualizarAppParametersCommandHandler>();
+      services.AddScoped<IRequestHandler<ExcluirCommoditiesRateCommand, bool>, ExcluirCommoditiesRateCommandHandler>();
+      services.AddScoped<IRequestHandler<CadastrarCommoditiesRateCommand, bool>, CadastrarCommoditiesRateCommandHandler>();
+      services.AddScoped<IRequestHandler<AtualizarCommoditiesRateCommand, bool>, AtualizarCommoditiesRateCommandHandler>();
       services.AddScoped<IRequestHandler<ExcluirSymbolsCommand, bool>, ExcluirSymbolsCommandHandler>();
       services.AddScoped<IRequestHandler<CadastrarSymbolsCommand, bool>, CadastrarSymbolsCommandHandler>();
       services.AddScoped<IRequestHandler<AtualizarSymbolsCommand, bool>, AtualizarSymbolsCommandHandler>();
@@ -78,9 +93,13 @@ namespace CrossCutting.IoC
       services.AddScoped<IRequestHandler<AtualizarFolderCommand, bool>, AtualizarFolderCommandHandler>();
       services.AddScoped<IRequestHandler<GerarSecretAndApiKeyCommand, bool>, GerarSecretAndApiKeyCommandHandler>();
 
-      // Domain - Queries 
- services.AddScoped<IRequestHandler<ObterCommoditiesRateQuery, CommoditiesRate>, ObterCommoditiesRateQueryHandler>(); 
- services.AddScoped<IRequestHandler<ListarCommoditiesRateQuery, PagedList<CommoditiesRate>>, ListarCommoditiesRateQueryHandler>(); 
+      // Domain - Queries
+      services.AddScoped<IRequestHandler<ObterEventRegistryQuery, EventRegistry>, ObterEventRegistryQueryHandler>();
+      services.AddScoped<IRequestHandler<ListarEventRegistryQuery, PagedList<EventRegistry>>, ListarEventRegistryQueryHandler>();
+      services.AddScoped<IRequestHandler<ObterAppParametersQuery, AppParameters>, ObterAppParametersQueryHandler>();
+      services.AddScoped<IRequestHandler<ListarAppParametersQuery, PagedList<AppParameters>>, ListarAppParametersQueryHandler>();
+      services.AddScoped<IRequestHandler<ObterCommoditiesRateQuery, CommoditiesRate>, ObterCommoditiesRateQueryHandler>();
+      services.AddScoped<IRequestHandler<ListarCommoditiesRateQuery, PagedList<CommoditiesRate>>, ListarCommoditiesRateQueryHandler>();
       services.AddScoped<IRequestHandler<ObterSymbolsQuery, Symbols>, ObterSymbolsQueryHandler>();
       services.AddScoped<IRequestHandler<ListarSymbolsQuery, PagedList<Symbols>>, ListarSymbolsQueryHandler>();
       services.AddScoped<IRequestHandler<ObterApiCredentialsQuery, ApiCredentials>, ObterApiCredentialsQueryHandler>();
@@ -92,14 +111,15 @@ namespace CrossCutting.IoC
       // Domain - Events
       services.AddScoped<INotificationHandler<DomainNotification>, DomainNotificationHandler>();
 
-      // Infra - Data 
- services.AddScoped<ICommoditiesRateRepository, CommoditiesRateRepository>(); 
+      // Infra - Data
+      services.AddScoped<IAppParametersRepository, AppParametersRepository>();
+      services.AddScoped<IEventRegistryRepository, EventRegistryRepository>();
+      services.AddScoped<ICommoditiesRateRepository, CommoditiesRateRepository>();
       services.AddScoped<ISymbolsRepository, SymbolsRepository>();
       services.AddScoped<IApiCredentialsRepository, ApiCredentialsRepository>();
       services.AddScoped<IPostRepository, PostRepository>();
       services.AddScoped<IFolderRepository, FolderRepository>();
       services.AddScoped<IUnitOfWork, UnitOfWork>();
-
 
       services.AddScoped<ICommoditiesRepository, CommoditiesRepository>();
       services.AddScoped<IEventStoreRepository, EventStoreSQLRepository>();
@@ -107,8 +127,7 @@ namespace CrossCutting.IoC
       services.AddScoped<EventStoreSQLContext>();
       services.AddScoped<RauscherDbContext>();
       services.AddScoped<IUser, User>();
-      //Infra - Fil
-
+      // Infra - Filters (if any)
     }
   }
 }
