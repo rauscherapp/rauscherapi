@@ -1,25 +1,29 @@
 ﻿using APIs.Security.JWT;
+using Application.Interfaces;
 using Data.Context;
+using Domain.Options;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Linq;
 
 namespace Api.Configurations
 {
-    public static class DatabaseSetup
+  public static class DatabaseSetup
+  {
+    public static void AddDatabaseSetup(this IServiceCollection services, IConfiguration configuration)
     {
-        public static void AddDatabaseSetup(this IServiceCollection services, IConfiguration configuration)
-        {
-            if (services == null) throw new ArgumentNullException(nameof(services));
+      if (services == null) throw new ArgumentNullException(nameof(services));
 
-            services.AddDbContext<EventStoreSQLContext>(options =>
-                options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+      services.AddDbContext<EventStoreSQLContext>(options =>
+          options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddDbContext<RauscherDbContext>(options =>
-                options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
-            services.AddDbContext<ApiSecurityDbContext>(options =>
-                options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
-        }
+      services.AddDbContext<RauscherDbContext>(options =>
+          options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+      services.AddDbContext<ApiSecurityDbContext>(options =>
+          options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
     }
+  }
 }

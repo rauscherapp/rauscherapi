@@ -57,5 +57,10 @@ namespace Application.Controllers
         return BadRequest(ModelState);
       }
     }
+    [HttpPost("checkSubscription")]
+    public async Task<IActionResult> CheckSubscription([FromBody] UserRequest model)
+    {
+       return Ok(await _authService.CheckSubscription(model));
+    }
   }
 }

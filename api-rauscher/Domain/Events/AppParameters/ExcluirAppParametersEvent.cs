@@ -9,6 +9,7 @@ namespace Domain.Events
     Guid id,
     string StripeApiClientKey,
     string StripeApiSecret,
+    string StripeWebhookSecret,
     string StripeApiPriceId,
     string CommoditiesApiKey,
     string EmailSender,
@@ -18,6 +19,7 @@ namespace Domain.Events
       Id = id;
       StripeApiClientKey = StripeApiClientKey;
       StripeApiSecret = StripeApiSecret;
+      StripeWebhookSecret = StripeWebhookSecret;
       StripeApiPriceId = StripeApiPriceId;
       CommoditiesApiKey = CommoditiesApiKey;
       EmailSender = EmailSender;
@@ -26,6 +28,7 @@ namespace Domain.Events
     public Guid Id { get; set; }
     public string StripeApiClientKey { get; set; }
     public string StripeApiSecret { get; set; }
+    public string StripeWebhookSecret { get; set; }
     public string StripeApiPriceId { get; set; }
     public string CommoditiesApiKey { get; set; }
     public string EmailSender { get; set; }

@@ -10,10 +10,20 @@ namespace Application.AutoMapper
     public ViewModelToDomainMappingProfile()
     {
       //ConfigureViewModelToDomain 
- CreateMap<CommoditiesRateViewModel, CommoditiesRate>(); 
- CreateMap<CommoditiesRateViewModel, ExcluirCommoditiesRateCommand>(); 
- CreateMap<CommoditiesRateViewModel, CadastrarCommoditiesRateCommand>(); 
- CreateMap<CommoditiesRateViewModel, AtualizarCommoditiesRateCommand>(); 
+      CreateMap<AppParametersViewModel, AppParameters>();
+      CreateMap<AppParametersViewModel, ExcluirAppParametersCommand>();
+      CreateMap<AppParametersViewModel, CadastrarAppParametersCommand>();
+      CreateMap<AppParametersViewModel, AtualizarAppParametersCommand>();
+
+      CreateMap<EventRegistryViewModel, EventRegistry>();
+      CreateMap<EventRegistryViewModel, ExcluirEventRegistryCommand>();
+      CreateMap<EventRegistryViewModel, CadastrarEventRegistryCommand>();
+      CreateMap<EventRegistryViewModel, AtualizarEventRegistryCommand>();
+
+      CreateMap<CommoditiesRateViewModel, CommoditiesRate>();
+      CreateMap<CommoditiesRateViewModel, ExcluirCommoditiesRateCommand>();
+      CreateMap<CommoditiesRateViewModel, CadastrarCommoditiesRateCommand>();
+      CreateMap<CommoditiesRateViewModel, AtualizarCommoditiesRateCommand>();
       CreateMap<SymbolsViewModel, Symbols>();
       CreateMap<SymbolsViewModel, ExcluirSymbolsCommand>();
       CreateMap<SymbolsViewModel, CadastrarSymbolsCommand>();

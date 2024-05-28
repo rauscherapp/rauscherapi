@@ -19,6 +19,9 @@ namespace Data.Mappings
 			
 			builder.Property(e => e.StripeApiSecret)
 			.HasColumnName("StripeApiSecret");			
+			
+			builder.Property(e => e.StripeWebhookSecret)
+			.HasColumnName("StripeWebhookSecret");			
 
 			builder.Property(e => e.StripeApiPriceId)
 			.HasColumnName("StripeApiPriceId");

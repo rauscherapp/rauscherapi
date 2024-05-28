@@ -86,6 +86,18 @@ public class AccessManager
     return userCreated;
   }
 
+  public async Task<bool> CheckSubscription(UserRequest userRequest)
+  {
+    var user = await _userManager.FindByEmailAsync(userRequest.Email!);
+    return user?.HasValidStripeSubscription ?? false;
+  }
+  public async Task<bool> SuccesfullSubscriptionUserUpdate(string email)
+  {
+    var user = await _userManager.FindByEmailAsync(email);
+    return user?.HasValidStripeSubscription ?? false;
+  }
+
+
   public Token GenerateToken(UserResponse user)
   {
     ClaimsIdentity identity = new(

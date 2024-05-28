@@ -1,7 +1,11 @@
 using Api.Configurations;
 using APIs.Security.JWT;
+using Aplication.Provider;
+using Application.Interfaces;
+using Application.Services;
 using Data.Commodities.Api.Service;
 using Data.Commoditites.Api.Options;
+using Domain.Options;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -12,10 +16,12 @@ using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 using Polly;
 using Serilog;
+using StripeApi.Options;
 using System;
-using System.Configuration;
+using System.Linq;
 
 namespace Api
 {
@@ -83,6 +89,10 @@ namespace Api
       //// .NET Native DI Abstraction
       services.AddDependencyInjectionSetup();
 
+      services.AddScoped<IAppParametersOptionsProvider, AppParametersOptionsProvider>();
+      services.AddTransient<IConfigureOptions<ParametersOptions>, ConfigureParametersOptions>();
+
+
       services.AddMvc(setupAction =>
       {
         setupAction.Filters.Add(
@@ -103,8 +113,12 @@ namespace Api
       });
 
       services.Configure<CommoditiesApiOptions>(Configuration.GetSection("CommoditiesApi"));
+      services.Configure<StripeApiOptions>(Configuration.GetSection("StripeApi"));
       services.AddHttpClient<CommoditiesRepository>()
         .AddTransientHttpErrorPolicy(p => p.WaitAndRetryAsync(3, _ => TimeSpan.FromSeconds(2)));
+
+
+
     }
 
 
@@ -120,9 +134,9 @@ namespace Api
         {
           appBuilder.Run(async context =>
                   {
-              context.Response.StatusCode = 500;
-              await context.Response.WriteAsync("Ocorreu um erro inesperado. Tente novamente mais tarde.");
-            });
+                    context.Response.StatusCode = 500;
+                    await context.Response.WriteAsync("Ocorreu um erro inesperado. Tente novamente mais tarde.");
+                  });
         });
 
         app.UseHsts();
@@ -163,7 +177,7 @@ namespace Api
 
       app.UseRouting();
 
-      app.UseMiddleware<ApiKeyMiddleware>();
+      //app.UseMiddleware<ApiKeyMiddleware>();
 
       app.UseAuthorization();
 
