@@ -9,5 +9,7 @@ namespace Application.Interfaces
   {
     Task<bool> Register(UserRequest model);
     Task<(bool IsValid, string Token)> Login(UserRequest model);
+    Task<(bool IsValid, Token Token)> AppLogin(UserRequest model);
+    Task<bool> CheckSubscription(UserRequest model);
   }
 }

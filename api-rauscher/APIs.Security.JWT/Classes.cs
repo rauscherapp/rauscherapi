@@ -11,6 +11,15 @@ public class UserRequest
   public string? Status { get; set; }
   public string? Password { get; set; }
 }
+public class UserResponse
+{
+  public string Token { get; set; }
+  public int UserId { get; set; }
+  public string? Email { get; set; }
+  public string? Name { get; set; }
+  public Boolean HasValidStripeSubscription { get; set; }
+  public string StripeSubscriptionLink { get; set; }
+}
 
 public static class Roles
 {
@@ -42,5 +51,5 @@ public class Token
   public string? Expiration { get; set; }
   public string? AccessToken { get; set; }
   public string? Message { get; set; }
-  public UserRequest? User { get; set; }
+  public UserResponse? User { get; set; }
 }
