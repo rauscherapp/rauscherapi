@@ -1,10 +1,10 @@
 ﻿using APIs.Security.JWT;
 using Application.Interfaces;
-using Domain.Model;
 using Domain.Options;
-using Domain.Repository;
-using MediatR;
 using Microsoft.Extensions.Options;
+using Stripe;
+using Stripe.Checkout;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -12,15 +12,15 @@ namespace Application.Services
 {
   public class AuthService : IAuthService
   {
+    private readonly IStripeClient _stripeClient;
     private readonly AccessManager _accessManager;
-    private readonly IStripeCheckoutSessionService _stripeCheckoutSessionService;
     private readonly string _priceId;
 
-    public AuthService(AccessManager accessManager, IStripeCheckoutSessionService stripeCheckoutSessionService, IOptions<ParametersOptions> parameters)
+    public AuthService(AccessManager accessManager, IOptionsSnapshot<ParametersOptions> parameters)
     {
       _accessManager = accessManager;
-      _stripeCheckoutSessionService = stripeCheckoutSessionService;
       _priceId = parameters.Value.StripePriceId;
+      _stripeClient = new StripeClient(parameters.Value.StripeApiSecret);
     }
 
     public async Task<bool> Register(UserRequest model)
@@ -46,10 +46,13 @@ namespace Application.Services
         var token = _accessManager.GenerateToken(result.Item1);
         return (true, token.AccessToken);
       }
-
       return (false, null);
     }
-    public async Task<(bool IsValid, Token Token)> AppLogin(UserRequest model)
+    public async Task<bool> CheckSubscription(UserRequest model)
+    {
+      return await _accessManager.CheckSubscription(model);
+    }
+    public async Task<(bool IsValid, APIs.Security.JWT.Token Token)> AppLogin(UserRequest model)
     {
       var result = _accessManager.ValidateCredentials(model);
 
@@ -58,23 +61,41 @@ namespace Application.Services
         var token = _accessManager.GenerateToken(result.Item1);
         if (token.User is not null && !token.User.HasValidStripeSubscription)
         {
-          var options = new CheckoutSession
+          var options = new SessionCreateOptions
           {
-            SuccessUrl = $"/success.html?session_id={{CHECKOUT_SESSION_ID}}",
-            CancelUrl = $"/canceled.html",
+            SuccessUrl = $"http://www.uol.com.br",
+            CancelUrl = $"http://ge.globo.com",
             Mode = "subscription",
-            LineItems = new List<LineItem>
+            LineItems = new List<SessionLineItemOptions>
                 {
-                    new LineItem
+                    new SessionLineItemOptions
                     {
-                        Price = new Price {
-                          Id = _priceId
-                        },
+                        Price = _priceId,
                         Quantity = 1,
                     },
                 },
-            // AutomaticTax = new SessionAutomaticTaxOptions { Enabled = true },
           };
+          var service = new SessionService(_stripeClient);
+          try
+          {
+            var session = await service.CreateAsync(options);
+            if(session is not null)
+            {
+              token.User.StripeSubscriptionLink = session.Url;
+              return (true, token);
+            }
+            return (true, token);
+          }
+          catch (StripeException e)
+          {
+            throw new Exception($"Error Stripe {e.Message}");
+          }
+
+          catch (Exception ex)
+          {
+            throw;
+          }
+
         }
         return (true, token);
       }

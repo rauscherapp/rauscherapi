@@ -13,6 +13,8 @@ namespace Application.ViewModels
 		public string StripeApiSecret { get; set; }
 		[JsonPropertyName("StripeApiPriceId")]
 		public string StripeApiPriceId { get; set; }
+		[JsonPropertyName("StripeWebhookSecret")]
+		public string StripeWebhookSecret { get; set; }
 		[JsonPropertyName("CommoditiesApiKey")]
 		public string CommoditiesApiKey { get; set; }
 		[JsonPropertyName("EmailSender")]

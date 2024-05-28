@@ -34,6 +34,7 @@ namespace Domain.CommandHandlers
           message.Id,
           message.StripeApiClientKey,
           message.StripeApiSecret,
+          message.StripeWebhookSecret,
           message.StripeApiPriceId,
           message.CommoditiesApiKey,
           message.EmailSender,

@@ -1,34 +1,37 @@
-using System;
 using Domain.Core.Events;
+using System;
 
 namespace Domain.Events
 {
-	    public class CadastrarAppParametersEvent : Event
-	{
-		public CadastrarAppParametersEvent(
-		Guid id,
-		string StripeApiClientKey,
-		string StripeApiSecret,
-		string StripeApiPriceId,
-		string CommoditiesApiKey,
-		string EmailSender,
-		string EmailPassword
-		)
-		{
-			Id = id;
-			StripeApiClientKey = StripeApiClientKey;
-			StripeApiSecret = StripeApiSecret;
+  public class CadastrarAppParametersEvent : Event
+  {
+    public CadastrarAppParametersEvent(
+    Guid id,
+    string StripeApiClientKey,
+    string StripeApiSecret,
+    string StripeWebhookSecret,
+    string StripeApiPriceId,
+    string CommoditiesApiKey,
+    string EmailSender,
+    string EmailPassword
+    )
+    {
+      Id = id;
+      StripeApiClientKey = StripeApiClientKey;
+      StripeApiSecret = StripeApiSecret;
+      StripeWebhookSecret = StripeWebhookSecret;
       StripeApiPriceId = StripeApiPriceId;
-			CommoditiesApiKey = CommoditiesApiKey;
-			EmailSender = EmailSender;
-			EmailPassword = EmailPassword;
-		}
-		public Guid Id { get; set; }
-		public string StripeApiClientKey { get; set; }
-		public string StripeApiSecret { get; set; }
-		public string StripeApiPriceId { get; set; }
-		public string CommoditiesApiKey { get; set; }
-		public string EmailSender { get; set; }
-		public string EmailPassword { get; set; }
-	}
+      CommoditiesApiKey = CommoditiesApiKey;
+      EmailSender = EmailSender;
+      EmailPassword = EmailPassword;
+    }
+    public Guid Id { get; set; }
+    public string StripeApiClientKey { get; set; }
+    public string StripeApiSecret { get; set; }
+    public string StripeWebhookSecret { get; set; }
+    public string StripeApiPriceId { get; set; }
+    public string CommoditiesApiKey { get; set; }
+    public string EmailSender { get; set; }
+    public string EmailPassword { get; set; }
+  }
 }

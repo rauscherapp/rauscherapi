@@ -35,6 +35,7 @@ namespace Domain.CommandHandlers
       appparameters.Id = message.Id;
       appparameters.StripeApiClientKey = message.StripeApiClientKey;
       appparameters.StripeApiSecret = message.StripeApiSecret;
+      appparameters.StripeWebhookSecret = message.StripeWebhookSecret;
       appparameters.StripeApiPriceId = message.StripeApiPriceId;
       appparameters.CommoditiesApiKey = message.CommoditiesApiKey;
       appparameters.EmailSender = message.EmailSender;
@@ -48,6 +49,7 @@ namespace Domain.CommandHandlers
           message.Id,
           message.StripeApiClientKey,
           message.StripeApiSecret,
+          message.StripeWebhookSecret,
           message.StripeApiPriceId,
           message.CommoditiesApiKey,
           message.EmailSender,

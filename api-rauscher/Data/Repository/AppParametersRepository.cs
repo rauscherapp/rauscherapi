@@ -17,21 +17,21 @@ namespace Data.Repository
 		}
 		public AppParameters ObterAppParameters(Guid appParametersId)
 		{
-			    var AppParameters = Db.AppParameters
+			    var appParameters = Db.AppParameters
 			        .Where(c => c.Id == appParametersId);
 			
-			    return AppParameters.FirstOrDefault();
+			    return appParameters.FirstOrDefault();
 		}
 		
 		public async Task<PagedList<AppParameters>> ListarAppParameterss(AppParametersParameters parameters)
 		{
-			var appparameters = Db.AppParameters
+			var appParameters = Db.AppParameters
 			.AsQueryable();
 			
 			if (!string.IsNullOrWhiteSpace(parameters.OrderBy))
-			    appparameters = appparameters.ApplySort(parameters.OrderBy);
+			    appParameters = appParameters.ApplySort(parameters.OrderBy);
 			
-			return PagedList<AppParameters>.Create(appparameters, parameters.PageNumber, parameters.PageSize);
+			return PagedList<AppParameters>.Create(appParameters, parameters.PageNumber, parameters.PageSize);
 		}
 	}
 }

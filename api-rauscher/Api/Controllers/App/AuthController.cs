@@ -31,7 +31,7 @@ namespace App.Controllers
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] UserRequest model)
     {
-      var result = await _authService.Login(model);
+      var result = await _authService.AppLogin(model);
 
       if (result.IsValid)
       {
