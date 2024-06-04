@@ -18,7 +18,7 @@ namespace Data.Repository
 		public EventRegistry ObterEventRegistry(Guid eventRegistryId)
 		{
 			    var EventRegistry = Db.EventRegistrys
-			        .Where(c => c.EventRegistryId == eventRegistryId);
+			        .Where(c => c.Id == eventRegistryId);
 			
 			    return EventRegistry.FirstOrDefault();
 		}

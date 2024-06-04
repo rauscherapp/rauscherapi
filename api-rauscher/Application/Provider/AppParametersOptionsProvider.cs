@@ -26,6 +26,7 @@ namespace Aplication.Provider
         StripeApiSecret = optionsEntity.StripeApiSecret,
         StripeWebhookSecret = optionsEntity.StripeWebhookSecret,
         StripePriceId = optionsEntity.StripeApiPriceId,
+        StripeTrialPeriod = optionsEntity.StripeTrialPeriod,
         CommoditiesApiKey = optionsEntity.CommoditiesApiKey,
         EmailSender = optionsEntity.EmailSender,
         EmailPassword = optionsEntity.EmailPassword
