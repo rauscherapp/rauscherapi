@@ -25,7 +25,7 @@ public class AccessManager
     _tokenConfigurations = tokenConfigurations;
   }
 
-  public (UserResponse? user, bool isValid) ValidateCredentials(UserRequest user)
+  public async Task<(UserResponse? user, bool isValid)> ValidateCredentials(UserRequest user)
   {
     bool credenciaisValidas = false;
     var userResponse = new UserResponse();
@@ -33,14 +33,13 @@ public class AccessManager
     {
       // Verifica a existência do usuário nas tabelas do
       // ASP.NET Core Identity
-      var userIdentity = _userManager
-          .FindByEmailAsync(user.Email).Result;
+      var userIdentity = await _userManager
+          .FindByEmailAsync(user.Email);
       if (userIdentity is not null)
       {
         // Efetua o login com base no Id do usuário e sua senha
-        var resultadoLogin = _signInManager
-            .CheckPasswordSignInAsync(userIdentity, user.Password!, false)
-            .Result;
+        var resultadoLogin = await _signInManager
+            .CheckPasswordSignInAsync(userIdentity, user.Password!, false);
         if (resultadoLogin.Succeeded)
         {
           // Verifica se o usuário em questão possui
@@ -59,22 +58,23 @@ public class AccessManager
 
     return (userResponse, credenciaisValidas);
   }
-  public bool CreateUser(UserRequest userRequest)
+  public async Task<bool> CreateUser(UserRequest userRequest)
   {
     bool userCreated = false;
-    if (_userManager.FindByEmailAsync(userRequest.Email!).Result == null)
+    var userResponse = await _userManager.FindByEmailAsync(userRequest.Email!);
+    if (userResponse is null)
     {
       var user = new ApplicationUser()
       {
         Email = userRequest.Email,
         EmailConfirmed = true,
-        Documento = "34337013857"
+        UserName = userRequest.Email        
       };
 
       if (userRequest.Password != null)
       {
-        var resultado = _userManager
-                  .CreateAsync(user, userRequest.Password).Result;
+        var resultado = await _userManager
+                  .CreateAsync(user, userRequest.Password);
 
         if (resultado.Succeeded)
         {
@@ -91,11 +91,7 @@ public class AccessManager
     var user = await _userManager.FindByEmailAsync(userRequest.Email!);
     return user?.HasValidStripeSubscription ?? false;
   }
-  public async Task<bool> SuccesfullSubscriptionUserUpdate(string email)
-  {
-    var user = await _userManager.FindByEmailAsync(email);
-    return user?.HasValidStripeSubscription ?? false;
-  }
+
 
 
   public Token GenerateToken(UserResponse user)

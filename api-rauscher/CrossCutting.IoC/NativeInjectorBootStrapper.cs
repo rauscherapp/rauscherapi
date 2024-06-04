@@ -29,6 +29,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.Extensions.DependencyInjection;
+using StripeApi.Service;
 using System.Linq;
 
 namespace CrossCutting.IoC
@@ -66,6 +67,8 @@ namespace CrossCutting.IoC
       services.AddScoped<IApiCredentialsAppService, ApicredentialsAppService>();
       services.AddScoped<IPostAppService, PostAppService>();
       services.AddScoped<IFolderAppService, FolderAppService>();
+      services.AddScoped<IStripeCustomerService, StripeCustomerService>();
+      services.AddScoped<IStripeSessionService, StripeSessionService>();
       services.AddScoped<IUriAppService, UriAppService>();
 
       // Domain - Commands

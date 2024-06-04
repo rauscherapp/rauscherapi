@@ -1,6 +1,7 @@
 ﻿using Api.Controllers;
 using APIs.Security.JWT;
 using Application.Interfaces;
+using Application.ViewModels;
 using Domain.Core.Bus;
 using Domain.Core.Notifications;
 using MediatR;
@@ -33,9 +34,9 @@ namespace Application.Controllers
     {
       var result = await _authService.Register(model);
 
-      if (result)
+      if (result.IsValid)
       {
-        return Ok();
+        return Ok(result.Token);
       }
 
       ModelState.AddModelError(string.Empty, "Erro criar usuario no sistema");
@@ -60,7 +61,10 @@ namespace Application.Controllers
     [HttpPost("checkSubscription")]
     public async Task<IActionResult> CheckSubscription([FromBody] UserRequest model)
     {
-       return Ok(await _authService.CheckSubscription(model));
+      var hasSubscription = new HasValidSignatureViewModel {
+        HasValidSignature = await _authService.CheckSubscription(model)
+      };
+       return Ok(hasSubscription);
     }
   }
 }

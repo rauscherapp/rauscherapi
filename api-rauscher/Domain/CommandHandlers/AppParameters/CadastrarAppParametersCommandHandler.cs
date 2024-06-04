@@ -38,6 +38,7 @@ namespace Domain.CommandHandlers
         message.StripeApiSecret,
         message.StripeWebhookSecret,
         message.StripeApiPriceId,
+        message.StripeTrialPeriod,
         message.CommoditiesApiKey,
         message.EmailSender,
         message.EmailPassword
@@ -53,6 +54,7 @@ namespace Domain.CommandHandlers
           message.StripeApiSecret,
           message.StripeWebhookSecret,
           message.StripeApiPriceId,
+          message.StripeTrialPeriod,
           message.CommoditiesApiKey,
           message.EmailSender,
           message.EmailPassword

@@ -32,7 +32,7 @@ namespace Domain.CommandHandlers
         return Task.FromResult(false);
       }
       var eventregistry = _eventregistryRepository.GetById(message.EventRegistryId);
-      eventregistry.EventRegistryId = message.EventRegistryId;
+      eventregistry.Id = message.EventRegistryId;
       eventregistry.EventName = message.Eventname;
       eventregistry.EventDescription = message.Eventdescription;
       eventregistry.EventType = message.Eventtype;
