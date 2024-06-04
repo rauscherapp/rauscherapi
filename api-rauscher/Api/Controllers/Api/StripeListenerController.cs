@@ -1,7 +1,10 @@
 ﻿using APIs.Security.JWT;
+using Application.Interfaces;
+using Domain.Options;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using Stripe;
 using System;
 using System.IO;
@@ -15,10 +18,12 @@ namespace Api.Controllers.Api
   public class StripeListenerController : Controller
   {
     private readonly string _webhookSecret;
-    private readonly AccessManager _accessManager;
-    public StripeListenerController()
+    private readonly IAuthService _authService;
+
+    public StripeListenerController(IOptionsSnapshot<ParametersOptions> parameters, IAuthService authService)
     {
-      _webhookSecret = "whsec_ac5085b7e96a855990b9c947aeaf114dd79c8c0c3d182565c4325722881b6028";
+      _webhookSecret = parameters.Value.StripeWebhookSecret;
+      _authService = authService;
     }
     [HttpPost("webhook")]
     public async Task<IActionResult> Webhook()
@@ -40,21 +45,28 @@ namespace Api.Controllers.Api
         return BadRequest();
       }
 
-      if (stripeEvent.Type == "checkout.session.completed")
-      {
-        var session = stripeEvent.Data.Object as Stripe.Checkout.Session;
-        Console.WriteLine($"Session ID: {session.Id}");
-        // Take some action based on session.
-      }
-      if (stripeEvent.Type == "payment_intent.succeeded")
-      {
-        var session = stripeEvent.Data.Object;
-        Console.WriteLine($"Session ID: {session}");
-        // Take some action based on session.
-      }
+      //if (stripeEvent.Type == "checkout.session.completed")
+      //{
+      //  var session = stripeEvent.Data.Object as Stripe.Checkout.Session;
+      //  Console.WriteLine($"Session ID: {session.Id}");
+      //  // Take some action based on session.
+      //}
+      //if (stripeEvent.Type == "checkout.session.completed")
+      //{
+      //  var session = stripeEvent.Data.Object as Stripe.Checkout.Session;
+      //  Console.WriteLine($"Session ID: {session.Id}");
+      //  // Take some action based on session.
+      //}
+      //if (stripeEvent.Type == "payment_intent.succeeded")
+      //{
+      //  var session = stripeEvent.Data.Object;
+      //  Console.WriteLine($"Session ID: {session}");
+      //  // Take some action based on session.
+      //}
       if (stripeEvent.Type == "customer.subscription.created")
       {
         var session = stripeEvent.Data.Object as Stripe.Subscription;
+        await _authService.SuccesfullSubscriptionUserUpdate(session.CustomerId);
         Console.WriteLine($"Session ID: {session}");
         // Take some action based on session.
       }

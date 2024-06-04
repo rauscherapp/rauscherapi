@@ -20,6 +20,7 @@ namespace Api
       options.StripeApiSecret = optionsEntity.StripeApiSecret;
       options.StripeWebhookSecret = optionsEntity.StripeWebhookSecret;
       options.StripePriceId = optionsEntity.StripePriceId;
+      options.StripeTrialPeriod = optionsEntity.StripeTrialPeriod;
       options.CommoditiesApiKey = optionsEntity.CommoditiesApiKey;
       options.EmailSender = optionsEntity.EmailSender;
       options.EmailPassword = optionsEntity.EmailPassword;

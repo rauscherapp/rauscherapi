@@ -10,6 +10,7 @@ namespace Domain.Models
 		string stripeApiSecret,
 		string stripeWebhookSecret,
 		string stripeApiPriceId,
+		int stripeTrialPeriod,
 		string commoditiesApiKey,
 		string emailSender,
 		string emailPassword
@@ -20,6 +21,7 @@ namespace Domain.Models
 			StripeApiSecret = stripeApiSecret;
       StripeWebhookSecret = stripeWebhookSecret;
       StripeApiPriceId = stripeApiPriceId;
+      StripeTrialPeriod = stripeTrialPeriod;
 			CommoditiesApiKey = commoditiesApiKey;
 			EmailSender = emailSender;
 			EmailPassword = emailPassword;
@@ -29,6 +31,7 @@ namespace Domain.Models
 		public string StripeApiSecret { get; set; }
 		public string StripeWebhookSecret { get; set; }
 		public string StripeApiPriceId { get; set; }
+		public int StripeTrialPeriod { get; set; }
 		public string CommoditiesApiKey { get; set; }
 		public string EmailSender { get; set; }
 		public string EmailPassword { get; set; }

@@ -5,7 +5,7 @@ namespace Domain.Models
 	public class EventRegistry
 	{
 		public EventRegistry(
-		Guid eventRegistryId,
+		Guid id,
 		string eventName,
 		string eventDescription,
 		string eventType,
@@ -14,7 +14,7 @@ namespace Domain.Models
 		string eventLink
 		)
 		{
-			EventRegistryId = eventRegistryId;
+			Id = id;
 			EventName = eventName;
 			EventDescription = eventDescription;
 			EventType = eventType;
@@ -22,7 +22,7 @@ namespace Domain.Models
 			EventLocation = eventLocation;
 			EventLink = eventLink;
 		}
-		public Guid EventRegistryId { get; set; }
+		public Guid Id { get; set; }
 		public string EventName { get; set; }
     public string EventDescription { get; set; }
 		public string EventType { get; set; }
