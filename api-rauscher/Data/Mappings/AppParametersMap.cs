@@ -25,6 +25,9 @@ namespace Data.Mappings
 
 			builder.Property(e => e.StripeApiPriceId)
 			.HasColumnName("StripeApiPriceId");
+
+			builder.Property(e => e.StripeTrialPeriod)
+			.HasColumnName("StripeTrialPeriod");
 			
 			builder.Property(e => e.CommoditiesApiKey)
 			.HasColumnName("CommoditiesApiKey");

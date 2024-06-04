@@ -44,7 +44,7 @@ namespace Api
     {
       services.AddHealthChecks();
 
-      services.AddApplicationInsightsTelemetry(Configuration.GetValue<string>("ApplicationInsights:InstrumentationKey"));
+      //services.AddApplicationInsightsTelemetry(Configuration.GetValue<string>("ApplicationInsights:InstrumentationKey"));
 
       services.AddCors();
 
@@ -116,9 +116,6 @@ namespace Api
       services.Configure<StripeApiOptions>(Configuration.GetSection("StripeApi"));
       services.AddHttpClient<CommoditiesRepository>()
         .AddTransientHttpErrorPolicy(p => p.WaitAndRetryAsync(3, _ => TimeSpan.FromSeconds(2)));
-
-
-
     }
 
 
@@ -140,15 +137,16 @@ namespace Api
         });
 
         app.UseHsts();
-      }
+      }    
 
       app.UseCors(c =>
       {
+
         c.AllowAnyHeader();
         c.WithExposedHeaders("X-Pagination");
         c.AllowAnyMethod();
         c.AllowAnyOrigin();
-        c.WithOrigins("https://tshp.stocklerltda.com.br", "http://localhost:4200");
+        c.WithOrigins("https://rauscher-app-espuri.flutterflow.app/", "http://localhost:4200");
       });
 
       app.UseAuthentication();

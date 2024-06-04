@@ -1,37 +1,34 @@
-﻿//using Microsoft.Extensions.Logging;
-//using Microsoft.Extensions.Options;
-//using StripeApi.Models;
-//using StripeApi.Options;
+﻿using Domain.Interfaces;
+using Domain.Options;
+using Microsoft.Extensions.Options;
+using Stripe;
 
-//namespace StripeApi.Service
-//{
-//  public class StripeCustomerService
-//  {
-//    private readonly StripeService _stripeService;
-//    private readonly ILogger<StripeCustomerService> _logger;
+namespace StripeApi.Service
+{
+  public class StripeCustomerService : IStripeCustomerService
+  {
+    private readonly IStripeClient _stripeClient;
+    public StripeCustomerService(IOptionsSnapshot<ParametersOptions> parameters)
+    {
+      _stripeClient = new StripeClient(parameters.Value.StripeApiSecret);
+    }
+    public async Task<Customer> GetCustomerByEmailAsync(string customerId)
+    {
+      var service = new CustomerService(_stripeClient);
+      var customer = await service.GetAsync(customerId);
 
-//    public StripeCustomerService(StripeService stripeService, ILogger<StripeCustomerService> logger)
-//    {
-//      _stripeService = stripeService;
-//      _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-//    }
+      return customer;
+    }
+    public async Task<Customer> CreateCustomerAsync(string email)
+    {
+      var options = new CustomerCreateOptions
+      {
+        Email = email,
+      };
+      var service = new CustomerService(_stripeClient);
+      Customer customer = await service.CreateAsync(options);
 
-//    public async Task<Customer> CreateCustomerAsync(string name, string email, string description)
-//    {
-//      _logger.LogInformation($"Handling: {nameof(StripeCustomerService)}");
-//      var customerCreateOptions = new
-//      {
-//        name,
-//        email,
-//        description
-//      };
-
-//      return await _stripeService.PostAsync<Customer>("customers", customerCreateOptions);
-//    }
-
-//    public async Task<Customer> GetCustomerAsync(string customerId)
-//    {
-//      return await _stripeService.GetAsync<Customer>($"customers/{customerId}");
-//    }
-//  }
-//}
+      return customer;
+    }
+  }
+}

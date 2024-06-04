@@ -10,8 +10,8 @@ namespace Data.Mappings
 		{
 			builder.ToTable("EventRegistry");
 			
-			builder.HasKey(e => e.EventRegistryId);
-			builder.Property(e => e.EventRegistryId)
+			builder.HasKey(e => e.Id);
+			builder.Property(e => e.Id)
 			.HasColumnName("Id");
 			
 			builder.Property(e => e.EventName)
