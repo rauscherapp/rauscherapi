@@ -7,7 +7,7 @@ namespace Domain.Events
   {
     public AtualizarCommoditiesRateEvent(
     Guid id,
-    int? timestamp,
+    long? timestamp,
     string baseCurrency,
     DateTime? date,
     string code,
@@ -30,7 +30,7 @@ namespace Domain.Events
       Isup = isup;
     }
     public Guid Id { get; set; }
-    public int? Timestamp { get; set; }
+    public long? Timestamp { get; set; }
     public string BaseCurrency { get; set; }
     public DateTime? Date { get; set; }
     public string Code { get; set; }

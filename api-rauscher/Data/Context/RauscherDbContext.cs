@@ -49,6 +49,11 @@ namespace Data.Context
       modelBuilder.ApplyConfiguration(new ApiCredentialsMap());
       modelBuilder.ApplyConfiguration(new PostMap());
       modelBuilder.ApplyConfiguration(new FolderMap());
+      modelBuilder.Entity<CommoditiesRate>()
+          .HasOne(cr => cr.Symbol)
+          .WithMany(s => s.CommoditiesRates)
+          .HasForeignKey(cr => cr.SymbolCode)
+          .HasPrincipalKey(s => s.Code);
     }
   }
 }

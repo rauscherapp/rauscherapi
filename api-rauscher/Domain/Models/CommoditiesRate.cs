@@ -5,10 +5,10 @@ namespace Domain.Models
 	public class CommoditiesRate
 	{
 		public CommoditiesRate(
-		int? timestamp,
+		long? timestamp,
     string baseCurrency,
 		DateTime? date,
-		string code,
+		string symbolCode,
 		string unit,
 		decimal price,
 		decimal? variationprice,
@@ -20,7 +20,7 @@ namespace Domain.Models
 			Timestamp = timestamp;
 			BaseCurrency = baseCurrency;
 			Date = date;
-			Code = code;
+			SymbolCode = symbolCode;
 			Unit = unit;
 			Price = price;
 			Variationprice = variationprice;
@@ -47,14 +47,16 @@ namespace Domain.Models
 			Variationpricepercent = 0M;
     }
     public Guid Id { get; set; }
-		public int? Timestamp { get; set; }
+		public long? Timestamp { get; set; }
 		public string BaseCurrency { get; set; }
 		public DateTime? Date { get; set; }
-		public string Code { get; set; }
+		public string SymbolCode { get; set; }
 		public string Unit { get; set; }
 		public decimal Price { get; set; }
 		public decimal? Variationprice { get; set; }
 		public decimal? Variationpricepercent { get; set; }
 		public Boolean Isup { get; set; }
-	}
+
+    public Symbols Symbol { get; set; }
+  }
 }

@@ -14,5 +14,6 @@ namespace Application.Interfaces
     Task<SymbolsViewModel> ObterSymbols(Guid Symbols);
     Task<PagedResponse<SymbolsViewModel>> ListarSymbols(SymbolsParameters parameters);
     Task<SymbolsViewModel> AtualizarSymbolsApi(SymbolsViewModel SymbolsViewModel);
+    Task<PagedResponse<SymbolsViewModel>> ListarSymbolsWithRate(SymbolsParameters parameters);
   }
 }

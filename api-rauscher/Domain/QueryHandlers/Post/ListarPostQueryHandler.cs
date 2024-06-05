@@ -4,6 +4,7 @@ using Domain.QueryParameters;
 using Domain.Repositories;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -24,14 +25,29 @@ namespace Domain.QueryHandlers
     {
       _logger.LogInformation("Handling: {MethodName} | params: {@Request}", nameof(Handle), request);
 
-      if(!string.IsNullOrEmpty(request.Parameters.folder))
+      if (!string.IsNullOrEmpty(request.Parameters.folder))
       {
-        var folderId = _folderRepository.GetFoldersBySlug(request.Parameters.folder).ID;
+        // Dicionário de traduções (exemplo)
+        var translationDictionary = new Dictionary<string, string>
+        {
+            { "economia", "economy" },
+            { "pimenta preta", "black pepper" },
+            { "café", "coffee" },
+            // Adicione outras traduções conforme necessário
+        };
+
+        // Traduzir o parâmetro folder
+        var folderInEnglish = request.Parameters.folder;
+        if (translationDictionary.ContainsKey(folderInEnglish.ToLower()))
+        {
+          folderInEnglish = translationDictionary[folderInEnglish.ToLower()];
+        }
+
+        var folderId = _folderRepository.GetFoldersBySlug(folderInEnglish).ID;
         return await _postRepository.ListarPostsByFolderId(request.Parameters, folderId);
       }
 
       return await _postRepository.ListarPosts(request.Parameters);
-
     }
   }
 }
