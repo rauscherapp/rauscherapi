@@ -23,8 +23,8 @@ namespace Data.Mappings
 			builder.Property(e => e.Date)
 			.HasColumnName("Date");
 			
-			builder.Property(e => e.Code)
-			.HasColumnName("Code");
+			builder.Property(e => e.SymbolCode)
+			.HasColumnName("SymbolCode");
 			
 			builder.Property(e => e.Unit)
 			.HasColumnName("Unit");

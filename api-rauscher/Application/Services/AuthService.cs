@@ -3,12 +3,9 @@ using Application.Interfaces;
 using Domain.Interfaces;
 using Domain.Options;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Stripe;
-using Stripe.Checkout;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Application.Services
@@ -98,7 +95,7 @@ namespace Application.Services
           try
           {
             var session = await _stripeSessionClient.CreateSessionAsync(model.Email);
-            if(session is not null)
+            if (session is not null)
             {
               token.User.StripeSubscriptionLink = session.Url;
               return (true, token);
@@ -126,6 +123,14 @@ namespace Application.Services
       var customer = await _stripeCustomerService.GetCustomerByEmailAsync(customerId);
       var user = await _userManager.FindByEmailAsync(customer.Email);
       user.HasValidStripeSubscription = true;
+      await _userManager.UpdateAsync(user);
+      return user?.HasValidStripeSubscription ?? false;
+    }
+    public async Task<bool> CancelledSubscriptionUserUpdate(string customerId)
+    {
+      var customer = await _stripeCustomerService.GetCustomerByEmailAsync(customerId);
+      var user = await _userManager.FindByEmailAsync(customer.Email);
+      user.HasValidStripeSubscription = false;
       await _userManager.UpdateAsync(user);
       return user?.HasValidStripeSubscription ?? false;
     }

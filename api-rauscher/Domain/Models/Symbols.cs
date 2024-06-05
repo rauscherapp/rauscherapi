@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace Domain.Models
 {
@@ -21,5 +22,8 @@ namespace Domain.Models
 		public string Name { get; set; }
 		public string FriendlyName { get; set; }
 		public Boolean Appvisible { get; set; }
-	}
+
+    // Navigation property
+    public virtual ICollection<CommoditiesRate> CommoditiesRates { get; set; }
+  }
 }
