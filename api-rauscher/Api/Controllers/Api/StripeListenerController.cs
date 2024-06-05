@@ -44,25 +44,13 @@ namespace Api.Controllers.Api
         Console.WriteLine($"Something failed {e}");
         return BadRequest();
       }
-
-      //if (stripeEvent.Type == "checkout.session.completed")
-      //{
-      //  var session = stripeEvent.Data.Object as Stripe.Checkout.Session;
-      //  Console.WriteLine($"Session ID: {session.Id}");
-      //  // Take some action based on session.
-      //}
-      //if (stripeEvent.Type == "checkout.session.completed")
-      //{
-      //  var session = stripeEvent.Data.Object as Stripe.Checkout.Session;
-      //  Console.WriteLine($"Session ID: {session.Id}");
-      //  // Take some action based on session.
-      //}
-      //if (stripeEvent.Type == "payment_intent.succeeded")
-      //{
-      //  var session = stripeEvent.Data.Object;
-      //  Console.WriteLine($"Session ID: {session}");
-      //  // Take some action based on session.
-      //}
+      if (stripeEvent.Type == "customer.subscription.deleted")
+      {
+        var session = stripeEvent.Data.Object as Stripe.Subscription;
+        await _authService.CancelledSubscriptionUserUpdate(session.CustomerId);
+        Console.WriteLine($"Session ID: {session}");
+        // Take some action based on session.
+      }
       if (stripeEvent.Type == "customer.subscription.created")
       {
         var session = stripeEvent.Data.Object as Stripe.Subscription;

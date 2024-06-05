@@ -13,6 +13,7 @@ namespace Domain.Repositories
 		Symbols ObterSymbols(Guid id);
 		Symbols ObterSymbolsByCode(string code);
 		Task<List<Symbols>> ObterSymbolsAppVisible();
+    Task<PagedList<Symbols>> GetSymbolsWithLatestRatesAsync(SymbolsParameters parameters);
 
   }
 }

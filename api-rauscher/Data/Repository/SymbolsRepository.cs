@@ -49,5 +49,22 @@ namespace Data.Repository
 
       return PagedList<Symbols>.Create(symbols, parameters.PageNumber, parameters.PageSize);
     }
+
+    public async Task<PagedList<Symbols>> GetSymbolsWithLatestRatesAsync(SymbolsParameters parameters)
+    {
+      var symbolsQuery = Db.Symbolss
+          .Include(s => s.CommoditiesRates)
+          .Where(query => query.Appvisible)
+          .AsQueryable();
+
+      // Apply sorting
+      if (!string.IsNullOrWhiteSpace(parameters.OrderBy))
+      {
+        symbolsQuery = symbolsQuery.ApplySort(parameters.OrderBy);
+      }
+
+      // Apply pagination
+      return PagedList<Symbols>.Create(symbolsQuery, parameters.PageNumber, parameters.PageSize);
+    }
   }
 }

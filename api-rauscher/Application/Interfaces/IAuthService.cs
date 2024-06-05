@@ -12,5 +12,6 @@ namespace Application.Interfaces
     Task<(bool IsValid, Token Token)> AppLogin(UserRequest model);
     Task<bool> CheckSubscription(UserRequest model);
     Task<bool> SuccesfullSubscriptionUserUpdate(string email);
+    Task<bool> CancelledSubscriptionUserUpdate(string customerId);
   }
 }

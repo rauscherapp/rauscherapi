@@ -97,6 +97,7 @@ namespace CrossCutting.IoC
       services.AddScoped<IRequestHandler<GerarSecretAndApiKeyCommand, bool>, GerarSecretAndApiKeyCommandHandler>();
 
       // Domain - Queries
+      services.AddScoped<IRequestHandler<ListarSymbolsWithRateQuery, PagedList<Symbols>>, ListarSymbolsWithRateQueryHandler>();
       services.AddScoped<IRequestHandler<ObterEventRegistryQuery, EventRegistry>, ObterEventRegistryQueryHandler>();
       services.AddScoped<IRequestHandler<ListarEventRegistryQuery, PagedList<EventRegistry>>, ListarEventRegistryQueryHandler>();
       services.AddScoped<IRequestHandler<ObterAppParametersQuery, AppParameters>, ObterAppParametersQueryHandler>();

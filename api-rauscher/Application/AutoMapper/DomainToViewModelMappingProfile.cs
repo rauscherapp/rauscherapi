@@ -1,6 +1,9 @@
 using Application.ViewModels;
 using AutoMapper;
 using Domain.Models;
+using System;
+using System.Globalization;
+using System.Linq;
 
 namespace Application.AutoMapper
 {
@@ -23,11 +26,50 @@ namespace Application.AutoMapper
         .ForMember(dest => dest.EventDateYear, opt => opt.MapFrom(src => src.EventDate.ToString("YYYY")));
 
       CreateMap<AppParameters, AppParametersViewModel>();
-      CreateMap<CommoditiesRate, CommoditiesRateViewModel>();
-      CreateMap<Symbols, SymbolsViewModel>();
+        CreateMap<CommoditiesRate, CommoditiesRateViewModel>()
+            .ForMember(dest => dest.FullVariationPricePercent, opt => opt.MapFrom<FullVariationPricePercentResolver>())
+            .ForMember(dest => dest.TimestampDate, opt => opt.MapFrom<TimestampToDateTimeResolver>())
+            .ForMember(dest => dest.FormattedPrice, opt => opt.ConvertUsing(new PriceToCurrencyConverter(), src => src.Price));
+
+
+      CreateMap<Symbols, SymbolsViewModel>()
+        .ForMember(dest => dest.LastRate, opt => opt.MapFrom(src => src.CommoditiesRates.OrderByDescending(cr => cr.Timestamp).FirstOrDefault()));
       CreateMap<ApiCredentials, ApicredentialsViewModel>();
       CreateMap<Post, PostViewModel>();
       CreateMap<Folder, FolderViewModel>();
     }
+  }
+}
+
+
+public class FullVariationPricePercentResolver : IValueResolver<CommoditiesRate, object, string>
+{
+  public string Resolve(CommoditiesRate source, object destination, string destMember, ResolutionContext context)
+  {
+    string variationPrice = source.Variationprice.HasValue ? source.Variationprice.Value.ToString("F2") : "0.00";
+    string variationPricePercent = source.Variationpricepercent.HasValue ? source.Variationpricepercent.Value.ToString("F2") : "0.00";
+    string isUpSignal = source.Isup ? "+" : "";
+
+    return $"{isUpSignal}{variationPrice}({isUpSignal}{variationPricePercent}%)";
+  }
+}
+
+public class TimestampToDateTimeResolver : IValueResolver<CommoditiesRate, object, string>
+{
+  public string Resolve(CommoditiesRate source, object destination, string destMember, ResolutionContext context)
+  {
+    if (source.Timestamp.HasValue)
+    {
+      var dateTime = DateTimeOffset.FromUnixTimeSeconds(source.Timestamp.Value).DateTime;
+      return dateTime.ToString("HH:mm:ss");
+    }
+    return null;
+  }
+}
+public class PriceToCurrencyConverter : IValueConverter<decimal?, string>
+{
+  public string Convert(decimal? sourceMember, ResolutionContext context)
+  {
+    return sourceMember.HasValue ? sourceMember.Value.ToString("C", new CultureInfo("en-US")) : null;
   }
 }

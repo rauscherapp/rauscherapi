@@ -11,7 +11,11 @@ namespace Application.ViewModels
 		public string Code { get; set; }
 		[JsonPropertyName("Name")]
 		public string Name { get; set; }
+		[JsonPropertyName("FriendlyName")]
+		public string FriendlyName { get; set; }
 		[JsonPropertyName("Appvisible")]
 		public Boolean Appvisible { get; set; }
+		[JsonPropertyName("LastRate")]
+		public CommoditiesRateViewModel LastRate { get; set; }
 	}
 }

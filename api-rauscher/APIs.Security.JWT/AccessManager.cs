@@ -1,8 +1,8 @@
-﻿using System.IdentityModel.Tokens.Jwt;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Principal;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.IdentityModel.Tokens;
 
 namespace APIs.Security.JWT;
 
@@ -62,28 +62,43 @@ public class AccessManager
   {
     bool userCreated = false;
     var userResponse = await _userManager.FindByEmailAsync(userRequest.Email!);
-    if (userResponse is null)
+    if (userResponse is not null)
     {
-      var user = new ApplicationUser()
-      {
-        Email = userRequest.Email,
-        EmailConfirmed = true,
-        UserName = userRequest.Email        
-      };
+      await DeleteUser(userResponse);
+    }
 
-      if (userRequest.Password != null)
-      {
-        var resultado = await _userManager
-                  .CreateAsync(user, userRequest.Password);
+    var user = new ApplicationUser()
+    {
+      Email = userRequest.Email,
+      EmailConfirmed = true,
+      UserName = userRequest.Email
+    };
 
-        if (resultado.Succeeded)
-        {
-          userCreated = true;
-          _userManager.AddToRoleAsync(user, Roles.ROLE_ACESSO_APIS).Wait();
-        }
+    if (userRequest.Password != null)
+    {
+      var resultado = await _userManager
+                .CreateAsync(user, userRequest.Password);
+
+      if (resultado.Succeeded)
+      {
+        userCreated = true;
+        _userManager.AddToRoleAsync(user, Roles.ROLE_ACESSO_APIS).Wait();
       }
     }
+
     return userCreated;
+  }
+
+  public async Task<bool> DeleteUser(ApplicationUser applicationUser)
+  {
+    bool userRemoved = false;
+    var resultado = await _userManager
+              .DeleteAsync(applicationUser);
+    if (resultado.Succeeded)
+    {
+      userRemoved = true;
+    }
+    return userRemoved;
   }
 
   public async Task<bool> CheckSubscription(UserRequest userRequest)
