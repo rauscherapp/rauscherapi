@@ -26,6 +26,8 @@
 		<PackageReference Include="Stripe.net" Version="44.9.0" />
 		<PackageReference Include="System.Linq.Dynamic.Core" Version="1.2.18" />
 		<PackageReference Include="RabbitMQ.Client" Version="6.3.0" />
+		<PackageReference Include="MailKit" Version="3.0.0" />
+		<PackageReference Include="MimeKit" Version="3.0.0" />
 	</ItemGroup>
 
   <ItemGroup>

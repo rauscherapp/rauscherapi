@@ -24,5 +24,9 @@ namespace Application.ViewModels
 		public string EmailSender { get; set; }
 		[JsonPropertyName("EmailPassword")]
 		public string EmailPassword { get; set; }
+		[JsonPropertyName("SmtpServer ")]
+		public string SmtpServer { get; set; }
+		[JsonPropertyName("SmtpPort ")]
+		public int SmtpPort { get; set; }
 	}
 }
