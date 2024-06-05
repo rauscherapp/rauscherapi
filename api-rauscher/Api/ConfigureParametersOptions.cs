@@ -23,7 +23,10 @@ namespace Api
       options.StripeTrialPeriod = optionsEntity.StripeTrialPeriod;
       options.CommoditiesApiKey = optionsEntity.CommoditiesApiKey;
       options.EmailSender = optionsEntity.EmailSender;
+      options.EmailReceiver = optionsEntity.EmailReceiver;
       options.EmailPassword = optionsEntity.EmailPassword;
+      options.SmtpServer = optionsEntity.SmtpServer;
+      options.SmtpPort = optionsEntity.SmtpPort;
 
     }
   }

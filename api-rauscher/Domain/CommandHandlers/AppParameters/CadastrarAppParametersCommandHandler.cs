@@ -41,7 +41,10 @@ namespace Domain.CommandHandlers
         message.StripeTrialPeriod,
         message.CommoditiesApiKey,
         message.EmailSender,
-        message.EmailPassword
+        message.EmailPassword,
+        message.SmtpServer,
+        message.SmtpPort,
+        message.EmailReceiver
         );
 
       _appparametersRepository.Add(appparameters);
@@ -57,7 +60,10 @@ namespace Domain.CommandHandlers
           message.StripeTrialPeriod,
           message.CommoditiesApiKey,
           message.EmailSender,
-          message.EmailPassword
+          message.EmailPassword,
+          message.SmtpServer,
+          message.SmtpPort,
+          message.EmailReceiver
           ));
       }
 
