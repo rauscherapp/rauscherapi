@@ -6,6 +6,7 @@ namespace Domain.Commands
 {
   public abstract class EmailCommand : Command
   {
+    public string CustomerName { get; set; }
     public string CustomerEmail { get; set; }
     public string Subject { get; set; }
     public string Body { get; set; }

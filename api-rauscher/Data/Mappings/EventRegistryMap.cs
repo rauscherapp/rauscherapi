@@ -32,6 +32,9 @@ namespace Data.Mappings
 			builder.Property(e => e.EventLink)
 			.HasColumnName("EventLink");
 			
+			builder.Property(e => e.Published)
+			.HasColumnName("Published");
+			
 		}
 	}
 }

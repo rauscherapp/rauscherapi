@@ -80,7 +80,7 @@ namespace Api.Controllers
       var result = await _eventAppService.CadastrarEventRegistry(eventViewModel);
       return CreateResponse(result);
     }
-    [HttpPut("UpdateEventRegistry/{id}")]
+    [HttpPatch("UpdateEventRegistry/{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [AllowAnonymous]
     public async Task<IActionResult> UpdateEventRegistry([FromBody] EventRegistryViewModel EventRegistryViewModel)

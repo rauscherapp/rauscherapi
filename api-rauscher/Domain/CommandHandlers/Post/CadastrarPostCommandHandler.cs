@@ -6,6 +6,7 @@ using Domain.Interfaces;
 using Domain.Models;
 using Domain.Repositories;
 using MediatR;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -15,15 +16,18 @@ namespace Domain.CommandHandlers
           IRequestHandler<CadastrarPostCommand, bool>
   {
     private readonly IPostRepository _postRepository;
+    private readonly IFolderRepository _folderRepository;
     private readonly IMediatorHandler Bus;
 
     public CadastrarPostCommandHandler(IPostRepository postRepository,
                                                  IUnitOfWork uow,
                                                  IMediatorHandler bus,
-                                                 INotificationHandler<DomainNotification> notifications) : base(uow, bus, notifications)
+                                                 INotificationHandler<DomainNotification> notifications,
+                                                 IFolderRepository folderRepository) : base(uow, bus, notifications)
     {
       _postRepository = postRepository;
       Bus = bus;
+      _folderRepository = folderRepository;
     }
     public Task<bool> Handle(CadastrarPostCommand message, CancellationToken cancellationToken)
     {
@@ -31,6 +35,12 @@ namespace Domain.CommandHandlers
       {
         NotifyValidationErrors(message);
         return Task.FromResult(false);
+      }
+
+      if (!String.IsNullOrEmpty(message.FolderName))
+      {
+        message.Folderid = _folderRepository.GetFoldersBySlug(message.FolderName.ToLower()).ID;
+        
       }
       var post = new Post(
         message.TITLE,

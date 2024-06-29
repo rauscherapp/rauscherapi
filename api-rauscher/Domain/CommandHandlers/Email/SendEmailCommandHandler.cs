@@ -30,8 +30,8 @@ namespace Domain.CommandHandlers
     public async Task<bool> Handle(EmailCommand message, CancellationToken cancellationToken)
     {
       var emailMessage = new MimeMessage();
-      emailMessage.From.Add(new MailboxAddress("no-reply@rauscher.com.br", _parameters.EmailSender));
-      emailMessage.To.Add(new MailboxAddress("To", _parameters.EmailReceiver));
+      emailMessage.From.Add(new MailboxAddress(message.CustomerName, _parameters.EmailSender));
+      emailMessage.To.Add(new MailboxAddress("Customer Support", _parameters.EmailReceiver));
       emailMessage.Subject = $"Customer Contact from MobileApp: {message.CustomerEmail}";
 
       // Constructing the body text

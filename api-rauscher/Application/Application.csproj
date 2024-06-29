@@ -15,7 +15,7 @@
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
 		<PackageReference Include="Stripe.net" Version="44.9.0" />
 		<PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
-		<PackageReference Include="System.Linq.Dynamic.Core" Version="1.2.18" />
+		<PackageReference Include="System.Linq.Dynamic.Core" Version="1.4.2" />
 		<PackageReference Include="System.ServiceModel.Primitives" Version="4.9.0" />
 		<PackageReference Include="MailKit" Version="3.0.0" />
 		<PackageReference Include="MimeKit" Version="3.0.0" />

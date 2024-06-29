@@ -14,7 +14,17 @@ public static class JwtSecurityExtension
         // Ativando a utilização do ASP.NET Identity, a fim de
         // permitir a recuperação de seus objetos via injeção de
         // dependências
-        services.AddIdentity<ApplicationUser, IdentityRole>()
+        services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+        {
+          // Configurações de senha
+          options.Password.RequireDigit = false; // Requer dígitos (0-9)
+          options.Password.RequireLowercase = false; // Requer letras minúsculas (a-z)
+          options.Password.RequireUppercase = false; // Requer letras maiúsculas (A-Z)
+          options.Password.RequireNonAlphanumeric = false; // Requer caracteres especiais
+          options.Password.RequiredLength = 3; // Comprimento mínimo da senha
+          options.Password.RequiredUniqueChars = 1; // Requer número mínimo de caracteres únicos
+
+        })
             .AddEntityFrameworkStores<ApiSecurityDbContext>()
             .AddDefaultTokenProviders();
 

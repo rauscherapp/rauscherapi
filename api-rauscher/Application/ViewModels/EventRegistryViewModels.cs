@@ -27,5 +27,7 @@ namespace Application.ViewModels
 		public string EventDateHour { get; set; }
 		[JsonPropertyName("EventDateYear")]
 		public string EventDateYear { get; set; }
+		[JsonPropertyName("Published")]
+		public bool Published { get; set; }
 	}
 }
