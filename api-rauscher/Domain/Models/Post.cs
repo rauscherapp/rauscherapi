@@ -28,25 +28,16 @@ namespace Domain.Models
     // Methods to change the properties
     public void SetTitle(string title)
     {
-      if (string.IsNullOrWhiteSpace(title))
-        throw new ArgumentException("Title cannot be empty.", nameof(title));
-
       Title = title;
     }
 
     public void SetContent(string content)
     {
-      if (string.IsNullOrWhiteSpace(content))
-        throw new ArgumentException("Content cannot be empty.", nameof(content));
-
       Content = content;
     }
 
     public void SetAuthor(string author)
     {
-      if (string.IsNullOrWhiteSpace(author))
-        throw new ArgumentException("Author cannot be empty.", nameof(author));
-
       Author = author;
     }
 

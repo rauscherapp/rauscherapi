@@ -11,5 +11,6 @@ namespace Domain.QueryParameters
 		public DateTime Eventdate { get; set; }
 		public string Eventlocation { get; set; }
 		public string Eventlink { get; set; }
+		public bool Published { get; set; }
 	}
 }

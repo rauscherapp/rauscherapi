@@ -13,5 +13,6 @@ namespace Domain.Commands
 		public Boolean VISIBLE { get; set; }
 		public DateTime? PUBLISHEDAT { get; set; }
 		public Guid Folderid { get; set; }
+		public String FolderName { get; set; }
 	}
 }

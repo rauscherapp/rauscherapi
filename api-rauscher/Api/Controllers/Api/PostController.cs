@@ -80,7 +80,7 @@ namespace Api.Controllers
       var result = await _postAppService.CadastrarPost(postViewModel);
       return CreateResponse(result);
     }
-    [HttpPut("UpdatePost/{id}")]
+    [HttpPatch("UpdatePost/{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [AllowAnonymous]
     public async Task<IActionResult> UpdatePost([FromBody] PostViewModel PostViewModel)

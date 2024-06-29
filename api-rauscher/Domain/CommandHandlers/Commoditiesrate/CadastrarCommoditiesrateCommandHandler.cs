@@ -43,18 +43,12 @@ namespace Domain.CommandHandlers
       if (baseSymbols.Count > 5)
       {
         var batchSize = 5;
-
-        // Grouping the symbols into batches of 5
         var groupedSymbols = baseSymbols.Select((x, index) => new { Index = index, Value = x })
                                         .GroupBy(x => x.Index / batchSize)
                                         .Select(x => x.Select(v => v.Value.Code).ToList())
                                         .ToList();
-
-
         foreach (var group in groupedSymbols)
         {
-          // Process each group of 5 symbols here
-          // 'group' is a List<string> containing up to 5 symbols
           Console.WriteLine("Batch of symbols:");
           foreach (var symbol in group)
           {
@@ -64,7 +58,7 @@ namespace Domain.CommandHandlers
       }
       else
       {
-        resultMapped.AddRange(await  _commoditiesRepository.GetLatestCommodityRatesAsync("USD", baseSymbols.Select(c => c.Code)));
+        resultMapped.AddRange(await _commoditiesRepository.GetLatestCommodityRatesAsync("USD", baseSymbols.Select(c => c.Code)));
       }
 
       foreach (var result in resultMapped)
