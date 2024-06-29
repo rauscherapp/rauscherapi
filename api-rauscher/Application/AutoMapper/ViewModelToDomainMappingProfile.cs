@@ -2,6 +2,7 @@ using Application.ViewModels;
 using AutoMapper;
 using Domain.Commands;
 using Domain.Models;
+using Domain.QueryParameters;
 
 namespace Application.AutoMapper
 {
@@ -10,6 +11,8 @@ namespace Application.AutoMapper
     public ViewModelToDomainMappingProfile()
     {
       //ConfigureViewModelToDomain 
+
+      CreateMap<AppEmailParameters, SendEmailCommand>();
       CreateMap<AppParametersViewModel, AppParameters>();
       CreateMap<AppParametersViewModel, ExcluirAppParametersCommand>();
       CreateMap<AppParametersViewModel, CadastrarAppParametersCommand>();

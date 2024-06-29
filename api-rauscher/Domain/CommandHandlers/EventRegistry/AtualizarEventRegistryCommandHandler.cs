@@ -39,6 +39,7 @@ namespace Domain.CommandHandlers
       eventregistry.EventDate = message.Eventdate;
       eventregistry.EventLocation = message.Eventlocation;
       eventregistry.EventLink = message.Eventlink;
+      eventregistry.Published = message.Published;
 
       _eventregistryRepository.Update(eventregistry);
 
@@ -51,7 +52,8 @@ namespace Domain.CommandHandlers
           message.Eventtype,
           message.Eventdate,
           message.Eventlocation,
-          message.Eventlink
+          message.Eventlink,
+          message.Published
           ));
       }
       return Task.FromResult(true);

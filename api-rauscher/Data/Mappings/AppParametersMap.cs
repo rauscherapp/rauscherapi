@@ -33,10 +33,19 @@ namespace Data.Mappings
 			.HasColumnName("CommoditiesApiKey");
 			
 			builder.Property(e => e.EmailSender)
-			.HasColumnName("EmailSender");
+			.HasColumnName("EmailSender");			
+			builder.Property(e => e.EmailReceiver)
+			.HasColumnName("EmailReceiver");
 			
 			builder.Property(e => e.EmailPassword)
 			.HasColumnName("EmailPassword");
+			
+			
+			builder.Property(e => e.SmtpServer)
+			.HasColumnName("SmtpServer");
+			
+			builder.Property(e => e.SmtpPort)
+			.HasColumnName("SmtpPort");
 			
 		}
 	}

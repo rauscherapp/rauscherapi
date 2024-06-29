@@ -70,8 +70,10 @@ namespace CrossCutting.IoC
       services.AddScoped<IStripeCustomerService, StripeCustomerService>();
       services.AddScoped<IStripeSessionService, StripeSessionService>();
       services.AddScoped<IUriAppService, UriAppService>();
+      services.AddScoped<IEmailService, EmailSenderAppService>();
 
       // Domain - Commands
+      services.AddScoped<IRequestHandler<SendEmailCommand, bool>, SendEmailCommandHandler>();
       services.AddScoped<IRequestHandler<ExcluirEventRegistryCommand, bool>, ExcluirEventRegistryCommandHandler>();
       services.AddScoped<IRequestHandler<CadastrarEventRegistryCommand, bool>, CadastrarEventRegistryCommandHandler>();
       services.AddScoped<IRequestHandler<AtualizarEventRegistryCommand, bool>, AtualizarEventRegistryCommandHandler>();

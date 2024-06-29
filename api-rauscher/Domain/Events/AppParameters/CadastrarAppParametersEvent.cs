@@ -14,7 +14,10 @@ namespace Domain.Events
     int stripeTrialPeriod,
     string commoditiesApiKey,
     string emailSender,
-    string emailPassword
+    string emailPassword,
+    string smtpServer,
+    int smtpPort,
+    string emailReceiver
     )
     {
       Id = id;
@@ -26,6 +29,9 @@ namespace Domain.Events
       CommoditiesApiKey = commoditiesApiKey;
       EmailSender = emailSender;
       EmailPassword = emailPassword;
+      SmtpServer = smtpServer;
+      SmtpPort = smtpPort;
+      EmailReceiver = emailReceiver;
     }
     public Guid Id { get; set; }
     public string StripeApiClientKey { get; set; }
@@ -36,5 +42,8 @@ namespace Domain.Events
     public string CommoditiesApiKey { get; set; }
     public string EmailSender { get; set; }
     public string EmailPassword { get; set; }
+    public string SmtpServer { get; set; }
+    public int SmtpPort { get; set; }
+    public string EmailReceiver { get; }
   }
 }

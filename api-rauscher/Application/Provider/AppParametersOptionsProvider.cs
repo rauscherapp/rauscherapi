@@ -29,7 +29,10 @@ namespace Aplication.Provider
         StripeTrialPeriod = optionsEntity.StripeTrialPeriod,
         CommoditiesApiKey = optionsEntity.CommoditiesApiKey,
         EmailSender = optionsEntity.EmailSender,
-        EmailPassword = optionsEntity.EmailPassword
+        EmailReceiver = optionsEntity.EmailReceiver,
+        EmailPassword = optionsEntity.EmailPassword,
+        SmtpServer = optionsEntity.SmtpServer,
+        SmtpPort = optionsEntity.SmtpPort
       };
     }
   }

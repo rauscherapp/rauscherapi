@@ -29,7 +29,7 @@ namespace StripeApi.Service
 
         var options = new SessionCreateOptions
         {         
-          SuccessUrl = $"https://www.uol.com.br",
+          SuccessUrl = $"https://rauscher-api.azurewebsites.net/success.html",
           CancelUrl = $"https://www.uol.com.br",
           Mode = "subscription",
           LineItems = new List<SessionLineItemOptions>

@@ -22,7 +22,13 @@ namespace Application.ViewModels
 		public string CommoditiesApiKey { get; set; }
 		[JsonPropertyName("EmailSender")]
 		public string EmailSender { get; set; }
+		[JsonPropertyName("EmailReceiver")]
+		public string EmailReceiver { get; set; }
 		[JsonPropertyName("EmailPassword")]
 		public string EmailPassword { get; set; }
+		[JsonPropertyName("SmtpServer ")]
+		public string SmtpServer { get; set; }
+		[JsonPropertyName("SmtpPort ")]
+		public int SmtpPort { get; set; }
 	}
 }
