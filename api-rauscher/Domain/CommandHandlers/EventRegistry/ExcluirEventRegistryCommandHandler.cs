@@ -31,14 +31,15 @@ namespace Domain.CommandHandlers
       if (Commit())
       {
         Bus.RaiseEvent(new ExcluirEventRegistryEvent(
-message.EventRegistryId,
-message.Eventname,
-message.Eventdescription,
-message.Eventtype,
-message.Eventdate,
-message.Eventlocation,
-message.Eventlink
-));
+          message.EventRegistryId,
+          message.Eventname,
+          message.Eventdescription,
+          message.Eventtype,
+          message.Eventdate,
+          message.Eventlocation,
+          message.Eventlink,
+          message.Published
+          ));
       }
       return Task.FromResult(true);
     }

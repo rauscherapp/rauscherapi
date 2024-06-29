@@ -174,6 +174,7 @@ namespace Api
       });
 
       app.UseRouting();
+      app.UseStaticFiles();
 
       //app.UseMiddleware<ApiKeyMiddleware>();
 

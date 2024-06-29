@@ -9,8 +9,8 @@ namespace Application.ViewModels
 		public Guid id { get; set; }
 		[JsonPropertyName("title")]
 		public string title { get; set; }
-		[JsonPropertyName("createdate")]
-		public DateTime createdate { get; set; }
+		[JsonPropertyName("createddate")]
+		public DateTime createddate { get; set; }
 		[JsonPropertyName("content")]
 		public string content { get; set; }
 		[JsonPropertyName("author")]
@@ -20,6 +20,8 @@ namespace Application.ViewModels
 		[JsonPropertyName("publishedat")]
 		public DateTime? publishedat { get; set; }
 		[JsonPropertyName("folderid")]
-		public Guid folderid { get; set; }
+		public Guid folderid { get; set; }    
+		[JsonPropertyName("foldername")]
+		public string foldername { get; set; }
 	}
 }

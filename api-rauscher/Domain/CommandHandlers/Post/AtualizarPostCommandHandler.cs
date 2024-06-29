@@ -35,6 +35,7 @@ namespace Domain.CommandHandlers
 
       post.SetTitle(message.TITLE);
       post.SetContent(message.CONTENT);
+      post.SetAuthor(message.AUTHOR);
 
       _postRepository.Update(post);
 
