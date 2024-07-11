@@ -54,7 +54,7 @@ namespace Data.Repository
     {
       var symbolsQuery = Db.Symbolss
           .Include(s => s.CommoditiesRates)
-          .Where(query => query.Appvisible)
+          .Where(query => query.Appvisible && query.SymbolType == parameters.SymbolType)
           .AsQueryable();
 
       // Apply sorting
