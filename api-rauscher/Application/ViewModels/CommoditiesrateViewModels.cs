@@ -8,7 +8,7 @@ namespace Application.ViewModels
     [JsonPropertyName("Id")]
     public Guid Id { get; set; }
     [JsonPropertyName("Timestamp")]
-    public int? Timestamp { get; set; }
+    public long? Timestamp { get; set; }
     [JsonPropertyName("Base")]
     public string Base { get; set; }
     [JsonPropertyName("Date")]

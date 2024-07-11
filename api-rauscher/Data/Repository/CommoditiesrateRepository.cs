@@ -22,7 +22,7 @@ namespace Data.Repository
       return CommoditiesRate.FirstOrDefault();
     }
 
-    public async Task<CommoditiesRate> GetLastPriceBeforeTimestamp(string commodityCode, long timestamp)
+    public async Task<CommoditiesRate> GetLastPriceBeforeTimestamp(string commodityCode, long? timestamp)
     {
       return await Db.CommoditiesRates
           .Where(cr => cr.SymbolCode == commodityCode && cr.Timestamp < timestamp)

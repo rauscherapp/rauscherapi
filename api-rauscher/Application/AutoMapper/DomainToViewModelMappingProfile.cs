@@ -1,6 +1,7 @@
 using Application.ViewModels;
 using AutoMapper;
 using Domain.Models;
+using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using System;
 using System.Globalization;
 using System.Linq;
@@ -29,7 +30,7 @@ namespace Application.AutoMapper
         CreateMap<CommoditiesRate, CommoditiesRateViewModel>()
             .ForMember(dest => dest.FullVariationPricePercent, opt => opt.MapFrom<FullVariationPricePercentResolver>())
             .ForMember(dest => dest.TimestampDate, opt => opt.MapFrom<TimestampToDateTimeResolver>())
-            .ForMember(dest => dest.FormattedPrice, opt => opt.ConvertUsing(new PriceToCurrencyConverter(), src => src.Price));
+            .ForMember(dest => dest.FormattedPrice, opt => opt.MapFrom<CurrencyResolver>());
 
 
       CreateMap<Symbols, SymbolsViewModel>()
@@ -56,20 +57,58 @@ public class FullVariationPricePercentResolver : IValueResolver<CommoditiesRate,
 
 public class TimestampToDateTimeResolver : IValueResolver<CommoditiesRate, object, string>
 {
+  protected DateTime date;
   public string Resolve(CommoditiesRate source, object destination, string destMember, ResolutionContext context)
   {
+    
     if (source.Timestamp.HasValue)
     {
-      var dateTime = DateTimeOffset.FromUnixTimeSeconds(source.Timestamp.Value).DateTime;
-      return dateTime.ToString("HH:mm:ss");
+      
+      if (source.Timestamp.Value > 10000000000)
+      {
+        date = DateTimeOffset.FromUnixTimeMilliseconds(source.Timestamp.Value).DateTime;
+      }
+      else
+      {
+        date = DateTimeOffset.FromUnixTimeSeconds(source.Timestamp.Value).DateTime;
+      }
+      
+      return date.ToString("HH:mm:ss");
     }
     return null;
+  }
+}
+
+public class CurrencyResolver : IValueResolver<CommoditiesRate, object, string>
+{
+  protected DateTime date;
+  public string Resolve(CommoditiesRate source, object destination, string destMember, ResolutionContext context)
+  {
+
+    if (source.SymbolCode.Equals("PTAX"))
+    {
+      // Custom formatting to ensure no rounding occurs
+      decimal value = source.Price;
+      string formattedValue = $"{new CultureInfo("en-US").NumberFormat.CurrencySymbol} {value.ToString("0.0000", new CultureInfo("en-US"))}";
+      return formattedValue;
+    }
+    else
+    {
+      return source.Price.ToString("C", new CultureInfo("en-US"));
+    }
   }
 }
 public class PriceToCurrencyConverter : IValueConverter<decimal?, string>
 {
   public string Convert(decimal? sourceMember, ResolutionContext context)
   {
-    return sourceMember.HasValue ? sourceMember.Value.ToString("C", new CultureInfo("en-US")) : null;
+    if (sourceMember.HasValue)
+    {
+      // Custom formatting to ensure no rounding occurs
+      decimal value = sourceMember.Value;
+      string formattedValue = $"{new CultureInfo("en-US").NumberFormat.CurrencySymbol} {value.ToString("0.0000", new CultureInfo("en-US"))}";
+      return formattedValue;
+    }
+    return null;
   }
 }

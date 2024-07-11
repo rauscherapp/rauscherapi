@@ -1,12 +1,14 @@
 using Application.Interfaces;
 using Application.Services;
 using CrossCutting.Bus;
+using Data.BancoCentral.Api.Service;
 using Data.Commodities.Api.Service;
 using Data.Context;
 using Data.EventSourcing;
 using Data.Repository;
 using Data.Repository.EventSourcing;
 using Data.UoW;
+using Data.YahooFinanceApi.Api.Service;
 using Domain.CommandHandlers;
 using Domain.CommandHandlers.Apicredentials;
 using Domain.Commands;
@@ -71,6 +73,8 @@ namespace CrossCutting.IoC
       services.AddScoped<IStripeSessionService, StripeSessionService>();
       services.AddScoped<IUriAppService, UriAppService>();
       services.AddScoped<IEmailService, EmailSenderAppService>();
+      services.AddScoped<IYahooFinanceRepository, YahooFinanceRepository>();
+      services.AddScoped<IBancoCentralRepository, BancoCentralRepository>();
 
       // Domain - Commands
       services.AddScoped<IRequestHandler<SendEmailCommand, bool>, SendEmailCommandHandler>();
