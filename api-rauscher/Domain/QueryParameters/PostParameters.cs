@@ -13,5 +13,6 @@ namespace Domain.QueryParameters
 		public Boolean? VISIBLE { get; set; }
 		public DateTime? PUBLISHEDAT { get; set; }
 		public string FolderName { get; set; }
+		public string source { get; set; } = "";
 	}
 }

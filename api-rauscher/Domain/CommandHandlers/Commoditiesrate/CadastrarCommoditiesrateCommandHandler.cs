@@ -46,30 +46,32 @@ namespace Domain.CommandHandlers
       List<CommoditiesRate> resultMapped = new List<CommoditiesRate>();
       #region GetPtaxRate Banco Central
 
-      var dates = new List<DateTime>();
+      //var dates = new List<DateTime>();
       var date = DateTime.Now;
 
-      while (dates.Count < 10)
-      {
-        if (date.DayOfWeek != DayOfWeek.Saturday && date.DayOfWeek != DayOfWeek.Sunday)
-        {
-          dates.Add(date);
-        }
-        date = date.AddDays(-1);
-      }
+      //while (dates.Count < 10)
+      //{
+      //  if (date.DayOfWeek != DayOfWeek.Saturday && date.DayOfWeek != DayOfWeek.Sunday)
+      //  {
+      //    dates.Add(date);
+      //  }
+      //  date = date.AddDays(-1);
+      //}
 
-      foreach (var iDate in dates.OrderBy(x => x.Date))
-      {
-        var ptaxRate = await _bancoCentralRepository.GetExchangeRateAsync(iDate.ToString("MM-dd-yyyy"));
-        resultMapped.AddRange(ptaxRate);
-      }
+      //foreach (var iDate in dates.OrderBy(x => x.Date))
+      //{
+      //  var ptaxRate = await _bancoCentralRepository.GetExchangeRateAsync(iDate.ToString("MM-dd-yyyy"));
+      //  resultMapped.AddRange(ptaxRate);
+      //}
 
-      //resultMapped.AddRange(ptaxRate);
+      var ptaxRate = await _bancoCentralRepository.GetExchangeRateAsync(date.ToString("MM-dd-yyyy"));
+      resultMapped.AddRange(ptaxRate);
+
 
       #endregion
       #region Get Exchanges YahooFinance
-      //var exchangeRate = await _yahooFinanceRepository.GetExchangeRateAsync();
-      //resultMapped.AddRange(exchangeRate);
+      var exchangeRate = await _yahooFinanceRepository.GetExchangeRateAsync();
+      resultMapped.AddRange(exchangeRate);
 
       #endregion
 

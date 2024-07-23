@@ -11,7 +11,7 @@ namespace Application.Interfaces
 		Task<AppParametersViewModel> AtualizarAppParameters(AppParametersViewModel appparametersViewModel);
 		Task<AppParametersViewModel> CadastrarAppParameters(AppParametersViewModel appparametersViewModel);
 		Task<bool> ExcluirAppParameters(Guid appParametersId);
-		Task<AppParametersViewModel> ObterAppParameters(Guid appParametersId);
 		Task<PagedResponse<AppParametersViewModel>> ListarAppParameters(AppParametersParameters parameters);
-	}
+    Task<AppParametersViewModel> ObterAppParameters();
+  }
 }

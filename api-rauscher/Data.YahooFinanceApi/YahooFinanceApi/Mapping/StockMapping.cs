@@ -1,8 +1,5 @@
 ﻿using Data.YahooFinanceApi.Api.Model;
 using Domain.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 
 namespace Data.Commodities.Api.Mapping
@@ -36,13 +33,12 @@ namespace Data.Commodities.Api.Mapping
       decimal variationPrice = 0m;
       decimal variationPercent = 0m;
       bool someBooleanFlag = false;
-      var firstTradeDate = DateTimeOffset.FromUnixTimeSeconds(model.RegularMarketTime).UtcDateTime;
-
+      var regularMarketTime = DateTimeOffset.FromUnixTimeSeconds(model.RegularMarketTime).DateTime;
 
       return new CommoditiesRate(
-          model.FirstTradeDateMilliseconds, // Assuming this should be a DateTime conversion
+          model.RegularMarketTime, // Assuming this should be a DateTime conversion
           "USD",
-          firstTradeDate,
+          regularMarketTime,
           model.Symbol,
           unit,
           (decimal)model.RegularMarketPrice,

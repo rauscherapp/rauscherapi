@@ -11,6 +11,7 @@ namespace Application.AutoMapper
     public ViewModelToDomainMappingProfile()
     {
       //ConfigureViewModelToDomain 
+      CreateMap<AboutUsViewModel, AtualizarAboutUsCommand>();
 
       CreateMap<AppEmailParameters, SendEmailCommand>();
       CreateMap<AppParametersViewModel, AppParameters>();

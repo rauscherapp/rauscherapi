@@ -66,10 +66,10 @@ namespace Application.Services
 			
 			return PaginationHelpers.CreatePaginatedResponse(viewModelPagedList, parameters, "Mostrar", _uriAppService);
 		}
-		public async Task<AppParametersViewModel> ObterAppParameters(Guid appParametersId)
+		public async Task<AppParametersViewModel> ObterAppParameters()
 		{
 			_logger.LogInformation("Handling: {MethodName}", nameof(ObterAppParameters));
-			var data = await _mediator.Send(new ObterAppParametersQuery(appParametersId));
+			var data = await _mediator.Send(new ObterAppParametersQuery());
 			var resultadoDB = _mapper.Map<AppParameters, AppParametersViewModel>(data);
 			if (resultadoDB == null) return resultadoDB;
 			

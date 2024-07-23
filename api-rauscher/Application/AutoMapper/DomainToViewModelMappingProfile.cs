@@ -38,6 +38,7 @@ namespace Application.AutoMapper
       CreateMap<ApiCredentials, ApicredentialsViewModel>();
       CreateMap<Post, PostViewModel>();
       CreateMap<Folder, FolderViewModel>();
+      CreateMap<AboutUs, AboutUsViewModel>();
     }
   }
 }
@@ -73,7 +74,7 @@ public class TimestampToDateTimeResolver : IValueResolver<CommoditiesRate, objec
         date = DateTimeOffset.FromUnixTimeSeconds(source.Timestamp.Value).DateTime;
       }
       
-      return date.ToString("HH:mm:ss");
+      return $"{date.ToString("HH:mm:ss")} UTC";
     }
     return null;
   }

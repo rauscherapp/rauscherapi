@@ -14,9 +14,9 @@ namespace Domain.Models
     public Guid FolderId { get; private set; }
 
     // Constructor for creating a new Post
-    public Post(string title, DateTime createdDate, string content, string author, bool visible, Guid folderId)
+    public Post(Guid id, string title, DateTime createdDate, string content, string author, bool visible, Guid folderId)
     {
-      Id = Guid.NewGuid();
+      Id = id;
       SetTitle(title);
       CreatedDate = createdDate;
       SetContent(content);
@@ -39,6 +39,10 @@ namespace Domain.Models
     public void SetAuthor(string author)
     {
       Author = author;
+    }
+    public void SetVisible(bool visible)
+    {
+      Visible = visible;
     }
 
     public void Publish(DateTime publishDate)

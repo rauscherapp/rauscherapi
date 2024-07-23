@@ -40,6 +40,12 @@ namespace Domain.CommandHandlers
       appparameters.CommoditiesApiKey = message.CommoditiesApiKey;
       appparameters.EmailSender = message.EmailSender;
       appparameters.EmailPassword = message.EmailPassword;
+      appparameters.SmtpServer = message.SmtpServer;
+      appparameters.SmtpPort = message.SmtpPort;
+      appparameters.EmailReceiver = message.EmailReceiver;
+      appparameters.MarketOpeningHour = message.MarketOpeningHour;
+      appparameters.MarketClosingHour = message.MarketClosingHour;
+      appparameters.MinutesIntervalJob = message.MinutesIntervalJob;
 
       _appparametersRepository.Update(appparameters);
 
@@ -53,12 +59,17 @@ namespace Domain.CommandHandlers
           message.StripeApiPriceId,
           message.CommoditiesApiKey,
           message.EmailSender,
-          message.EmailPassword
+          message.EmailPassword,
+          message.SmtpServer,
+          message.SmtpPort,
+          message.EmailReceiver,
+          message.MarketOpeningHour,
+          message.MarketClosingHour,
+          message.MinutesIntervalJob
           ));
       }
-
       return Task.FromResult(true);
     }
-
   }
 }
+
