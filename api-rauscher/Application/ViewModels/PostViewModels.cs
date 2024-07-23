@@ -23,5 +23,7 @@ namespace Application.ViewModels
 		public Guid folderid { get; set; }    
 		[JsonPropertyName("foldername")]
 		public string foldername { get; set; }
+		[JsonPropertyName("source")]
+		public string source { get; set; }
 	}
 }

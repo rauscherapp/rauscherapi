@@ -61,6 +61,7 @@ namespace CrossCutting.IoC
       // Application services
       //services.AddScoped<StripeService>();
       //services.AddScoped<IStripeCheckoutSessionService, StripeCheckoutSessionService>();
+      services.AddScoped<IAboutUsAppService, AboutUsAppService>();
       services.AddScoped<IAuthService, AuthService>();
       services.AddScoped<IEventRegistryAppService, EventRegistryAppService>();
       services.AddScoped<IAppParametersAppService, AppParametersAppService>();
@@ -101,6 +102,7 @@ namespace CrossCutting.IoC
       services.AddScoped<IRequestHandler<CadastrarFolderCommand, bool>, CadastrarFolderCommandHandler>();
       services.AddScoped<IRequestHandler<AtualizarFolderCommand, bool>, AtualizarFolderCommandHandler>();
       services.AddScoped<IRequestHandler<GerarSecretAndApiKeyCommand, bool>, GerarSecretAndApiKeyCommandHandler>();
+      services.AddScoped<IRequestHandler<AtualizarAboutUsCommand, bool>, AtualizarAboutUsCommandHandler>();
 
       // Domain - Queries
       services.AddScoped<IRequestHandler<ListarSymbolsWithRateQuery, PagedList<Symbols>>, ListarSymbolsWithRateQueryHandler>();
@@ -117,6 +119,7 @@ namespace CrossCutting.IoC
       services.AddScoped<IRequestHandler<ObterPostQuery, Post>, ObterPostQueryHandler>();
       services.AddScoped<IRequestHandler<ListarPostQuery, PagedList<Post>>, ListarPostQueryHandler>();
       services.AddScoped<IRequestHandler<ListarFolderQuery, PagedList<Folder>>, ListarFolderQueryHandler>();
+      services.AddScoped<IRequestHandler<ObterAboutUsQuery, AboutUs>, ObterAboutUsQueryHandler>();
 
       // Domain - Events
       services.AddScoped<INotificationHandler<DomainNotification>, DomainNotificationHandler>();
@@ -129,6 +132,7 @@ namespace CrossCutting.IoC
       services.AddScoped<IApiCredentialsRepository, ApiCredentialsRepository>();
       services.AddScoped<IPostRepository, PostRepository>();
       services.AddScoped<IFolderRepository, FolderRepository>();
+      services.AddScoped<IAboutUsRepository, AboutUsRepository>();
       services.AddScoped<IUnitOfWork, UnitOfWork>();
 
       services.AddScoped<ICommoditiesRepository, CommoditiesRepository>();

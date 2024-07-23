@@ -17,5 +17,8 @@ namespace Domain.Commands
 		public string EmailPassword { get; set; }
     public string SmtpServer { get; set; }
     public int SmtpPort { get; set; }
+    public string MarketOpeningHour { get; set; }
+    public string MarketClosingHour { get; set; }
+    public int MinutesIntervalJob { get; set; }
   }
 }
