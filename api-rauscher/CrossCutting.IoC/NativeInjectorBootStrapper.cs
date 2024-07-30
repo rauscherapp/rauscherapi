@@ -113,7 +113,7 @@ namespace CrossCutting.IoC
       services.AddScoped<IRequestHandler<ObterCommoditiesRateQuery, CommoditiesRate>, ObterCommoditiesRateQueryHandler>();
       services.AddScoped<IRequestHandler<ListarCommoditiesRateQuery, PagedList<CommoditiesRate>>, ListarCommoditiesRateQueryHandler>();
       services.AddScoped<IRequestHandler<ObterSymbolsQuery, Symbols>, ObterSymbolsQueryHandler>();
-      services.AddScoped<IRequestHandler<ListarSymbolsQuery, PagedList<Symbols>>, ListarSymbolsQueryHandler>();
+      services.AddScoped<IRequestHandler<ListarSymbolsQuery, IQueryable<Symbols>>, ListarSymbolsQueryHandler>();
       services.AddScoped<IRequestHandler<ObterApiCredentialsQuery, ApiCredentials>, ObterApiCredentialsQueryHandler>();
       services.AddScoped<IRequestHandler<ListarApiCredentialsQuery, PagedList<ApiCredentials>>, ListarApiCredentialsQueryHandler>();
       services.AddScoped<IRequestHandler<ObterPostQuery, Post>, ObterPostQueryHandler>();

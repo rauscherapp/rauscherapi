@@ -39,16 +39,42 @@ namespace Data.Repository
       return await Symbols.ToListAsync();
     }
 
-    public async Task<PagedList<Symbols>> ListarSymbolss(SymbolsParameters parameters)
-    {
-      var symbols = Db.Symbolss
-      .AsQueryable();
+    public async Task<IQueryable<Symbols>> ListarSymbolss(SymbolsParameters parameters)
+   {
+      // Validação básica de parâmetros
+      if (parameters == null) throw new ArgumentNullException(nameof(parameters));
 
+      var symbols = Db.Symbolss
+          .AsNoTracking()
+          .AsQueryable();
+
+      // Aplica filtros conforme os parâmetros
+      if (!string.IsNullOrWhiteSpace(parameters.SearchQuery))
+      {
+        var searchQuery = parameters.SearchQuery.ToLower();
+        symbols = symbols.Where(s => s.Name.ToLower().Contains(searchQuery)
+                                   || s.FriendlyName.ToLower().Contains(searchQuery)
+                                   || s.Code.ToLower().Contains(searchQuery));
+      }
+
+      // Aplica filtros conforme os parâmetros
+      if (!string.IsNullOrWhiteSpace(parameters.Name))
+        symbols = symbols.Where(s => s.Name.ToLower() == parameters.Name.ToLower());
+
+      if (!string.IsNullOrWhiteSpace(parameters.Code))
+        symbols = symbols.Where(s => s.Code.ToLower() == parameters.Code.ToLower());
+
+      if (!string.IsNullOrWhiteSpace(parameters.SymbolType))
+        symbols = symbols.Where(s => s.SymbolType.ToLower() == parameters.SymbolType.ToLower());
+
+      // Aplica ordenação, se especificada
       if (!string.IsNullOrWhiteSpace(parameters.OrderBy))
         symbols = symbols.ApplySort(parameters.OrderBy);
 
-      return PagedList<Symbols>.Create(symbols, parameters.PageNumber, parameters.PageSize);
+      // Cria a lista paginada de forma assíncrona
+      return symbols.AsQueryable();
     }
+
 
     public async Task<PagedList<Symbols>> GetSymbolsWithLatestRatesAsync(SymbolsParameters parameters)
     {
