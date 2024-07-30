@@ -35,10 +35,10 @@ namespace Api.Controllers
       _aboutUsAppService = aboutUsAppService;
 
     }
-    [HttpPost("AboutUs")]
+    [HttpPatch("AboutUs")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [AllowAnonymous]
-    public async Task<IActionResult> Post([FromQuery] AboutUsViewModel parameters)
+    public async Task<IActionResult> Patch([FromBody] AboutUsViewModel parameters)
     {
       var result = await _aboutUsAppService.AtualizarAboutUs(parameters);
       return CreateResponse(result);

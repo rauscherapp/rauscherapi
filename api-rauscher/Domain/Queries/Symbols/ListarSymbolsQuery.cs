@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Domain.Queries
 {
-	public class ListarSymbolsQuery : IRequest<PagedList<Symbols>>
+	public class ListarSymbolsQuery : IRequest<IQueryable<Symbols>>
 	{
 		public SymbolsParameters Parameters { get; internal set; }
 		
