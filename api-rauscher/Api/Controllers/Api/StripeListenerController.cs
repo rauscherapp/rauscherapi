@@ -1,5 +1,4 @@
-﻿using APIs.Security.JWT;
-using Application.Interfaces;
+﻿using Application.Interfaces;
 using Domain.Options;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;

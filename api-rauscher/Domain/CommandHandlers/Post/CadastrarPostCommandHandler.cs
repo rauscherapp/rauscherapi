@@ -43,8 +43,9 @@ namespace Domain.CommandHandlers
         
       }
       var post = new Post(
+        message.ID,
         message.TITLE,
-        message.CREATEDATE,
+        message.CREATEDDATE,
         message.CONTENT,
         message.AUTHOR,
         message.VISIBLE,
@@ -58,7 +59,7 @@ namespace Domain.CommandHandlers
         Bus.RaiseEvent(new CadastrarPostEvent(
           message.ID,
           message.TITLE,
-          message.CREATEDATE,
+          message.CREATEDDATE,
           message.CONTENT,
           message.AUTHOR,
           message.VISIBLE,

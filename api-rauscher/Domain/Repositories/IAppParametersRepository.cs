@@ -9,6 +9,6 @@ namespace Domain.Repositories
 	public interface IAppParametersRepository : IRepository<AppParameters>
 	{
 		Task<PagedList<AppParameters>> ListarAppParameterss(AppParametersParameters parameters);
-    AppParameters ObterAppParameters(Guid appParametersId);
+    AppParameters ObterAppParameters();
   }
 }

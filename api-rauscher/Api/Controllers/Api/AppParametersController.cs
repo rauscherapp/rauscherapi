@@ -55,9 +55,9 @@ namespace Api.Controllers
     [Route("AppParameter/{id}")]
     [AllowAnonymous]
 
-    public async Task<IActionResult> ObterAppParameter(Guid id)
+    public async Task<IActionResult> ObterAppParameter()
     {
-      var result = await _appParameterAppService.ObterAppParameters(id);
+      var result = await _appParameterAppService.ObterAppParameters();
       return CreateResponse(result);
     }
 

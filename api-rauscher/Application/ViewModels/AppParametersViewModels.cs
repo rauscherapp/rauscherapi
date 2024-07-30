@@ -30,5 +30,11 @@ namespace Application.ViewModels
 		public string SmtpServer { get; set; }
 		[JsonPropertyName("SmtpPort ")]
 		public int SmtpPort { get; set; }
-	}
+    [JsonPropertyName("MarketOpeningHour ")]
+    public string MarketOpeningHour { get; set; }
+    [JsonPropertyName("MarketClosingHour ")]
+    public string MarketClosingHour { get; set; }
+    [JsonPropertyName("MinutesIntervalJob ")]
+    public int MinutesIntervalJob { get; set; }
+  }
 }

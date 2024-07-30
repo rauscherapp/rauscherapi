@@ -1,4 +1,5 @@
-﻿using Domain.Core.Bus;
+﻿using Application.Helpers;
+using Domain.Core.Bus;
 using Domain.Core.Notifications;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -54,6 +55,24 @@ namespace Api.Controllers
         {
           success = true,
           data = result
+        });
+      }
+
+      return BadRequest(new
+      {
+        success = false,
+        errors = GetNotificationMessages()
+      });
+    }
+    protected IActionResult CreateResponseList(PaginationMetadata paginationResult = null, object result = null)
+    {
+      if (IsValidOperation())
+      {
+        return Ok(new
+        {
+          success = true,
+          data = result,
+          pagination = paginationResult
         });
       }
 

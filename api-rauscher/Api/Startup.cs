@@ -2,7 +2,6 @@ using Api.Configurations;
 using APIs.Security.JWT;
 using Aplication.Provider;
 using Application.Interfaces;
-using Application.Services;
 using Data.Commodities.Api.Service;
 using Data.Commoditites.Api.Options;
 using Domain.Options;
@@ -21,7 +20,6 @@ using Polly;
 using Serilog;
 using StripeApi.Options;
 using System;
-using System.Linq;
 
 namespace Api
 {
@@ -114,6 +112,7 @@ namespace Api
 
       services.Configure<CommoditiesApiOptions>(Configuration.GetSection("CommoditiesApi"));
       services.Configure<StripeApiOptions>(Configuration.GetSection("StripeApi"));
+      //services.Configure<BancoCentralOptions>(Configuration.GetSection("BancoCentralApi"));
       services.AddHttpClient<CommoditiesRepository>()
         .AddTransientHttpErrorPolicy(p => p.WaitAndRetryAsync(3, _ => TimeSpan.FromSeconds(2)));
     }
@@ -137,16 +136,15 @@ namespace Api
         });
 
         app.UseHsts();
-      }    
+      }
 
       app.UseCors(c =>
       {
-
         c.AllowAnyHeader();
         c.WithExposedHeaders("X-Pagination");
         c.AllowAnyMethod();
         c.AllowAnyOrigin();
-        c.WithOrigins("https://rauscher-app-espuri.flutterflow.app/", "http://localhost:4200");
+        c.WithOrigins("https://rauscher-app-espuri.flutterflow.app/", "http://localhost:4200", "http://localhost:53662");
       });
 
       app.UseAuthentication();

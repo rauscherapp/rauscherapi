@@ -19,9 +19,9 @@ namespace Domain.QueryHandlers
     }
     public async Task<AppParameters> Handle(ObterAppParametersQuery request, CancellationToken cancellationToken)
     {
-      _logger.LogInformation("Handling: {MethodName} | params: {@Request}", nameof(Handle), request.AppParametersId);
+      _logger.LogInformation("Handling: {MethodName}", nameof(Handle));
 
-      return _appParametersRepository.ObterAppParameters(request.AppParametersId);
+      return _appParametersRepository.ObterAppParameters();
 
     }
   }

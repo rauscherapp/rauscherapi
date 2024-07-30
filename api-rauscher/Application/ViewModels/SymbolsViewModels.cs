@@ -13,6 +13,8 @@ namespace Application.ViewModels
 		public string Name { get; set; }
 		[JsonPropertyName("FriendlyName")]
 		public string FriendlyName { get; set; }
+		[JsonPropertyName("SymbolType")]
+		public string SymbolType { get; set; }
 		[JsonPropertyName("Appvisible")]
 		public Boolean Appvisible { get; set; }
 		[JsonPropertyName("LastRate")]
