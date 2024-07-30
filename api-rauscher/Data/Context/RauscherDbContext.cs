@@ -26,6 +26,7 @@ namespace Data.Context
     public virtual DbSet<ApiCredentials> ApiCredentialss { get; set; }
     public virtual DbSet<Post> Posts { get; set; }
     public virtual DbSet<Folder> Folders { get; set; }
+    public virtual DbSet<AboutUs> AboutUs { get; set; }
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
       if (!optionsBuilder.IsConfigured)
@@ -49,6 +50,7 @@ namespace Data.Context
       modelBuilder.ApplyConfiguration(new ApiCredentialsMap());
       modelBuilder.ApplyConfiguration(new PostMap());
       modelBuilder.ApplyConfiguration(new FolderMap());
+      modelBuilder.ApplyConfiguration(new AboutUsMap());
       modelBuilder.Entity<CommoditiesRate>()
           .HasOne(cr => cr.Symbol)
           .WithMany(s => s.CommoditiesRates)

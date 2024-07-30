@@ -4,12 +4,13 @@ using Domain.QueryParameters;
 using Domain.Repositories;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Domain.QueryHandlers
 {
-  public class ListarSymbolsQueryHandler : IRequestHandler<ListarSymbolsQuery, PagedList<Symbols>>
+  public class ListarSymbolsQueryHandler : IRequestHandler<ListarSymbolsQuery, IQueryable<Symbols>>
   {
     private readonly ILogger<ListarSymbolsQueryHandler> _logger;
     private readonly ISymbolsRepository _symbolsRepository;
@@ -18,7 +19,7 @@ namespace Domain.QueryHandlers
       _symbolsRepository = symbolsRepository;
       _logger = logger;
     }
-    public async Task<PagedList<Symbols>> Handle(ListarSymbolsQuery request, CancellationToken cancellationToken)
+    public async Task<IQueryable<Symbols>> Handle(ListarSymbolsQuery request, CancellationToken cancellationToken)
     {
       _logger.LogInformation("Handling: {MethodName} | params: {@Request}", nameof(Handle), request);
 

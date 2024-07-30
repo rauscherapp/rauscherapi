@@ -8,7 +8,7 @@ namespace Domain.Repositories
 {
 	public interface ICommoditiesRateRepository : IRepository<CommoditiesRate>
 	{
-    Task<CommoditiesRate> GetLastPriceBeforeTimestamp(string commodityCode, long timestamp);
+    Task<CommoditiesRate> GetLastPriceBeforeTimestamp(string commodityCode, long? timestamp);
 		CommoditiesRate ObterCommoditiesRate(Guid id);
     Task<PagedList<CommoditiesRate>> ListarCommoditiesRates(CommoditiesRateParameters parameters);
 

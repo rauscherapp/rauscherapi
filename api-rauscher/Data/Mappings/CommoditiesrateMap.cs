@@ -30,15 +30,18 @@ namespace Data.Mappings
 			.HasColumnName("Unit");
 			
 			builder.Property(e => e.Price)
-			.HasColumnName("Price");
+			.HasColumnName("Price")
+      .HasColumnType("decimal(18, 4)"); 
 			
 			builder.Property(e => e.Variationprice)
-			.HasColumnName("VariationPrice");
+			.HasColumnName("VariationPrice")
+      .HasColumnType("decimal(18, 4)"); 
 			
 			builder.Property(e => e.Variationpricepercent)
-			.HasColumnName("VariationPricePercent");
-			
-			builder.Property(e => e.Isup)
+			.HasColumnName("VariationPricePercent")
+      .HasColumnType("decimal(18, 4)");
+
+      builder.Property(e => e.Isup)
 			.HasColumnName("isUp");
 			
 		}

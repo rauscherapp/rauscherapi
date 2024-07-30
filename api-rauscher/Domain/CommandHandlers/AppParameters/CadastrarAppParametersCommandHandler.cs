@@ -44,7 +44,10 @@ namespace Domain.CommandHandlers
         message.EmailPassword,
         message.SmtpServer,
         message.SmtpPort,
-        message.EmailReceiver
+        message.EmailReceiver,
+        message.MarketOpeningHour,
+        message.MarketClosingHour,
+        message.MinutesIntervalJob
         );
 
       _appparametersRepository.Add(appparameters);
@@ -63,7 +66,10 @@ namespace Domain.CommandHandlers
           message.EmailPassword,
           message.SmtpServer,
           message.SmtpPort,
-          message.EmailReceiver
+          message.EmailReceiver,
+          message.MarketOpeningHour,
+          message.MarketClosingHour,
+          message.MinutesIntervalJob
           ));
       }
 

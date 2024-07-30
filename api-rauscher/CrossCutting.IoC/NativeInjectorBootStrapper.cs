@@ -1,12 +1,14 @@
 using Application.Interfaces;
 using Application.Services;
 using CrossCutting.Bus;
+using Data.BancoCentral.Api.Service;
 using Data.Commodities.Api.Service;
 using Data.Context;
 using Data.EventSourcing;
 using Data.Repository;
 using Data.Repository.EventSourcing;
 using Data.UoW;
+using Data.YahooFinanceApi.Api.Service;
 using Domain.CommandHandlers;
 using Domain.CommandHandlers.Apicredentials;
 using Domain.Commands;
@@ -59,6 +61,7 @@ namespace CrossCutting.IoC
       // Application services
       //services.AddScoped<StripeService>();
       //services.AddScoped<IStripeCheckoutSessionService, StripeCheckoutSessionService>();
+      services.AddScoped<IAboutUsAppService, AboutUsAppService>();
       services.AddScoped<IAuthService, AuthService>();
       services.AddScoped<IEventRegistryAppService, EventRegistryAppService>();
       services.AddScoped<IAppParametersAppService, AppParametersAppService>();
@@ -71,6 +74,8 @@ namespace CrossCutting.IoC
       services.AddScoped<IStripeSessionService, StripeSessionService>();
       services.AddScoped<IUriAppService, UriAppService>();
       services.AddScoped<IEmailService, EmailSenderAppService>();
+      services.AddScoped<IYahooFinanceRepository, YahooFinanceRepository>();
+      services.AddScoped<IBancoCentralRepository, BancoCentralRepository>();
 
       // Domain - Commands
       services.AddScoped<IRequestHandler<SendEmailCommand, bool>, SendEmailCommandHandler>();
@@ -97,6 +102,7 @@ namespace CrossCutting.IoC
       services.AddScoped<IRequestHandler<CadastrarFolderCommand, bool>, CadastrarFolderCommandHandler>();
       services.AddScoped<IRequestHandler<AtualizarFolderCommand, bool>, AtualizarFolderCommandHandler>();
       services.AddScoped<IRequestHandler<GerarSecretAndApiKeyCommand, bool>, GerarSecretAndApiKeyCommandHandler>();
+      services.AddScoped<IRequestHandler<AtualizarAboutUsCommand, bool>, AtualizarAboutUsCommandHandler>();
 
       // Domain - Queries
       services.AddScoped<IRequestHandler<ListarSymbolsWithRateQuery, PagedList<Symbols>>, ListarSymbolsWithRateQueryHandler>();
@@ -107,12 +113,13 @@ namespace CrossCutting.IoC
       services.AddScoped<IRequestHandler<ObterCommoditiesRateQuery, CommoditiesRate>, ObterCommoditiesRateQueryHandler>();
       services.AddScoped<IRequestHandler<ListarCommoditiesRateQuery, PagedList<CommoditiesRate>>, ListarCommoditiesRateQueryHandler>();
       services.AddScoped<IRequestHandler<ObterSymbolsQuery, Symbols>, ObterSymbolsQueryHandler>();
-      services.AddScoped<IRequestHandler<ListarSymbolsQuery, PagedList<Symbols>>, ListarSymbolsQueryHandler>();
+      services.AddScoped<IRequestHandler<ListarSymbolsQuery, IQueryable<Symbols>>, ListarSymbolsQueryHandler>();
       services.AddScoped<IRequestHandler<ObterApiCredentialsQuery, ApiCredentials>, ObterApiCredentialsQueryHandler>();
       services.AddScoped<IRequestHandler<ListarApiCredentialsQuery, PagedList<ApiCredentials>>, ListarApiCredentialsQueryHandler>();
       services.AddScoped<IRequestHandler<ObterPostQuery, Post>, ObterPostQueryHandler>();
       services.AddScoped<IRequestHandler<ListarPostQuery, PagedList<Post>>, ListarPostQueryHandler>();
       services.AddScoped<IRequestHandler<ListarFolderQuery, PagedList<Folder>>, ListarFolderQueryHandler>();
+      services.AddScoped<IRequestHandler<ObterAboutUsQuery, AboutUs>, ObterAboutUsQueryHandler>();
 
       // Domain - Events
       services.AddScoped<INotificationHandler<DomainNotification>, DomainNotificationHandler>();
@@ -125,6 +132,7 @@ namespace CrossCutting.IoC
       services.AddScoped<IApiCredentialsRepository, ApiCredentialsRepository>();
       services.AddScoped<IPostRepository, PostRepository>();
       services.AddScoped<IFolderRepository, FolderRepository>();
+      services.AddScoped<IAboutUsRepository, AboutUsRepository>();
       services.AddScoped<IUnitOfWork, UnitOfWork>();
 
       services.AddScoped<ICommoditiesRepository, CommoditiesRepository>();

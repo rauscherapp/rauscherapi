@@ -41,6 +41,11 @@ namespace Data.Repository
           .AsNoTracking() // Add this if you're not updating the posts
           .Where(post => post.FolderId == folderId); // No need to check if folderId is null
 
+			if (!parameters.source.Equals("webadmin"))
+      {
+        query = query.Where(post => post.Visible);
+      }
+
       if (!string.IsNullOrWhiteSpace(parameters.OrderBy))
       {
         query = query.ApplySort(parameters.OrderBy); // Assuming ApplySort is an extension method

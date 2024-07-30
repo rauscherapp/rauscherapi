@@ -9,6 +9,7 @@ namespace Domain.Commands
 		public string Code { get; set; }
 		public string Name { get; set; }
 		public string FriendlyName { get; set; }
+		public string SymbolType { get; set; }
 		public Boolean Appvisible { get; set; }
 	}
 }

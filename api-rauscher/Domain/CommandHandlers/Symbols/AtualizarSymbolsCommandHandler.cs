@@ -35,6 +35,8 @@ namespace Domain.CommandHandlers
       symbols.Id = message.Id;
       symbols.Code = message.Code;
       symbols.Name = message.Name;
+      symbols.FriendlyName = message.FriendlyName;
+      symbols.SymbolType = message.SymbolType;
       symbols.Appvisible = message.Appvisible;
 
       _symbolsRepository.Update(symbols);
@@ -45,6 +47,8 @@ namespace Domain.CommandHandlers
           message.Id,
           message.Code,
           message.Name,
+          message.FriendlyName,
+          message.SymbolType,
           message.Appvisible
           ));
       }
