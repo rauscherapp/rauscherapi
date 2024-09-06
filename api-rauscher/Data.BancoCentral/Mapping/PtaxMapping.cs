@@ -42,7 +42,7 @@ namespace Data.Commodities.Api.Mapping
           Convert.ToDateTime(model.dataHoraCotacao),
           "PTAX",
           unit,
-          model.cotacaoVenda.CalculatePrice(),
+          model.cotacaoVenda.Replace(".", ",").CalculatePrice(),
           variationPrice,
           variationPercent,
           someBooleanFlag);
@@ -52,7 +52,6 @@ namespace Data.Commodities.Api.Mapping
     {
       if (decimal.TryParse(value, out decimal decimalModel) && decimalModel != 0)
       {
-        decimalModel /= 100000;
         return decimalModel;
       }
       return 0m;

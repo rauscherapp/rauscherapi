@@ -22,6 +22,8 @@
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.4" />
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.1.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer" Version="5.0.0" />
+		<PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.1.0" />
+		<PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="8.0.7" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.26" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.26">
 			<PrivateAssets>all</PrivateAssets>
@@ -62,6 +64,12 @@
 	<Content Update="appsettings.json">
 	  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	</Content>
+  </ItemGroup>
+  
+  <ItemGroup>
+    <None Update="Api.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup> 
   
 </Project>

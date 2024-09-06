@@ -23,6 +23,9 @@ namespace Data.Mappings
       builder.Property(e => e.FriendlyName)
       .HasColumnName("FriendlyName");
 
+      builder.Property(e => e.Vendor)
+      .HasColumnName("Vendor");
+
       builder.Property(e => e.SymbolType)
       .HasColumnName("SYMBOLTYPE");
 

@@ -54,7 +54,7 @@ namespace Worker
               services.AddDatabaseSetup(configuration); // Certifique-se de ter um método de extensão para isso
               services.AddMediatR(typeof(Program));
               services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-              services.AddDependencyInjectionSetup(); // Certifique-se de ter um método de extensão para isso
+              
               services.AddScoped<IAppParametersOptionsProvider, AppParametersOptionsProvider>();
               services.AddTransient<IConfigureOptions<ParametersOptions>, ConfigureParametersOptions>();
               services.AddAutoMapperSetup();
@@ -63,10 +63,19 @@ namespace Worker
               services.Configure<StripeApiOptions>(configuration.GetSection("StripeApi"));
               services.Configure<BancoCentralOptions>(configuration.GetSection("BancoCentralApi"));
               services.Configure<YahooFinanceOptions>(configuration.GetSection("YahooFinanceApi"));
-              services.AddHttpClient<CommoditiesRepository>()
-                      .AddTransientHttpErrorPolicy(p => p.WaitAndRetryAsync(3, _ => TimeSpan.FromSeconds(2)));
+              services.Configure<ParametersOptions>(configuration.GetSection("ParametersOptions"));
+              //services.AddHttpClient<CommoditiesRepository>()
+              //        .AddTransientHttpErrorPolicy(p => p.WaitAndRetryAsync(3, _ => TimeSpan.FromSeconds(2)));
+              services.AddDependencyInjectionSetup(); // Certifique-se de ter um método de extensão para isso
+              services.AddHttpClient<Data.BancoCentral.Api.Infrastructure.BancoCentralAPI>();
+              
+              services.AddHttpClient<Data.YahooFinanceApi.Api.Infrastructure.YahooFinanceAPI>();
+
+              
+              services.AddHttpClient<Data.Commodities.Api.Infrastructure.CommoditiesAPI>();
               services.AddSingleton<Microsoft.AspNetCore.Mvc.Routing.IUrlHelperFactory, Microsoft.AspNetCore.Mvc.Routing.UrlHelperFactory>();
 
+              services.AddSignalR();
 
               services.AddHostedService<Worker>(); // Adiciona a classe Worker como um serviço hospedado
             });

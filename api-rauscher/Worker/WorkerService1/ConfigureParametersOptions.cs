@@ -22,6 +22,7 @@ namespace Worker
       options.StripePriceId = optionsEntity.StripePriceId;
       options.StripeTrialPeriod = optionsEntity.StripeTrialPeriod;
       options.CommoditiesApiKey = optionsEntity.CommoditiesApiKey;
+      options.YahooFinanceApiKey = optionsEntity.YahooFinanceApiKey;
       options.EmailSender = optionsEntity.EmailSender;
       options.EmailReceiver = optionsEntity.EmailReceiver;
       options.EmailPassword = optionsEntity.EmailPassword;

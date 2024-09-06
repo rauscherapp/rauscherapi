@@ -19,22 +19,28 @@ namespace Application.ViewModels
 		[JsonPropertyName("StripeTrialPeriod")]
 		public string StripeTrialPeriod { get; set; }
 		[JsonPropertyName("CommoditiesApiKey")]
-		public string CommoditiesApiKey { get; set; }
+		public string CommoditiesApiKey { get; set; }		
+		[JsonPropertyName("YahooFinanceApiKey")]
+		public string YahooFinanceApiKey { get; set; }
 		[JsonPropertyName("EmailSender")]
 		public string EmailSender { get; set; }
 		[JsonPropertyName("EmailReceiver")]
 		public string EmailReceiver { get; set; }
 		[JsonPropertyName("EmailPassword")]
 		public string EmailPassword { get; set; }
-		[JsonPropertyName("SmtpServer ")]
+		[JsonPropertyName("SmtpServer")]
 		public string SmtpServer { get; set; }
-		[JsonPropertyName("SmtpPort ")]
+		[JsonPropertyName("SmtpPort")]
 		public int SmtpPort { get; set; }
-    [JsonPropertyName("MarketOpeningHour ")]
+    [JsonPropertyName("MarketOpeningHour")]
     public string MarketOpeningHour { get; set; }
-    [JsonPropertyName("MarketClosingHour ")]
+    [JsonPropertyName("MarketClosingHour")]
     public string MarketClosingHour { get; set; }
-    [JsonPropertyName("MinutesIntervalJob ")]
+    [JsonPropertyName("MinutesIntervalJob")]
     public int MinutesIntervalJob { get; set; }
+    [JsonPropertyName("YahooFinanceApiOn")]
+    public bool YahooFinanceApiOn { get; set; }
+    [JsonPropertyName("CommoditiesApiOn")]
+    public bool CommoditiesApiOn { get; set; }
   }
 }

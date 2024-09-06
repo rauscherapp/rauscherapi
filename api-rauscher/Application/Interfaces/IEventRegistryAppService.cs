@@ -13,5 +13,6 @@ namespace Application.Interfaces
     Task<bool> ExcluirEventRegistry(Guid eventRegistryId);
     Task<EventRegistryViewModel> ObterEventRegistry(Guid eventRegistryId);
     Task<PagedResponse<EventRegistryViewModel>> ListarEventRegistry(EventRegistryParameters parameters);
+    Task<PagedResponse<EventRegistryViewModel>> ListarEventRegistryApp(EventRegistryParameters parameters);
   }
 }

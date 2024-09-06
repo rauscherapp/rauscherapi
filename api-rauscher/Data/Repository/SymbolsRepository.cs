@@ -15,6 +15,20 @@ namespace Data.Repository
     public SymbolsRepository(RauscherDbContext context) : base(context)
     {
     }
+    public async Task<List<Symbols>> FindAllCommodities()
+    {
+      var Symbols = Db.Symbolss
+          .Where(c => c.SymbolType.ToLower().Equals("commodity"));
+
+      return await Symbols.ToListAsync();
+    }
+    public async Task<List<Symbols>> FindAllExchanges()
+    {
+      var Symbols = Db.Symbolss
+          .Where(c => c.SymbolType.ToLower().Equals("exchange"));
+
+      return await Symbols.ToListAsync();
+    }
     public Symbols ObterSymbols(Guid id)
     {
       var Symbols = Db.Symbolss
@@ -51,10 +65,13 @@ namespace Data.Repository
       // Aplica filtros conforme os parâmetros
       if (!string.IsNullOrWhiteSpace(parameters.SearchQuery))
       {
-        var searchQuery = parameters.SearchQuery.ToLower();
-        symbols = symbols.Where(s => s.Name.ToLower().Contains(searchQuery)
-                                   || s.FriendlyName.ToLower().Contains(searchQuery)
-                                   || s.Code.ToLower().Contains(searchQuery));
+        if (!parameters.SearchQuery.Equals("null"))
+        {
+          var searchQuery = parameters.SearchQuery.ToLower();
+          symbols = symbols.Where(s => s.Name.ToLower().Contains(searchQuery)
+                                     || s.FriendlyName.ToLower().Contains(searchQuery)
+                                     || s.Code.ToLower().Contains(searchQuery));
+        }
       }
 
       // Aplica filtros conforme os parâmetros
