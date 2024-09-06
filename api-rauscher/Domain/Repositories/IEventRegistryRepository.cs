@@ -8,7 +8,8 @@ namespace Domain.Repositories
 {
 	public interface IEventRegistryRepository : IRepository<EventRegistry>
 	{
-		Task<PagedList<EventRegistry>> ListarEventRegistrys(EventRegistryParameters parameters);
+    Task<PagedList<EventRegistry>> ListarEventRegistryApp(EventRegistryParameters parameters);
+    Task<PagedList<EventRegistry>> ListarEventRegistrys(EventRegistryParameters parameters);
 		EventRegistry ObterEventRegistry(Guid eventRegistryId);
 	}
 }

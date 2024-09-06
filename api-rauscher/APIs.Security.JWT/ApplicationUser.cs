@@ -10,4 +10,5 @@ public class ApplicationUser : IdentityUser
     public string? Status { get; set; }
     public DateTime? DataNascimento { get; set; }
     public Boolean HasValidStripeSubscription { get; set; }
+    public int UserType{ get; set; }
 }

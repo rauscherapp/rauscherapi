@@ -51,6 +51,17 @@ namespace Api.Controllers
       var result = _mapper.Map<IEnumerable<EventRegistryViewModel>>(events.Data).ShapeData(parameters.Fields);
       return CreateResponse(result);
     }
+    [HttpGet("EventRegistryApp")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [AllowAnonymous]
+    public async Task<IActionResult> EventRegistryApp([FromQuery] EventRegistryParameters parameters)
+    {
+      var events = await _eventAppService.ListarEventRegistryApp(parameters);
+
+      Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(events.PaginationMetadata));
+      var result = _mapper.Map<IEnumerable<EventRegistryViewModel>>(events.Data).ShapeData(parameters.Fields);
+      return CreateResponse(result);
+    }
 
 
     [HttpGet()]

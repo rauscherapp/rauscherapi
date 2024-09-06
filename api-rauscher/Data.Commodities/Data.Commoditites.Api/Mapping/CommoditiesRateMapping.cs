@@ -1,5 +1,4 @@
 ﻿using Domain.Models;
-using System.Linq;
 
 namespace Data.Commodities.Api.Mapping
 {
@@ -17,7 +16,7 @@ namespace Data.Commodities.Api.Mapping
       {
         unit = response.Unit.FirstOrDefault(x => x.Key == model.Key).Value ?? "Unknown Unit";
       }
-      
+
       decimal variationPrice = 0m;
       decimal variationPercent = 0m;
       bool someBooleanFlag = false;
@@ -32,7 +31,7 @@ namespace Data.Commodities.Api.Mapping
           variationPrice,
           variationPercent,
           someBooleanFlag);
-    }    
+    }
     public static decimal CalculatePrice(this double model)
     {
       decimal decimalModel = Convert.ToDecimal(model);

@@ -38,7 +38,15 @@ namespace Domain.CommandHandlers
           message.StripeApiPriceId,
           message.CommoditiesApiKey,
           message.EmailSender,
-          message.EmailPassword
+          message.EmailPassword,
+          message.SmtpServer,
+          message.SmtpPort,
+          message.EmailReceiver,
+          message.MarketOpeningHour,
+          message.MarketClosingHour,
+          message.MinutesIntervalJob,
+          message.YahooFinanceApiOn,
+          message.CommoditiesApiOn
           ));
       }
       return Task.FromResult(true);

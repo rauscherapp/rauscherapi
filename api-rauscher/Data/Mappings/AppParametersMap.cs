@@ -30,7 +30,9 @@ namespace Data.Mappings
 			.HasColumnName("StripeTrialPeriod");
 			
 			builder.Property(e => e.CommoditiesApiKey)
-			.HasColumnName("CommoditiesApiKey");
+			.HasColumnName("CommoditiesApiKey");			
+			builder.Property(e => e.YahooFinanceApiKey)
+			.HasColumnName("YahooFinanceApiKey");
 			
 			builder.Property(e => e.EmailSender)
 			.HasColumnName("EmailSender");			
@@ -45,8 +47,17 @@ namespace Data.Mappings
 			.HasColumnName("SmtpServer");
 			
 			builder.Property(e => e.SmtpPort)
-			.HasColumnName("SmtpPort");
-			
-		}
+			.HasColumnName("SmtpPort");			
+			builder.Property(e => e.MarketOpeningHour)
+			.HasColumnName("MarketOpeningHour");			
+			builder.Property(e => e.MarketClosingHour)
+			.HasColumnName("MarketClosingHour");			
+			builder.Property(e => e.YahooFinanceApiOn)
+			.HasColumnName("YahooFinanceApiOn");			
+			builder.Property(e => e.CommoditiesApiOn)
+			.HasColumnName("CommoditiesApiOn");			
+			builder.Property(e => e.MinutesIntervalJob)
+			.HasColumnName("MinutesIntervalJob");
+  }
 	}
 }

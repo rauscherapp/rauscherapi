@@ -38,6 +38,7 @@ namespace Domain.CommandHandlers
       appparameters.StripeWebhookSecret = message.StripeWebhookSecret;
       appparameters.StripeApiPriceId = message.StripeApiPriceId;
       appparameters.CommoditiesApiKey = message.CommoditiesApiKey;
+      appparameters.YahooFinanceApiKey = message.YahooFinanceApiKey;
       appparameters.EmailSender = message.EmailSender;
       appparameters.EmailPassword = message.EmailPassword;
       appparameters.SmtpServer = message.SmtpServer;
@@ -46,6 +47,8 @@ namespace Domain.CommandHandlers
       appparameters.MarketOpeningHour = message.MarketOpeningHour;
       appparameters.MarketClosingHour = message.MarketClosingHour;
       appparameters.MinutesIntervalJob = message.MinutesIntervalJob;
+      appparameters.YahooFinanceApiOn = message.YahooFinanceApiOn;
+      appparameters.CommoditiesApiOn = message.CommoditiesApiOn;
 
       _appparametersRepository.Update(appparameters);
 
@@ -65,7 +68,10 @@ namespace Domain.CommandHandlers
           message.EmailReceiver,
           message.MarketOpeningHour,
           message.MarketClosingHour,
-          message.MinutesIntervalJob
+          message.MinutesIntervalJob,
+          message.YahooFinanceApiOn,
+          message.CommoditiesApiOn,
+          message.YahooFinanceApiKey
           ));
       }
       return Task.FromResult(true);

@@ -35,6 +35,15 @@ namespace Application.Services
     {
       GC.SuppressFinalize(this);
     }
+
+
+    public async Task<bool> AtualizarOHLCCommoditiesRate()
+    {
+      _logger.LogInformation("Handling: {MethodName}", nameof(AtualizarCommoditiesRate));
+      var command = new AtualizarOHLCCommoditiesRateCommand();
+      await _mediator.Send(command);
+      return true;
+    }
     public async Task<CommoditiesRateViewModel> AtualizarCommoditiesRate(CommoditiesRateViewModel CommoditiesRateViewModel)
     {
       _logger.LogInformation("Handling: {MethodName}", nameof(AtualizarCommoditiesRate));
@@ -48,6 +57,13 @@ namespace Application.Services
       var command = _mapper.Map<CadastrarCommoditiesRateCommand>(CommoditiesRateViewModel);
       await _mediator.Send(command);
       return CommoditiesRateViewModel;
+    }
+    public async Task<bool> RemoverCommoditiesRateAntigos()
+    {
+      _logger.LogInformation("Handling: {MethodName}", nameof(ExcluirCommoditiesRate));
+      var command = new ExcluirCommoditiesRateAntigosCommand();
+      await _mediator.Send(command);
+      return true;
     }
     public async Task<bool> ExcluirCommoditiesRate(Guid CommoditiesRate)
     {

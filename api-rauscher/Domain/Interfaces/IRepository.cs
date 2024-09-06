@@ -14,5 +14,7 @@ namespace Domain.Interfaces
     void Update(TEntity obj);
     void Remove(Guid id);
     int SaveChanges();
+    void RemoveAll(List<TEntity> obj);
+    void AddRange(List<TEntity> obj);
   }
 }

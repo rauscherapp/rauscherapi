@@ -1,14 +1,20 @@
 using Application.Interfaces;
 using Application.Services;
 using CrossCutting.Bus;
-using Data.BancoCentral.Api.Service;
-using Data.Commodities.Api.Service;
+using Data.BancoCentral.Api.Infrastructure;
+using Data.BancoCentral.Api.Interfaces;
+using Data.Commodities.Api.Infrastructure;
+using Data.Commodities.Api.Interfaces;
 using Data.Context;
 using Data.EventSourcing;
 using Data.Repository;
 using Data.Repository.EventSourcing;
 using Data.UoW;
+using Data.YahooFinanceApi.Api.Infrastructure;
+using Data.YahooFinanceApi.Api.Interfaces;
 using Data.YahooFinanceApi.Api.Service;
+using Domain.Adapters.Providers;
+using Domain.Adapters.Vendors;
 using Domain.CommandHandlers;
 using Domain.CommandHandlers.Apicredentials;
 using Domain.Commands;
@@ -18,13 +24,15 @@ using Domain.Core.Events;
 using Domain.Core.Notifications;
 using Domain.Interfaces;
 using Domain.Models;
-using Domain.Options;
 using Domain.Queries;
 using Domain.QueryHandlers;
 using Domain.QueryParameters;
 using Domain.Repositories;
-using Domain.Repository;
 using Domain.Services;
+using Infrastructure.BancoCentral;
+using Infrastructure.Commodities;
+using Infrastructure.RateProvider.Providers;
+using Infrastructure.YahooFinance;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -44,6 +52,8 @@ namespace CrossCutting.IoC
       services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
       services.AddSingleton<ILoggerFactoryWrapper, LoggerFactoryWrapper>();
       services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
+
+
 
       // Correctly register IUrlHelper to handle cases where ActionContext might be null
       services.AddScoped<IUrlHelper>(x =>
@@ -75,7 +85,7 @@ namespace CrossCutting.IoC
       services.AddScoped<IUriAppService, UriAppService>();
       services.AddScoped<IEmailService, EmailSenderAppService>();
       services.AddScoped<IYahooFinanceRepository, YahooFinanceRepository>();
-      services.AddScoped<IBancoCentralRepository, BancoCentralRepository>();
+      //services.AddScoped<IBancoCentralRepository, BancoCentralRepository>();
 
       // Domain - Commands
       services.AddScoped<IRequestHandler<SendEmailCommand, bool>, SendEmailCommandHandler>();
@@ -86,6 +96,7 @@ namespace CrossCutting.IoC
       services.AddScoped<IRequestHandler<CadastrarAppParametersCommand, bool>, CadastrarAppParametersCommandHandler>();
       services.AddScoped<IRequestHandler<AtualizarAppParametersCommand, bool>, AtualizarAppParametersCommandHandler>();
       services.AddScoped<IRequestHandler<ExcluirCommoditiesRateCommand, bool>, ExcluirCommoditiesRateCommandHandler>();
+      services.AddScoped<IRequestHandler<ExcluirCommoditiesRateAntigosCommand, bool>, ExcluirCommoditiesRateAntigosCommandHandler>();
       services.AddScoped<IRequestHandler<CadastrarCommoditiesRateCommand, bool>, CadastrarCommoditiesRateCommandHandler>();
       services.AddScoped<IRequestHandler<AtualizarCommoditiesRateCommand, bool>, AtualizarCommoditiesRateCommandHandler>();
       services.AddScoped<IRequestHandler<ExcluirSymbolsCommand, bool>, ExcluirSymbolsCommandHandler>();
@@ -103,11 +114,13 @@ namespace CrossCutting.IoC
       services.AddScoped<IRequestHandler<AtualizarFolderCommand, bool>, AtualizarFolderCommandHandler>();
       services.AddScoped<IRequestHandler<GerarSecretAndApiKeyCommand, bool>, GerarSecretAndApiKeyCommandHandler>();
       services.AddScoped<IRequestHandler<AtualizarAboutUsCommand, bool>, AtualizarAboutUsCommandHandler>();
+      services.AddScoped<IRequestHandler<AtualizarOHLCCommoditiesRateCommand, bool>, AtualizarOHLCCommoditiesRateCommandHandler>();
 
       // Domain - Queries
       services.AddScoped<IRequestHandler<ListarSymbolsWithRateQuery, PagedList<Symbols>>, ListarSymbolsWithRateQueryHandler>();
       services.AddScoped<IRequestHandler<ObterEventRegistryQuery, EventRegistry>, ObterEventRegistryQueryHandler>();
       services.AddScoped<IRequestHandler<ListarEventRegistryQuery, PagedList<EventRegistry>>, ListarEventRegistryQueryHandler>();
+      services.AddScoped<IRequestHandler<ListarEventRegistryAppQuery, PagedList<EventRegistry>>, ListarEventRegistryAppQueryHandler>();
       services.AddScoped<IRequestHandler<ObterAppParametersQuery, AppParameters>, ObterAppParametersQueryHandler>();
       services.AddScoped<IRequestHandler<ListarAppParametersQuery, PagedList<AppParameters>>, ListarAppParametersQueryHandler>();
       services.AddScoped<IRequestHandler<ObterCommoditiesRateQuery, CommoditiesRate>, ObterCommoditiesRateQueryHandler>();
@@ -135,7 +148,21 @@ namespace CrossCutting.IoC
       services.AddScoped<IAboutUsRepository, AboutUsRepository>();
       services.AddScoped<IUnitOfWork, UnitOfWork>();
 
-      services.AddScoped<ICommoditiesRepository, CommoditiesRepository>();
+      services.AddTransient<IRateProvider, RateProvider>();
+      services.AddTransient<IVendorRateAdapters, RatesAdapter>();
+      services.AddTransient<IVendorRateAdapters, YahooRatesAdapter>();
+      services.AddTransient<IVendorRateAdapters, CommodititesRatesAdapter>();
+      services.AddTransient<ITradeReadRepository, Data.BancoCentral.Api.Service.TradeReadRepository>();
+      services.AddTransient<ITradeReadRepository, Data.YahooFinanceApi.Api.Service.TradeReadRepository>();
+      services.AddTransient<ITradeReadRepository, Data.Commodities.Api.Service.TradeReadRepository>();
+
+      services.AddTransient<IBancoCentralAPI, BancoCentralAPI>();
+      services.AddTransient<IYahooFinanceAPI, YahooFinanceAPI>();
+      services.AddTransient<ICommoditiesAPI, CommoditiesAPI>();
+      services.AddTransient<ICommodityOpenHighLowCloseRepository, CommodityOpenHighLowCloseRepository>();
+      services.AddTransient<IRequestHandler<CadastrarCommoditiesRateCommand, bool>, CadastrarCommoditiesRateCommandHandler>();
+
+      //services.AddScoped<ICommoditiesRepository, CommoditiesRepository>();
       services.AddScoped<IEventStoreRepository, EventStoreSQLRepository>();
       services.AddScoped<IEventStore, SqlEventStore>();
       services.AddScoped<EventStoreSQLContext>();

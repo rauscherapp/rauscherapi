@@ -7,11 +7,13 @@ using Data.Commoditites.Api.Options;
 using Domain.Options;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.Authorization;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -20,6 +22,7 @@ using Polly;
 using Serilog;
 using StripeApi.Options;
 using System;
+using System.Text.Json;
 
 namespace Api
 {
@@ -89,6 +92,7 @@ namespace Api
 
       services.AddScoped<IAppParametersOptionsProvider, AppParametersOptionsProvider>();
       services.AddTransient<IConfigureOptions<ParametersOptions>, ConfigureParametersOptions>();
+      services.AddSignalR();
 
 
       services.AddMvc(setupAction =>
@@ -112,9 +116,15 @@ namespace Api
 
       services.Configure<CommoditiesApiOptions>(Configuration.GetSection("CommoditiesApi"));
       services.Configure<StripeApiOptions>(Configuration.GetSection("StripeApi"));
+      services.AddHttpClient<Data.BancoCentral.Api.Infrastructure.BancoCentralAPI>();
+
+      services.AddHttpClient<Data.YahooFinanceApi.Api.Infrastructure.YahooFinanceAPI>();
+
+
+      services.AddHttpClient<Data.Commodities.Api.Infrastructure.CommoditiesAPI>();
       //services.Configure<BancoCentralOptions>(Configuration.GetSection("BancoCentralApi"));
-      services.AddHttpClient<CommoditiesRepository>()
-        .AddTransientHttpErrorPolicy(p => p.WaitAndRetryAsync(3, _ => TimeSpan.FromSeconds(2)));
+      //services.AddHttpClient<CommoditiesRepository>()
+      //  .AddTransientHttpErrorPolicy(p => p.WaitAndRetryAsync(3, _ => TimeSpan.FromSeconds(2)));
     }
 
 
@@ -129,10 +139,27 @@ namespace Api
         app.UseExceptionHandler(appBuilder =>
         {
           appBuilder.Run(async context =>
-                  {
-                    context.Response.StatusCode = 500;
-                    await context.Response.WriteAsync("Ocorreu um erro inesperado. Tente novamente mais tarde.");
-                  });
+          {
+            context.Response.StatusCode = 500;
+            context.Response.ContentType = "application/json";
+
+            var exceptionHandlerPathFeature = context.Features.Get<IExceptionHandlerPathFeature>();
+
+            if (exceptionHandlerPathFeature != null)
+            {
+              var ex = exceptionHandlerPathFeature.Error;
+
+              var errorDetails = new
+              {
+                Message = "Ocorreu um erro inesperado. Tente novamente mais tarde.",
+                Detailed = ex.Message
+              };
+
+              var errorJson = JsonSerializer.Serialize(errorDetails);
+
+              await context.Response.WriteAsync(errorJson);
+            }
+          });
         });
 
         app.UseHsts();
@@ -144,7 +171,8 @@ namespace Api
         c.WithExposedHeaders("X-Pagination");
         c.AllowAnyMethod();
         c.AllowAnyOrigin();
-        c.WithOrigins("https://rauscher-app-espuri.flutterflow.app/", "http://localhost:4200", "http://localhost:53662");
+        c.AllowCredentials();
+        c.WithOrigins("https://rauscher-app-espuri.flutterflow.app/", "http://localhost:4200", "http://localhost:53662", "http://webadminapp.us-east-2.elasticbeanstalk.com");
       });
 
       app.UseAuthentication();
@@ -181,6 +209,7 @@ namespace Api
       app.UseEndpoints(endpoints =>
       {
         endpoints.MapControllers();
+        endpoints.MapHub<CommoditiesTradeHub>("/CommoditiesTradeHub");
       });
 
       app.UseHealthChecks("/health");
