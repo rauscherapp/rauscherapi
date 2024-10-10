@@ -6,6 +6,7 @@ using Domain.Interfaces;
 using Domain.Repositories;
 using MediatR;
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -41,7 +42,9 @@ namespace Domain.CommandHandlers
       var symbols = await _symbolsRepository.ObterSymbolsAppVisible();
       var openingRates = await _rateProvider.GetOpeningRateAsync(DateTime.UtcNow.AddDays(-1).ToString("MM-dd-yyyy"), symbols);
 
-      foreach (var symbol in openingRates)
+      var openingRatesResults = openingRates.Select(x => x).Where(x => x != null);
+
+      foreach (var symbol in openingRatesResults)
       {
         var ohlcExisting = await _commodityOpenHighLowCloseRepository.ObterOHCLBySymbolCode(symbol.Symbol);
         if (ohlcExisting is null)

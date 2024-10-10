@@ -53,15 +53,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4.6 - YahooFinance", "4.6 -
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Data.YahooFinanceApi.Api", "api-rauscher\Data.YahooFinanceApi\YahooFinanceApi\Data.YahooFinanceApi.Api.csproj", "{88ECB456-BF5B-42B6-9174-0774567D5656}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure.Commodities", "Infrastructure.Commodities\Infrastructure.Commodities.csproj", "{05954D48-77F2-448C-B70A-A60CC9A06DEA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure.Commodities", "Infrastructure.Commodities\Infrastructure.Commodities.csproj", "{05954D48-77F2-448C-B70A-A60CC9A06DEA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure.BancoCentral", "Infrastructure.BancoCentral\Infrastructure.BancoCentral.csproj", "{79EF1C8B-12B6-4CF6-AD3C-53E861DF49D5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure.BancoCentral", "Infrastructure.BancoCentral\Infrastructure.BancoCentral.csproj", "{79EF1C8B-12B6-4CF6-AD3C-53E861DF49D5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure.YahooFinance", "Infrastructure.YahooFinance\Infrastructure.YahooFinance.csproj", "{CC77FA20-18F4-4F3A-80C9-B5357D7BCCC1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure.YahooFinance", "Infrastructure.YahooFinance\Infrastructure.YahooFinance.csproj", "{CC77FA20-18F4-4F3A-80C9-B5357D7BCCC1}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4.7 - Adapters", "4.7 - Adapters", "{E704AE0F-C56E-4EDD-A316-84AF9C6E0401}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure.RateProvider", "Infrastructure.RateProvider\Infrastructure.RateProvider.csproj", "{7D9FA3C0-B927-4EB8-A008-AD5F5EA74B05}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure.RateProvider", "Infrastructure.RateProvider\Infrastructure.RateProvider.csproj", "{7D9FA3C0-B927-4EB8-A008-AD5F5EA74B05}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RauscherFunctionsAPI", "RauscherFunctionsAPI\RauscherFunctionsAPI.csproj", "{82F4F546-0034-4759-8EBC-B86513CAA18A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -137,6 +139,10 @@ Global
 		{7D9FA3C0-B927-4EB8-A008-AD5F5EA74B05}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7D9FA3C0-B927-4EB8-A008-AD5F5EA74B05}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7D9FA3C0-B927-4EB8-A008-AD5F5EA74B05}.Release|Any CPU.Build.0 = Release|Any CPU
+		{82F4F546-0034-4759-8EBC-B86513CAA18A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{82F4F546-0034-4759-8EBC-B86513CAA18A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{82F4F546-0034-4759-8EBC-B86513CAA18A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{82F4F546-0034-4759-8EBC-B86513CAA18A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -171,6 +177,7 @@ Global
 		{CC77FA20-18F4-4F3A-80C9-B5357D7BCCC1} = {5ECA3AF4-E30A-4D34-980E-C06B671B8ACE}
 		{E704AE0F-C56E-4EDD-A316-84AF9C6E0401} = {07394689-747E-410D-9307-030762D86E8D}
 		{7D9FA3C0-B927-4EB8-A008-AD5F5EA74B05} = {E704AE0F-C56E-4EDD-A316-84AF9C6E0401}
+		{82F4F546-0034-4759-8EBC-B86513CAA18A} = {60C85A7F-4CA7-49D1-A1D3-C650FB9FAABB}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {AC74E1D8-823B-4022-B974-BA9E71D491A1}

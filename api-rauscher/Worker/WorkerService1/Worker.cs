@@ -9,7 +9,7 @@ namespace Worker
     private readonly ILogger<Worker> _logger;
     private readonly IServiceProvider _serviceProvider;
     private HubConnection _hubConnection;
-    private DateTime _lastOHLCUpdateDate; 
+    private DateTime _lastOHLCUpdateDate;
 
 
     public Worker(ILogger<Worker> logger, IServiceProvider serviceProvider)
@@ -46,14 +46,19 @@ namespace Worker
           var currentTime = DateTime.Now.TimeOfDay;
           var currentDate = DateTime.Now.Date;
 
+#if DEBUG
+          marketOpeningHour = TimeSpan.Parse("09:00");
+          marketClosingHour = TimeSpan.Parse("22:00");
+#endif
+
           if (currentTime >= marketOpeningHour && currentTime <= marketClosingHour)
           {
             if (_lastOHLCUpdateDate != currentDate)
             {
-              //var taskOHLC = commoditiesRateAppService.AtualizarOHLCCommoditiesRate();
-              //await Task.WhenAll(taskOHLC);
+              var taskOHLC = commoditiesRateAppService.AtualizarOHLCCommoditiesRate();
+              await Task.WhenAll(taskOHLC);
 
-              //_lastOHLCUpdateDate = currentDate;
+              _lastOHLCUpdateDate = currentDate;
             }
 
             var taskExclude = commoditiesRateAppService.RemoverCommoditiesRateAntigos();

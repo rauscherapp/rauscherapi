@@ -25,7 +25,7 @@ namespace Data.YahooFinanceApi.Api.Service
       var result = (await _yahooFinanceAPI.GetExchangeRateAsync(symbol));
       if (result == null)
       {
-        return null;
+        return Enumerable.Empty<CommodityOpenHighLowClose>();
       }
       return result.AsOHLCDomainModel();
     }

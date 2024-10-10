@@ -24,7 +24,7 @@ namespace Data.Commodities.Api.Service
       var result = await _commoditiesAPI.GetOHLCAsync(codes);
       if (result == null)
       {
-        return null;
+        return Enumerable.Empty<CommodityOpenHighLowClose>();
       }
       return result.OhlcAsDomainModel();
     }
