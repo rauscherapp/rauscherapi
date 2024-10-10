@@ -25,7 +25,7 @@ namespace Data.BancoCentral.Api.Service
     {
       var result = (await _bancoCentralAPI.GetOpeningRateAsync(date)).Value.Where(x => x.tipoBoletim.ToLower().Equals("fechamento ptax"));
       if (result == null) {
-        return null;
+        return Enumerable.Empty<CommodityOpenHighLowClose>();
       }
       return result.AsOHLCDomainModel();
     }

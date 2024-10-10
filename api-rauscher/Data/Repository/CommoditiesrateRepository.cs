@@ -43,14 +43,11 @@ namespace Data.Repository
 
     public async Task RemoveOlderThanAsync(DateTime date)
     {
-      // Obtenha os registros a serem excluídos
       var commoditiesToDelete = await Db.CommoditiesRates
           .Where(cr => cr.Date < date)
-          .ToListAsync(); // Use ToListAsync para materializar os dados antes da exclusão
+          .ToListAsync();
 
-      // Realize a exclusão em massa
       Db.CommoditiesRates.RemoveRange(commoditiesToDelete);
-      await Db.SaveChangesAsync(); // Aguarde a conclusão da operação
     }
   }
 }

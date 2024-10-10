@@ -45,11 +45,18 @@ namespace Application.Services
     public async Task<AboutUsViewModel> ObterAboutUs()
     {
       _logger.LogInformation("Handling: {MethodName}", nameof(ObterAboutUs));
-      var data = await _mediator.Send(new ObterAboutUsQuery());
-      var resultadoDB = _mapper.Map<AboutUs, AboutUsViewModel>(data);
-      if (resultadoDB == null) return resultadoDB;
-
-      return resultadoDB;
+      try
+      {
+        var data = await _mediator.Send(new ObterAboutUsQuery());
+        var resultadoDB = _mapper.Map<AboutUs, AboutUsViewModel>(data);
+        return resultadoDB;
+      }
+      catch (Exception ex)
+      {
+        _logger.LogInformation("Handling Error: {0} ", ex.InnerException);
+        _logger.LogError(ex.Message);
+      }
+      return null;
     }
   }
 }

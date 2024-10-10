@@ -10,7 +10,7 @@ namespace Domain.Commands
 
     public ExcluirCommoditiesRateAntigosCommand()
     {
-      DataLimite = DateTime.UtcNow.AddDays(-1); // Define 7 dias atrás como a data limite
+      DataLimite = DateTime.UtcNow.AddDays(-3); // Define 7 dias atrás como a data limite
     }
     public override bool IsValid()
     {

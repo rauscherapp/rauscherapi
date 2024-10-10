@@ -27,25 +27,7 @@ namespace Domain.CommandHandlers
 
     public async Task<bool> Handle(ExcluirCommoditiesRateAntigosCommand message, CancellationToken cancellationToken)
     {
-      // Remove registros mais antigos que 7 dias
       await _CommoditiesRateRepository.RemoveOlderThanAsync(message.DataLimite);
-
-      if (Commit())
-      {
-        // Opcional: Lançar evento após exclusão
-        await Bus.RaiseEvent(new ExcluirCommoditiesRateEvent(
-          message.Id,
-          message.Timestamp,
-          message.Base,
-          message.Date,
-          message.Code,
-          message.Unit,
-          message.Price,
-          message.Variationprice,
-          message.Variationpricepercent,
-          message.Isup
-          ));
-      }
 
       return await Task.FromResult(true);
     }

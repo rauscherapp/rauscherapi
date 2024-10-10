@@ -89,7 +89,7 @@ namespace Application.Services
     {
       _logger.LogInformation("Handling: {MethodName}", nameof(ListarSymbols));
       var data = await _mediator.Send(new ListarSymbolsWithRateQuery(parameters));
-      var resultadoDB = data.Select(x => _mapper.Map<Symbols, SymbolsViewModel>(x));
+      var resultadoDB = data.Select(x => _mapper.Map<Symbols, SymbolsViewModel>(x)).Where(last => last.LastRate != null);
       return resultadoDB;
     }
     public async Task<SymbolsViewModel> ObterSymbols(Guid Symbols)

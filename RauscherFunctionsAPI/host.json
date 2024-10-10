@@ -1,0 +1,15 @@
+{
+  "version": "2.0",
+  "logging": {
+    "logLevel": {
+      "Function": "Information",
+      "Host.Results": "Information",
+      "Host.Aggregator": "Information"
+    },
+    "applicationInsights": {
+      "samplingSettings": {
+        "isEnabled": true
+      }
+    }
+  }
+}
