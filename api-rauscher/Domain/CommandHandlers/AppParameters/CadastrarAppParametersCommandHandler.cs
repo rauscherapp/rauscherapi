@@ -47,7 +47,9 @@ namespace Domain.CommandHandlers
         message.EmailReceiver,
         message.MarketOpeningHour,
         message.MarketClosingHour,
-        message.MinutesIntervalJob
+        message.MinutesIntervalJob,
+        message.YahooFinanceApiOn,
+        message.CommoditiesApiOn
         );
 
       _appparametersRepository.Add(appparameters);
@@ -69,7 +71,9 @@ namespace Domain.CommandHandlers
           message.EmailReceiver,
           message.MarketOpeningHour,
           message.MarketClosingHour,
-          message.MinutesIntervalJob
+          message.MinutesIntervalJob,
+          message.YahooFinanceApiOn,
+          message.CommoditiesApiOn
           ));
       }
 

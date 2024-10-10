@@ -28,6 +28,7 @@ namespace Aplication.Provider
         StripePriceId = optionsEntity.StripeApiPriceId,
         StripeTrialPeriod = optionsEntity.StripeTrialPeriod,
         CommoditiesApiKey = optionsEntity.CommoditiesApiKey,
+        YahooFinanceApiKey = optionsEntity.YahooFinanceApiKey,
         EmailSender = optionsEntity.EmailSender,
         EmailReceiver = optionsEntity.EmailReceiver,
         EmailPassword = optionsEntity.EmailPassword,

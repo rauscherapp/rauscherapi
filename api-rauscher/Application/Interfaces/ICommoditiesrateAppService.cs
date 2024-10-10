@@ -13,5 +13,7 @@ namespace Application.Interfaces
     Task<bool> ExcluirCommoditiesRate(Guid CommoditiesRate);
     Task<CommoditiesRateViewModel> ObterCommoditiesRate(Guid CommoditiesRate);
     Task<PagedResponse<CommoditiesRateViewModel>> ListarCommoditiesRate(CommoditiesRateParameters parameters);
+    Task<bool> RemoverCommoditiesRateAntigos();
+    Task<bool> AtualizarOHLCCommoditiesRate();
   }
 }

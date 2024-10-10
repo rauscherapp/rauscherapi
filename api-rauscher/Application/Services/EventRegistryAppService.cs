@@ -66,6 +66,16 @@ namespace Application.Services
 
       return PaginationHelpers.CreatePaginatedResponse(viewModelPagedList, parameters, "Mostrar", _uriAppService);
     }
+    public async Task<PagedResponse<EventRegistryViewModel>> ListarEventRegistryApp(EventRegistryParameters parameters)
+    {
+      _logger.LogInformation("Handling: {MethodName}", nameof(ListarEventRegistryApp));
+      var data = await _mediator.Send(new ListarEventRegistryAppQuery(parameters));
+      var resultadoDB = data.Select(x => _mapper.Map<EventRegistry, EventRegistryViewModel>(x));
+
+      var viewModelPagedList = PagedList<EventRegistryViewModel>.Create(resultadoDB.AsQueryable(), parameters.PageNumber, parameters.PageSize);
+
+      return PaginationHelpers.CreatePaginatedResponse(viewModelPagedList, parameters, "Mostrar", _uriAppService);
+    }
     public async Task<EventRegistryViewModel> ObterEventRegistry(Guid eventRegistryId)
     {
       _logger.LogInformation("Handling: {MethodName}", nameof(ObterEventRegistry));

@@ -6,6 +6,7 @@ using Domain.Commands;
 using Domain.Models;
 using Domain.Queries;
 using Domain.QueryParameters;
+using Domain.Repositories;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using System;
@@ -82,6 +83,14 @@ namespace Application.Services
       var viewModelPagedList = PagedList<SymbolsViewModel>.Create(resultadoDB.AsQueryable(), parameters.PageNumber, parameters.PageSize);
 
       return PaginationHelpers.CreatePaginatedResponse(viewModelPagedList, parameters, "Mostrar", _uriAppService);
+    }
+
+    public async Task<IEnumerable<SymbolsViewModel>> ListarSymbolsWithRateForWorker(SymbolsParameters parameters)
+    {
+      _logger.LogInformation("Handling: {MethodName}", nameof(ListarSymbols));
+      var data = await _mediator.Send(new ListarSymbolsWithRateQuery(parameters));
+      var resultadoDB = data.Select(x => _mapper.Map<Symbols, SymbolsViewModel>(x)).Where(last => last.LastRate != null);
+      return resultadoDB;
     }
     public async Task<SymbolsViewModel> ObterSymbols(Guid Symbols)
     {

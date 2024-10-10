@@ -40,5 +40,14 @@ namespace Data.Repository
 
       return PagedList<CommoditiesRate>.Create(CommoditiesRate, parameters.PageNumber, parameters.PageSize);
     }
+
+    public async Task RemoveOlderThanAsync(DateTime date)
+    {
+      var commoditiesToDelete = await Db.CommoditiesRates
+          .Where(cr => cr.Date < date)
+          .ToListAsync();
+
+      Db.CommoditiesRates.RemoveRange(commoditiesToDelete);
+    }
   }
 }

@@ -24,7 +24,7 @@ namespace Application.AutoMapper
         .ForMember(dest => dest.EventDateMonth, opt => opt.MapFrom(src => src.EventDate.ToString("MMM").ToUpper()))
         .ForMember(dest => dest.EventDateDay, opt => opt.MapFrom(src => src.EventDate.Day.ToString()))
         .ForMember(dest => dest.EventDateHour, opt => opt.MapFrom(src => src.EventDate.ToString("hh:mm tt").ToUpper()))
-        .ForMember(dest => dest.EventDateYear, opt => opt.MapFrom(src => src.EventDate.ToString("YYYY")));
+        .ForMember(dest => dest.EventDateYear, opt => opt.MapFrom(src => src.EventDate.Year.ToString()));
 
       CreateMap<AppParameters, AppParametersViewModel>();
         CreateMap<CommoditiesRate, CommoditiesRateViewModel>()

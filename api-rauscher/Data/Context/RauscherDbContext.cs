@@ -27,6 +27,7 @@ namespace Data.Context
     public virtual DbSet<Post> Posts { get; set; }
     public virtual DbSet<Folder> Folders { get; set; }
     public virtual DbSet<AboutUs> AboutUs { get; set; }
+    public virtual DbSet<CommodityOpenHighLowClose> CommodityOpenHighLowCloses { get; set; }
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
       if (!optionsBuilder.IsConfigured)
@@ -48,6 +49,7 @@ namespace Data.Context
       modelBuilder.ApplyConfiguration(new CommoditiesRateMap());
       modelBuilder.ApplyConfiguration(new SymbolsMap());
       modelBuilder.ApplyConfiguration(new ApiCredentialsMap());
+      modelBuilder.ApplyConfiguration(new CommodityOpenHighLowCloseMap());
       modelBuilder.ApplyConfiguration(new PostMap());
       modelBuilder.ApplyConfiguration(new FolderMap());
       modelBuilder.ApplyConfiguration(new AboutUsMap());

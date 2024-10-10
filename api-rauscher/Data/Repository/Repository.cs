@@ -24,6 +24,10 @@ namespace Data.Repository
     {
       DbSet.Add(obj);
     }
+    public virtual void AddRange(List<TEntity> obj)
+    {
+      DbSet.AddRange(obj);
+    }
 
     public async Task<List<TEntity>> Buscar(Expression<Func<TEntity, bool>> predicate)
     {
@@ -48,6 +52,10 @@ namespace Data.Repository
     public virtual void Remove(Guid id)
     {
       DbSet.Remove(DbSet.Find(id));
+    }
+    public virtual void RemoveAll(List<TEntity> obj)
+    {
+      DbSet.RemoveRange(obj);
     }
 
     public int SaveChanges()

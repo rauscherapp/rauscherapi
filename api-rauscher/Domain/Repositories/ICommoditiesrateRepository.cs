@@ -11,6 +11,6 @@ namespace Domain.Repositories
     Task<CommoditiesRate> GetLastPriceBeforeTimestamp(string commodityCode, long? timestamp);
 		CommoditiesRate ObterCommoditiesRate(Guid id);
     Task<PagedList<CommoditiesRate>> ListarCommoditiesRates(CommoditiesRateParameters parameters);
-
+    Task RemoveOlderThanAsync(DateTime date);
   }
 }

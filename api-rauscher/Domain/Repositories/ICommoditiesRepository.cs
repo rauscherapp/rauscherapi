@@ -12,5 +12,6 @@ namespace Domain.Repositories
   {
     Task<IEnumerable<Symbols>> GetSymbolsAsync();
     Task<IEnumerable<CommoditiesRate>> GetLatestCommodityRatesAsync(string baseCurrency, IEnumerable<string> symbols);
+    Task<CommodityOpenHighLowClose> GetOHLCAsync(string symbol);
   }
 }

@@ -32,6 +32,16 @@ namespace Data.Repository
 			    eventregistry = eventregistry.ApplySort(parameters.OrderBy);
 			
 			return PagedList<EventRegistry>.Create(eventregistry, parameters.PageNumber, parameters.PageSize);
+		}		
+		public async Task<PagedList<EventRegistry>> ListarEventRegistryApp(EventRegistryParameters parameters)
+		{
+			var eventregistry = Db.EventRegistrys
+				.AsQueryable().Where(x => x.Published);
+		
+			if (!string.IsNullOrWhiteSpace(parameters.OrderBy))
+			    eventregistry = eventregistry.ApplySort(parameters.OrderBy);
+			
+			return PagedList<EventRegistry>.Create(eventregistry, parameters.PageNumber, parameters.PageSize);
 		}
 	}
 }

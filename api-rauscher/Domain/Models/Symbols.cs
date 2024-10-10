@@ -10,7 +10,8 @@ namespace Domain.Models
     string name,
     Boolean appvisible,
     string friendlyName,
-    string symbolType)
+    string symbolType,
+    string vendor)
     {
       Id = Guid.NewGuid();
       Code = code;
@@ -18,6 +19,7 @@ namespace Domain.Models
       Appvisible = appvisible;
       FriendlyName = friendlyName;
       SymbolType = symbolType;
+      Vendor = vendor;
     }
     public Guid Id { get; set; }
 		public string Code { get; set; }
@@ -25,6 +27,7 @@ namespace Domain.Models
 		public string FriendlyName { get; set; }
 		
     public string SymbolType { get; set; }
+    public string Vendor { get; set; }
 		public Boolean Appvisible { get; set; }
 
     // Navigation property

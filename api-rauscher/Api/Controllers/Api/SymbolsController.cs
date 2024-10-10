@@ -52,10 +52,19 @@ namespace Api.Controllers
       return CreateResponse(result);
     }
 
+    [HttpPost("CreateSymbol")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [AllowAnonymous]
+    public async Task<IActionResult> CreateSymbol([FromQuery] SymbolsViewModel parameters)
+    {
+      var result = await _symbolsAppService.CadastrarSymbols(parameters);
+      return CreateResponse(result);
+    }
+
     [HttpPatch("UpdateSymbol/{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [AllowAnonymous]
-    public async Task<IActionResult> UpdatePost([FromBody] SymbolsViewModel SymbolViewModel)
+    public async Task<IActionResult> UpdateSymbol([FromBody] SymbolsViewModel SymbolViewModel)
     {
       if (!IsValidOperation())
       {
@@ -66,6 +75,23 @@ namespace Api.Controllers
         });
       }
       var result = await _symbolsAppService.AtualizarSymbols(SymbolViewModel);
+      return CreateResponse(result);
+    }
+
+    [HttpPatch("UpdateSymbolFromApi")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [AllowAnonymous]
+    public async Task<IActionResult> UpdateSymbolFromApi([FromBody] SymbolsViewModel symbolViewModel)
+    {
+      if (!IsValidOperation())
+      {
+        return BadRequest(new
+        {
+          success = false,
+          errors = GetNotificationMessages()
+        });
+      }
+      var result = await _symbolsAppService.AtualizarSymbolsApi(symbolViewModel);
       return CreateResponse(result);
     }
 
