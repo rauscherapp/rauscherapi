@@ -10,6 +10,7 @@ public class UserRequest
   public string? Avatar { get; set; }
   public string? Status { get; set; }
   public string? Password { get; set; }
+  public int? UserType{ get; set; }
 }
 public class UserResponse
 {

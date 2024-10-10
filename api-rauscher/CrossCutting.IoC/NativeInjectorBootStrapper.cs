@@ -1,14 +1,20 @@
 using Application.Interfaces;
 using Application.Services;
 using CrossCutting.Bus;
-using Data.BancoCentral.Api.Service;
-using Data.Commodities.Api.Service;
+using Data.BancoCentral.Api.Infrastructure;
+using Data.BancoCentral.Api.Interfaces;
+using Data.Commodities.Api.Infrastructure;
+using Data.Commodities.Api.Interfaces;
 using Data.Context;
 using Data.EventSourcing;
 using Data.Repository;
 using Data.Repository.EventSourcing;
 using Data.UoW;
+using Data.YahooFinanceApi.Api.Infrastructure;
+using Data.YahooFinanceApi.Api.Interfaces;
 using Data.YahooFinanceApi.Api.Service;
+using Domain.Adapters.Providers;
+using Domain.Adapters.Vendors;
 using Domain.CommandHandlers;
 using Domain.CommandHandlers.Apicredentials;
 using Domain.Commands;
@@ -18,13 +24,15 @@ using Domain.Core.Events;
 using Domain.Core.Notifications;
 using Domain.Interfaces;
 using Domain.Models;
-using Domain.Options;
 using Domain.Queries;
 using Domain.QueryHandlers;
 using Domain.QueryParameters;
 using Domain.Repositories;
-using Domain.Repository;
 using Domain.Services;
+using Infrastructure.BancoCentral;
+using Infrastructure.Commodities;
+using Infrastructure.RateProvider.Providers;
+using Infrastructure.YahooFinance;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -46,7 +54,7 @@ namespace CrossCutting.IoC
       services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
 
       // Correctly register IUrlHelper to handle cases where ActionContext might be null
-      services.AddScoped<IUrlHelper>(x =>
+      services.AddTransient<IUrlHelper>(x =>
       {
         var actionContext = x.GetRequiredService<IActionContextAccessor>().ActionContext;
         var factory = x.GetRequiredService<IUrlHelperFactory>();
@@ -54,94 +62,106 @@ namespace CrossCutting.IoC
       });
 
       // Domain Bus (Mediator)
-      services.AddScoped<IMediatorHandler, InMemoryBus>();
-      services.AddScoped<IEventBusRabbitMQ, EventBusRabbitMQ>();
+      services.AddSingleton<IMediatorHandler, InMemoryBus>();
+      services.AddTransient<IEventBusRabbitMQ, EventBusRabbitMQ>();
       services.AddTransient<IPropertyCheckerService, PropertyCheckerService>();
 
       // Application services
-      //services.AddScoped<StripeService>();
-      //services.AddScoped<IStripeCheckoutSessionService, StripeCheckoutSessionService>();
-      services.AddScoped<IAboutUsAppService, AboutUsAppService>();
-      services.AddScoped<IAuthService, AuthService>();
-      services.AddScoped<IEventRegistryAppService, EventRegistryAppService>();
-      services.AddScoped<IAppParametersAppService, AppParametersAppService>();
-      services.AddScoped<ICommoditiesRateAppService, CommoditiesRateAppService>();
-      services.AddScoped<ISymbolsAppService, SymbolsAppService>();
-      services.AddScoped<IApiCredentialsAppService, ApicredentialsAppService>();
-      services.AddScoped<IPostAppService, PostAppService>();
-      services.AddScoped<IFolderAppService, FolderAppService>();
-      services.AddScoped<IStripeCustomerService, StripeCustomerService>();
-      services.AddScoped<IStripeSessionService, StripeSessionService>();
-      services.AddScoped<IUriAppService, UriAppService>();
-      services.AddScoped<IEmailService, EmailSenderAppService>();
-      services.AddScoped<IYahooFinanceRepository, YahooFinanceRepository>();
-      services.AddScoped<IBancoCentralRepository, BancoCentralRepository>();
+      services.AddTransient<IAboutUsAppService, AboutUsAppService>();
+      services.AddTransient<IAuthService, AuthService>();
+      services.AddTransient<IEventRegistryAppService, EventRegistryAppService>();
+      services.AddTransient<IAppParametersAppService, AppParametersAppService>();
+      services.AddTransient<ICommoditiesRateAppService, CommoditiesRateAppService>();
+      services.AddTransient<ISymbolsAppService, SymbolsAppService>();
+      services.AddTransient<IApiCredentialsAppService, ApicredentialsAppService>();
+      services.AddTransient<IPostAppService, PostAppService>();
+      services.AddTransient<IFolderAppService, FolderAppService>();
+      services.AddTransient<IStripeCustomerService, StripeCustomerService>();
+      services.AddTransient<IStripeSessionService, StripeSessionService>();
+      services.AddTransient<IUriAppService, UriAppService>();
+      services.AddTransient<IEmailService, EmailSenderAppService>();
+      services.AddTransient<IYahooFinanceRepository, YahooFinanceRepository>();
 
       // Domain - Commands
-      services.AddScoped<IRequestHandler<SendEmailCommand, bool>, SendEmailCommandHandler>();
-      services.AddScoped<IRequestHandler<ExcluirEventRegistryCommand, bool>, ExcluirEventRegistryCommandHandler>();
-      services.AddScoped<IRequestHandler<CadastrarEventRegistryCommand, bool>, CadastrarEventRegistryCommandHandler>();
-      services.AddScoped<IRequestHandler<AtualizarEventRegistryCommand, bool>, AtualizarEventRegistryCommandHandler>();
-      services.AddScoped<IRequestHandler<ExcluirAppParametersCommand, bool>, ExcluirAppParametersCommandHandler>();
-      services.AddScoped<IRequestHandler<CadastrarAppParametersCommand, bool>, CadastrarAppParametersCommandHandler>();
-      services.AddScoped<IRequestHandler<AtualizarAppParametersCommand, bool>, AtualizarAppParametersCommandHandler>();
-      services.AddScoped<IRequestHandler<ExcluirCommoditiesRateCommand, bool>, ExcluirCommoditiesRateCommandHandler>();
-      services.AddScoped<IRequestHandler<CadastrarCommoditiesRateCommand, bool>, CadastrarCommoditiesRateCommandHandler>();
-      services.AddScoped<IRequestHandler<AtualizarCommoditiesRateCommand, bool>, AtualizarCommoditiesRateCommandHandler>();
-      services.AddScoped<IRequestHandler<ExcluirSymbolsCommand, bool>, ExcluirSymbolsCommandHandler>();
-      services.AddScoped<IRequestHandler<CadastrarSymbolsCommand, bool>, CadastrarSymbolsCommandHandler>();
-      services.AddScoped<IRequestHandler<AtualizarSymbolsCommand, bool>, AtualizarSymbolsCommandHandler>();
-      services.AddScoped<IRequestHandler<AtualizarTabelaSymbolsAPICommand, bool>, AtualizarTabelaSymbolsAPICommandHandler>();
-      services.AddScoped<IRequestHandler<ExcluirApicredentialsCommand, bool>, ExcluirApicredentialsCommandHandler>();
-      services.AddScoped<IRequestHandler<CadastrarApicredentialsCommand, bool>, CadastrarApicredentialsCommandHandler>();
-      services.AddScoped<IRequestHandler<AtualizarApicredentialsCommand, bool>, AtualizarApicredentialsCommandHandler>();
-      services.AddScoped<IRequestHandler<ExcluirPostCommand, bool>, ExcluirPostCommandHandler>();
-      services.AddScoped<IRequestHandler<CadastrarPostCommand, bool>, CadastrarPostCommandHandler>();
-      services.AddScoped<IRequestHandler<AtualizarPostCommand, bool>, AtualizarPostCommandHandler>();
-      services.AddScoped<IRequestHandler<ExcluirFolderCommand, bool>, ExcluirFolderCommandHandler>();
-      services.AddScoped<IRequestHandler<CadastrarFolderCommand, bool>, CadastrarFolderCommandHandler>();
-      services.AddScoped<IRequestHandler<AtualizarFolderCommand, bool>, AtualizarFolderCommandHandler>();
-      services.AddScoped<IRequestHandler<GerarSecretAndApiKeyCommand, bool>, GerarSecretAndApiKeyCommandHandler>();
-      services.AddScoped<IRequestHandler<AtualizarAboutUsCommand, bool>, AtualizarAboutUsCommandHandler>();
+      services.AddTransient<IRequestHandler<SendEmailCommand, bool>, SendEmailCommandHandler>();
+      services.AddTransient<IRequestHandler<ExcluirEventRegistryCommand, bool>, ExcluirEventRegistryCommandHandler>();
+      services.AddTransient<IRequestHandler<CadastrarEventRegistryCommand, bool>, CadastrarEventRegistryCommandHandler>();
+      services.AddTransient<IRequestHandler<AtualizarEventRegistryCommand, bool>, AtualizarEventRegistryCommandHandler>();
+      services.AddTransient<IRequestHandler<ExcluirAppParametersCommand, bool>, ExcluirAppParametersCommandHandler>();
+      services.AddTransient<IRequestHandler<CadastrarAppParametersCommand, bool>, CadastrarAppParametersCommandHandler>();
+      services.AddTransient<IRequestHandler<AtualizarAppParametersCommand, bool>, AtualizarAppParametersCommandHandler>();
+      services.AddTransient<IRequestHandler<ExcluirCommoditiesRateCommand, bool>, ExcluirCommoditiesRateCommandHandler>();
+      services.AddTransient<IRequestHandler<ExcluirCommoditiesRateAntigosCommand, bool>, ExcluirCommoditiesRateAntigosCommandHandler>();
+      services.AddTransient<IRequestHandler<CadastrarCommoditiesRateCommand, bool>, CadastrarCommoditiesRateCommandHandler>();
+      services.AddTransient<IRequestHandler<AtualizarCommoditiesRateCommand, bool>, AtualizarCommoditiesRateCommandHandler>();
+      services.AddTransient<IRequestHandler<ExcluirSymbolsCommand, bool>, ExcluirSymbolsCommandHandler>();
+      services.AddTransient<IRequestHandler<CadastrarSymbolsCommand, bool>, CadastrarSymbolsCommandHandler>();
+      services.AddTransient<IRequestHandler<AtualizarSymbolsCommand, bool>, AtualizarSymbolsCommandHandler>();
+      services.AddTransient<IRequestHandler<AtualizarTabelaSymbolsAPICommand, bool>, AtualizarTabelaSymbolsAPICommandHandler>();
+      services.AddTransient<IRequestHandler<ExcluirApicredentialsCommand, bool>, ExcluirApicredentialsCommandHandler>();
+      services.AddTransient<IRequestHandler<CadastrarApicredentialsCommand, bool>, CadastrarApicredentialsCommandHandler>();
+      services.AddTransient<IRequestHandler<AtualizarApicredentialsCommand, bool>, AtualizarApicredentialsCommandHandler>();
+      services.AddTransient<IRequestHandler<ExcluirPostCommand, bool>, ExcluirPostCommandHandler>();
+      services.AddTransient<IRequestHandler<CadastrarPostCommand, bool>, CadastrarPostCommandHandler>();
+      services.AddTransient<IRequestHandler<AtualizarPostCommand, bool>, AtualizarPostCommandHandler>();
+      services.AddTransient<IRequestHandler<ExcluirFolderCommand, bool>, ExcluirFolderCommandHandler>();
+      services.AddTransient<IRequestHandler<CadastrarFolderCommand, bool>, CadastrarFolderCommandHandler>();
+      services.AddTransient<IRequestHandler<AtualizarFolderCommand, bool>, AtualizarFolderCommandHandler>();
+      services.AddTransient<IRequestHandler<GerarSecretAndApiKeyCommand, bool>, GerarSecretAndApiKeyCommandHandler>();
+      services.AddTransient<IRequestHandler<AtualizarAboutUsCommand, bool>, AtualizarAboutUsCommandHandler>();
+      services.AddTransient<IRequestHandler<AtualizarOHLCCommoditiesRateCommand, bool>, AtualizarOHLCCommoditiesRateCommandHandler>();
 
       // Domain - Queries
-      services.AddScoped<IRequestHandler<ListarSymbolsWithRateQuery, PagedList<Symbols>>, ListarSymbolsWithRateQueryHandler>();
-      services.AddScoped<IRequestHandler<ObterEventRegistryQuery, EventRegistry>, ObterEventRegistryQueryHandler>();
-      services.AddScoped<IRequestHandler<ListarEventRegistryQuery, PagedList<EventRegistry>>, ListarEventRegistryQueryHandler>();
-      services.AddScoped<IRequestHandler<ObterAppParametersQuery, AppParameters>, ObterAppParametersQueryHandler>();
-      services.AddScoped<IRequestHandler<ListarAppParametersQuery, PagedList<AppParameters>>, ListarAppParametersQueryHandler>();
-      services.AddScoped<IRequestHandler<ObterCommoditiesRateQuery, CommoditiesRate>, ObterCommoditiesRateQueryHandler>();
-      services.AddScoped<IRequestHandler<ListarCommoditiesRateQuery, PagedList<CommoditiesRate>>, ListarCommoditiesRateQueryHandler>();
-      services.AddScoped<IRequestHandler<ObterSymbolsQuery, Symbols>, ObterSymbolsQueryHandler>();
-      services.AddScoped<IRequestHandler<ListarSymbolsQuery, IQueryable<Symbols>>, ListarSymbolsQueryHandler>();
-      services.AddScoped<IRequestHandler<ObterApiCredentialsQuery, ApiCredentials>, ObterApiCredentialsQueryHandler>();
-      services.AddScoped<IRequestHandler<ListarApiCredentialsQuery, PagedList<ApiCredentials>>, ListarApiCredentialsQueryHandler>();
-      services.AddScoped<IRequestHandler<ObterPostQuery, Post>, ObterPostQueryHandler>();
-      services.AddScoped<IRequestHandler<ListarPostQuery, PagedList<Post>>, ListarPostQueryHandler>();
-      services.AddScoped<IRequestHandler<ListarFolderQuery, PagedList<Folder>>, ListarFolderQueryHandler>();
-      services.AddScoped<IRequestHandler<ObterAboutUsQuery, AboutUs>, ObterAboutUsQueryHandler>();
+      services.AddTransient<IRequestHandler<ListarSymbolsWithRateQuery, PagedList<Symbols>>, ListarSymbolsWithRateQueryHandler>();
+      services.AddTransient<IRequestHandler<ObterEventRegistryQuery, EventRegistry>, ObterEventRegistryQueryHandler>();
+      services.AddTransient<IRequestHandler<ListarEventRegistryQuery, PagedList<EventRegistry>>, ListarEventRegistryQueryHandler>();
+      services.AddTransient<IRequestHandler<ListarEventRegistryAppQuery, PagedList<EventRegistry>>, ListarEventRegistryAppQueryHandler>();
+      services.AddTransient<IRequestHandler<ObterAppParametersQuery, AppParameters>, ObterAppParametersQueryHandler>();
+      services.AddTransient<IRequestHandler<ListarAppParametersQuery, PagedList<AppParameters>>, ListarAppParametersQueryHandler>();
+      services.AddTransient<IRequestHandler<ObterCommoditiesRateQuery, CommoditiesRate>, ObterCommoditiesRateQueryHandler>();
+      services.AddTransient<IRequestHandler<ListarCommoditiesRateQuery, PagedList<CommoditiesRate>>, ListarCommoditiesRateQueryHandler>();
+      services.AddTransient<IRequestHandler<ObterSymbolsQuery, Symbols>, ObterSymbolsQueryHandler>();
+      services.AddTransient<IRequestHandler<ListarSymbolsQuery, IQueryable<Symbols>>, ListarSymbolsQueryHandler>();
+      services.AddTransient<IRequestHandler<ObterApiCredentialsQuery, ApiCredentials>, ObterApiCredentialsQueryHandler>();
+      services.AddTransient<IRequestHandler<ListarApiCredentialsQuery, PagedList<ApiCredentials>>, ListarApiCredentialsQueryHandler>();
+      services.AddTransient<IRequestHandler<ObterPostQuery, Post>, ObterPostQueryHandler>();
+      services.AddTransient<IRequestHandler<ListarPostQuery, PagedList<Post>>, ListarPostQueryHandler>();
+      services.AddTransient<IRequestHandler<ListarFolderQuery, PagedList<Folder>>, ListarFolderQueryHandler>();
+      services.AddTransient<IRequestHandler<ObterAboutUsQuery, AboutUs>, ObterAboutUsQueryHandler>();
 
       // Domain - Events
-      services.AddScoped<INotificationHandler<DomainNotification>, DomainNotificationHandler>();
+      services.AddSingleton<INotificationHandler<DomainNotification>, DomainNotificationHandler>();
 
       // Infra - Data
-      services.AddScoped<IAppParametersRepository, AppParametersRepository>();
-      services.AddScoped<IEventRegistryRepository, EventRegistryRepository>();
-      services.AddScoped<ICommoditiesRateRepository, CommoditiesRateRepository>();
-      services.AddScoped<ISymbolsRepository, SymbolsRepository>();
-      services.AddScoped<IApiCredentialsRepository, ApiCredentialsRepository>();
-      services.AddScoped<IPostRepository, PostRepository>();
-      services.AddScoped<IFolderRepository, FolderRepository>();
-      services.AddScoped<IAboutUsRepository, AboutUsRepository>();
-      services.AddScoped<IUnitOfWork, UnitOfWork>();
+      services.AddTransient<IAppParametersRepository, AppParametersRepository>();
+      services.AddTransient<IEventRegistryRepository, EventRegistryRepository>();
+      services.AddTransient<ICommoditiesRateRepository, CommoditiesRateRepository>();
+      services.AddTransient<ISymbolsRepository, SymbolsRepository>();
+      services.AddTransient<IApiCredentialsRepository, ApiCredentialsRepository>();
+      services.AddTransient<IPostRepository, PostRepository>();
+      services.AddTransient<IFolderRepository, FolderRepository>();
+      services.AddTransient<IAboutUsRepository, AboutUsRepository>();
+      services.AddTransient<IUnitOfWork, UnitOfWork>();
 
-      services.AddScoped<ICommoditiesRepository, CommoditiesRepository>();
-      services.AddScoped<IEventStoreRepository, EventStoreSQLRepository>();
-      services.AddScoped<IEventStore, SqlEventStore>();
-      services.AddScoped<EventStoreSQLContext>();
-      services.AddScoped<RauscherDbContext>();
-      services.AddScoped<IUser, User>();
-      // Infra - Filters (if any)
+      services.AddTransient<IRateProvider, RateProvider>();
+      services.AddTransient<IVendorRateAdapters, RatesAdapter>();
+      services.AddTransient<IVendorRateAdapters, YahooRatesAdapter>();
+      services.AddTransient<IVendorRateAdapters, CommodititesRatesAdapter>();
+      services.AddTransient<ITradeReadRepository, Data.BancoCentral.Api.Service.TradeReadRepository>();
+      services.AddTransient<ITradeReadRepository, Data.YahooFinanceApi.Api.Service.TradeReadRepository>();
+      services.AddTransient<ITradeReadRepository, Data.Commodities.Api.Service.TradeReadRepository>();
+
+      services.AddTransient<IBancoCentralAPI, BancoCentralAPI>();
+      services.AddTransient<IYahooFinanceAPI, YahooFinanceAPI>();
+      services.AddTransient<ICommoditiesAPI, CommoditiesAPI>();
+      services.AddTransient<ICommodityOpenHighLowCloseRepository, CommodityOpenHighLowCloseRepository>();
+      services.AddTransient<IRequestHandler<CadastrarCommoditiesRateCommand, bool>, CadastrarCommoditiesRateCommandHandler>();
+
+      services.AddTransient<IEventStoreRepository, EventStoreSQLRepository>();
+      services.AddTransient<IEventStore, SqlEventStore>();
+      services.AddTransient<EventStoreSQLContext>();
+      services.AddTransient<RauscherDbContext>();
+      services.AddTransient<IUser, User>();
     }
   }
 }

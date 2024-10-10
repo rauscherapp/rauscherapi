@@ -36,7 +36,8 @@ namespace Domain.CommandHandlers
         message.Name,
         message.Appvisible,
         message.FriendlyName,
-        message.SymbolType
+        message.SymbolType,
+        message.Vendor
         );
 
       _symbolsRepository.Add(symbols);

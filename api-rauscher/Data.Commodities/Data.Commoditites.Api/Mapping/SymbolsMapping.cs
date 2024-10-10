@@ -11,7 +11,7 @@ namespace Data.Commodities.Api.Mapping
 
     public static Symbols AsDomainModel(this KeyValuePair<string, string> model)
     {
-      return new Symbols(model.Key, model.Value, false, string.Empty, string.Empty);
+      return new Symbols(model.Key, model.Value, false, string.Empty, string.Empty, string.Empty);
     }
   }
 }

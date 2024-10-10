@@ -6,11 +6,11 @@ namespace Domain.QueryParameters
     {
         const int maxPageSize = 50;
         public string SearchQuery { get; set; }
-        public int PageNumber { get; set; } = 1;
-        public string OrderBy { get; set; } = "ID";
+        public int PageNumber { get; set; } = 0;
+        public string OrderBy { get; set; } = "";
         public string Fields { get; set; }
 
-        private int _pageSize = 20;
+        private int _pageSize = 10;
         public int PageSize
         {
             get => _pageSize;

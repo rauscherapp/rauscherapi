@@ -10,6 +10,10 @@
 	</ItemGroup>
 
   <ItemGroup>
+	<ProjectReference Include="..\..\Infrastructure.BancoCentral\Infrastructure.BancoCentral.csproj" />
+	<ProjectReference Include="..\..\Infrastructure.Commodities\Infrastructure.Commodities.csproj" />
+	<ProjectReference Include="..\..\Infrastructure.RateProvider\Infrastructure.RateProvider.csproj" />
+	<ProjectReference Include="..\..\Infrastructure.YahooFinance\Infrastructure.YahooFinance.csproj" />
 	<ProjectReference Include="..\Application\Application.csproj" />
 	<ProjectReference Include="..\Data.BancoCentral\Data.BancoCentral.Api.csproj" />
 	<ProjectReference Include="..\Data.Commodities\Data.Commoditites.Api\Data.Commodities.Api.csproj" />
