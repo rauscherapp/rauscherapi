@@ -34,7 +34,7 @@ namespace Application.AutoMapper
 
 
       CreateMap<Symbols, SymbolsViewModel>()
-        .ForMember(dest => dest.LastRate, opt => opt.MapFrom(src => src.CommoditiesRates.OrderByDescending(cr => cr.Timestamp).FirstOrDefault()));
+        .ForMember(dest => dest.lastRate, opt => opt.MapFrom(src => src.CommoditiesRates.OrderByDescending(cr => cr.Timestamp).FirstOrDefault()));
       CreateMap<ApiCredentials, ApicredentialsViewModel>();
       CreateMap<Post, PostViewModel>();
       CreateMap<Folder, FolderViewModel>();

@@ -3,6 +3,7 @@ using Domain.Models;
 using Domain.QueryParameters;
 using Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,8 +29,11 @@ namespace Data.Repository
 		{
 			var post = Db.Posts
 			.AsQueryable();
-			
-			if (!string.IsNullOrWhiteSpace(parameters.OrderBy))
+
+			if(!string.IsNullOrEmpty(parameters.Language))
+        post = post.Where(x => x.Language.Equals(parameters.Language));
+
+      if (!string.IsNullOrWhiteSpace(parameters.OrderBy))
 			    post = post.ApplySort(parameters.OrderBy);
 			
 			return PagedList<Post>.Create(post, parameters.PageNumber, parameters.PageSize);
@@ -45,6 +49,9 @@ namespace Data.Repository
       {
         query = query.Where(post => post.Visible);
       }
+
+      if (!string.IsNullOrEmpty(parameters.Language))
+        query = query.Where(x => x.Language.Equals(parameters.Language));
 
       if (!string.IsNullOrWhiteSpace(parameters.OrderBy))
       {

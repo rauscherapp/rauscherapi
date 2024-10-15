@@ -42,5 +42,13 @@ namespace Application.ViewModels
     public bool YahooFinanceApiOn { get; set; }
     [JsonPropertyName("CommoditiesApiOn")]
     public bool CommoditiesApiOn { get; set; }
+    [JsonPropertyName("WhatsAppNumber")]
+    public string WhatsAppNumber { get; set; }
+    [JsonPropertyName("ContactNumber")]
+    public string ContactNumber { get; set; }
+    [JsonPropertyName("InstagramUrl")]
+    public string InstagramUrl { get; set; }
+    [JsonPropertyName("WebSiteUrl")]
+    public string WebSiteUrl { get; set; }
   }
 }

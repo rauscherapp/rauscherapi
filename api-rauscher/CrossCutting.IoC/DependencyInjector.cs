@@ -1,6 +1,7 @@
 ﻿using Application.Interfaces;
 using Application.Services;
 using Data.Repository;
+using Data.UoW;
 using Domain.CommandHandlers;
 using Domain.CommandHandlers.Apicredentials;
 using Domain.Commands;
@@ -13,7 +14,6 @@ using Domain.QueryParameters;
 using Domain.Repositories;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
-using StripeApi.Service;
 using System.Linq;
 
 namespace CrossCutting.IoC
@@ -25,10 +25,10 @@ namespace CrossCutting.IoC
 
       //Services
       services.AddTransient<IAboutUsAppService, AboutUsAppService>();
-      //services.AddTransient<IAuthService, AuthService>();
+      services.AddTransient<IAuthService, AuthService>();
       services.AddTransient<IEventRegistryAppService, EventRegistryAppService>();
-      //services.AddTransient<IAppParametersAppService, AppParametersAppService>();
-      //services.AddTransient<ICommoditiesRateAppService, CommoditiesRateAppService>();
+      services.AddTransient<IAppParametersAppService, AppParametersAppService>();
+      services.AddTransient<ICommoditiesRateAppService, CommoditiesRateAppService>();
       services.AddTransient<ISymbolsAppService, SymbolsAppService>();
       //services.AddTransient<IApiCredentialsAppService, ApicredentialsAppService>();
       services.AddTransient<IPostAppService, PostAppService>();
@@ -92,7 +92,7 @@ namespace CrossCutting.IoC
       services.AddTransient<IPostRepository, PostRepository>();
       services.AddTransient<IFolderRepository, FolderRepository>();
       services.AddTransient<IAboutUsRepository, AboutUsRepository>();
-
+      services.AddTransient<IUnitOfWork, UnitOfWork>();
 
     }
   }

@@ -49,7 +49,8 @@ namespace Domain.CommandHandlers
         message.CONTENT,
         message.AUTHOR,
         message.VISIBLE,
-        message.Folderid
+        message.Folderid,
+        message.Language
         );
 
       _postRepository.Add(post);
