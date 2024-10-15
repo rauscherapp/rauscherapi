@@ -21,7 +21,11 @@ namespace Domain.Models
     string marketClosingHour,
     int minutesIntervalJob,
     bool yahooFinanceApiOn,
-    bool commoditiesApiOn)
+    bool commoditiesApiOn,
+    string whatsappNumber,
+    string contactNumber,
+    string instagramUrl,
+    string webSiteUrl)
     {
       Id = id;
       StripeApiClientKey = stripeApiClientKey;
@@ -40,6 +44,10 @@ namespace Domain.Models
       MinutesIntervalJob = minutesIntervalJob;
       YahooFinanceApiOn = yahooFinanceApiOn;
       CommoditiesApiOn = commoditiesApiOn;
+      WhatsappNumber = whatsappNumber;
+      ContactNumber = contactNumber;
+      InstagramUrl = instagramUrl;
+      WebSiteUrl = webSiteUrl;
     }
     public Guid Id { get; set; }
     public string StripeApiClientKey { get; set; }
@@ -59,5 +67,9 @@ namespace Domain.Models
     public bool YahooFinanceApiOn { get; set; }
     public bool CommoditiesApiOn { get; set; }
     public int MinutesIntervalJob { get; set; }
+    public string WhatsappNumber { get; set; }
+    public string ContactNumber { get; set; }
+    public string InstagramUrl { get; set; }
+    public string WebSiteUrl { get; set; }
   }
 }

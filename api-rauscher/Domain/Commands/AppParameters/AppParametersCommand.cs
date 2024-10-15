@@ -23,5 +23,9 @@ namespace Domain.Commands
     public bool YahooFinanceApiOn { get; set; }
     public bool CommoditiesApiOn { get; set; }
     public int MinutesIntervalJob { get; set; }
+    public string WhatsappNumber { get; set; }
+    public string ContactNumber { get; set; }
+    public string InstagramUrl { get; set; }
+    public string WebSiteUrl { get; set; }
   }
 }

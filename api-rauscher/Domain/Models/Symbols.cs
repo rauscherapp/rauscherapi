@@ -6,6 +6,7 @@ namespace Domain.Models
 	public class Symbols
 	{
     public Symbols(
+      Guid id,
     string code,
     string name,
     Boolean appvisible,
@@ -13,7 +14,7 @@ namespace Domain.Models
     string symbolType,
     string vendor)
     {
-      Id = Guid.NewGuid();
+      Id = id;
       Code = code;
       Name = name;
       Appvisible = appvisible;

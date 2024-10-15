@@ -45,8 +45,8 @@ namespace RauscherFunctionsAPI
     {
       log.LogInformation("Processing GET request for Posts.");
 
-      var parameters = new PostParameters();
-      // Optionally: parse query parameters from request to populate 'parameters'
+      var queryParameters = req.GetQueryParameterDictionary();
+      var parameters = JsonSerializer.Deserialize<PostParameters>(JsonSerializer.Serialize(queryParameters));
 
       var posts = await _postAppService.ListarPost(parameters);
       var result = _mapper.Map<IEnumerable<PostViewModel>>(posts.Data).ShapeData(parameters.Fields);
@@ -71,7 +71,7 @@ namespace RauscherFunctionsAPI
     [FunctionName("CreatePost")]
     [AllowAnonymous]
     public async Task<IActionResult> CreatePost(
-        [HttpTrigger(AuthorizationLevel.Function, "post", Route = "v1/Post")] HttpRequest req,
+        [HttpTrigger(AuthorizationLevel.Function, "post", Route = "v1/CreatePost")] HttpRequest req,
         ILogger log)
     {
       log.LogInformation("Processing POST request to create a new Post.");

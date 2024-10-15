@@ -55,14 +55,12 @@ namespace Data.Repository
 
     public async Task<IQueryable<Symbols>> ListarSymbolss(SymbolsParameters parameters)
    {
-      // Validação básica de parâmetros
       if (parameters == null) throw new ArgumentNullException(nameof(parameters));
 
       var symbols = Db.Symbolss
           .AsNoTracking()
           .AsQueryable();
 
-      // Aplica filtros conforme os parâmetros
       if (!string.IsNullOrWhiteSpace(parameters.SearchQuery))
       {
         if (!parameters.SearchQuery.Equals("null"))
@@ -74,7 +72,7 @@ namespace Data.Repository
         }
       }
 
-      // Aplica filtros conforme os parâmetros
+
       if (!string.IsNullOrWhiteSpace(parameters.Name))
         symbols = symbols.Where(s => s.Name.ToLower() == parameters.Name.ToLower());
 
@@ -84,7 +82,6 @@ namespace Data.Repository
       if (!string.IsNullOrWhiteSpace(parameters.SymbolType))
         symbols = symbols.Where(s => s.SymbolType.ToLower() == parameters.SymbolType.ToLower());
 
-      // Aplica ordenação, se especificada
       if (!string.IsNullOrWhiteSpace(parameters.OrderBy))
         symbols = symbols.ApplySort(parameters.OrderBy);
 
