@@ -49,7 +49,11 @@ namespace Domain.CommandHandlers
         message.MarketClosingHour,
         message.MinutesIntervalJob,
         message.YahooFinanceApiOn,
-        message.CommoditiesApiOn
+        message.CommoditiesApiOn,
+        message.WhatsappNumber,
+        message.ContactNumber,
+        message.InstagramUrl,
+        message.WebSiteUrl
         );
 
       _appparametersRepository.Add(appparameters);

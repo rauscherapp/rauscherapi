@@ -57,7 +57,15 @@ namespace Data.Mappings
 			builder.Property(e => e.CommoditiesApiOn)
 			.HasColumnName("CommoditiesApiOn");			
 			builder.Property(e => e.MinutesIntervalJob)
-			.HasColumnName("MinutesIntervalJob");
+			.HasColumnName("MinutesIntervalJob");			
+			builder.Property(e => e.WhatsappNumber)
+			.HasColumnName("WhatsappNumber");			
+			builder.Property(e => e.ContactNumber)
+			.HasColumnName("ContactNumber");			
+			builder.Property(e => e.InstagramUrl)
+			.HasColumnName("InstagramUrl");
+			builder.Property(e => e.WebSiteUrl)
+			.HasColumnName("WebSiteUrl");
   }
 	}
 }

@@ -12,9 +12,10 @@ namespace Domain.Models
     public bool Visible { get; private set; }
     public DateTime? PublishedAt { get; private set; }
     public Guid FolderId { get; private set; }
+    public string Language { get; private set; }
 
     // Constructor for creating a new Post
-    public Post(Guid id, string title, DateTime createdDate, string content, string author, bool visible, Guid folderId)
+    public Post(Guid id, string title, DateTime createdDate, string content, string author, bool visible, Guid folderId, string language)
     {
       Id = id;
       SetTitle(title);
@@ -23,6 +24,7 @@ namespace Domain.Models
       SetAuthor(author);
       Visible = visible;
       FolderId = folderId;
+      Language = language;
     }
 
     // Methods to change the properties
