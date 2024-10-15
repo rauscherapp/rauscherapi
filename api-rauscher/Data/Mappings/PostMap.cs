@@ -33,7 +33,9 @@ namespace Data.Mappings
 			.HasColumnName("PUBLISHEDAT");
 			
 			builder.Property(e => e.FolderId)
-			.HasColumnName("FolderId");
+			.HasColumnName("FolderId");			
+			builder.Property(e => e.Language)
+			.HasColumnName("Language");
 			
 		}
 	}

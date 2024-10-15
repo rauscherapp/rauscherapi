@@ -49,6 +49,11 @@ namespace Domain.CommandHandlers
       appparameters.MinutesIntervalJob = message.MinutesIntervalJob;
       appparameters.YahooFinanceApiOn = message.YahooFinanceApiOn;
       appparameters.CommoditiesApiOn = message.CommoditiesApiOn;
+      appparameters.WhatsappNumber = message.WhatsappNumber;
+      appparameters.ContactNumber = message.ContactNumber;
+      appparameters.InstagramUrl = message.InstagramUrl;
+      appparameters.WebSiteUrl = message.WebSiteUrl;
+
 
       _appparametersRepository.Update(appparameters);
 

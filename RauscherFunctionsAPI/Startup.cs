@@ -42,8 +42,19 @@ namespace MyFunctionApp
 
       builder.Services.AddLogging(loggingBuilder =>
       {
-        // Em vez de remover os provedores de log padrão, apenas adicione o Serilog
         loggingBuilder.AddSerilog(dispose: true);
+      });
+
+      builder.Services.AddCors(options =>
+      {
+        options.AddPolicy("AllowSpecificOrigins",
+            builder =>
+            {
+              builder.WithOrigins("http://localhost:4200")
+                     .AllowAnyHeader()
+                     .AllowAnyMethod()
+                     .AllowCredentials();
+            });
       });
 
       // Set up configuration
