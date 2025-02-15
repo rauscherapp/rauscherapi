@@ -66,7 +66,7 @@ public class FolderFunction : BaseFunctions
 
   [FunctionName("CreateFolder")]
   public async Task<IActionResult> CreateFolder(
-      [HttpTrigger(AuthorizationLevel.Function, "post", Route = "v1/Folder")] HttpRequest req,
+      [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "v1/Folder")] HttpRequest req,
       ILogger log)
   {
     log.LogInformation("Processing POST request to create a new Folder.");
@@ -89,7 +89,7 @@ public class FolderFunction : BaseFunctions
 
   [FunctionName("UpdateFolder")]
   public async Task<IActionResult> UpdateFolder(
-      [HttpTrigger(AuthorizationLevel.Function, "put", Route = "v1/Folder/{id}")] HttpRequest req,
+      [HttpTrigger(AuthorizationLevel.Anonymous, "put", Route = "v1/Folder/{id}")] HttpRequest req,
       Guid id,
       ILogger log)
   {
@@ -113,7 +113,7 @@ public class FolderFunction : BaseFunctions
 
   [FunctionName("DeleteFolder")]
   public async Task<IActionResult> DeleteFolder(
-      [HttpTrigger(AuthorizationLevel.Function, "delete", Route = "v1/Folder/{id}")] HttpRequest req,
+      [HttpTrigger(AuthorizationLevel.Anonymous, "delete", Route = "v1/Folder/{id}")] HttpRequest req,
       Guid id,
       ILogger log)
   {

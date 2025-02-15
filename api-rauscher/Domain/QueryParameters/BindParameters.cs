@@ -15,6 +15,10 @@ namespace Domain.QueryParameters
       {
         BindSymbolsParameters(symbolsParameters, queryParameters);
       }
+      if (parameters is PostParameters postParameters)
+      {
+        BindPostParameters(postParameters, queryParameters);
+      }
 
       return parameters;
     }
@@ -72,6 +76,27 @@ namespace Domain.QueryParameters
       if (queryParameters.TryGetValue("appvisible", out var appVisibleString) && bool.TryParse(appVisibleString, out var appVisible))
       {
         parameters.Appvisible = appVisible;
+      }
+    }
+    private void BindPostParameters(PostParameters parameters, IDictionary<string, string> queryParameters)
+    {
+      if (queryParameters.TryGetValue("id", out var idString) && Guid.TryParse(idString, out var id))
+      {
+        parameters.ID = id;
+      }
+
+      if (queryParameters.TryGetValue("folder", out var folder))
+      {
+        parameters.folder = folder;
+      }
+      if (queryParameters.TryGetValue("language", out var language))
+      {
+        parameters.language = language;
+      }
+
+      if (queryParameters.TryGetValue("visible", out var appVisibleString) && bool.TryParse(appVisibleString, out var appVisible))
+      {
+        parameters.VISIBLE = appVisible;
       }
     }
   }

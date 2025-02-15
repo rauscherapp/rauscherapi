@@ -7,6 +7,7 @@ using Domain.Models;
 using Domain.Queries;
 using Domain.QueryParameters;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -75,5 +76,15 @@ namespace Application.Services
 			
 			return resultadoDB;
 		}
-	}
+    public async Task<bool> UploadPostImage(Guid postId, IFormFile file)
+    {
+      _logger.LogInformation("Handling: {MethodName}", nameof(UploadPostImage));
+
+      var command = new UploadPostImageCommand(postId, file);
+      var result = await _mediator.Send(command);
+
+      return result;
+    }
+
+  }
 }

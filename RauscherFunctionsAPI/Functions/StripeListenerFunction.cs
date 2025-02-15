@@ -24,7 +24,7 @@ public class StripeListenerFunction
 
   [FunctionName("StripeWebhook")]
   public async Task<IActionResult> Webhook(
-      [HttpTrigger(AuthorizationLevel.Function, "post", Route = "v1/Stripe/webhook")] HttpRequest req,
+      [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "v1/Stripe/webhook")] HttpRequest req,
       ILogger log)
   {
     log.LogInformation("Processing Stripe webhook.");

@@ -1,6 +1,5 @@
 ﻿using Application.Helpers;
 using Application.Interfaces;
-using Application.Services;
 using Application.ViewModels;
 using AutoMapper;
 using Domain.Core.Bus;
@@ -42,7 +41,7 @@ public class SymbolsFunction : BaseFunctions
 
   [FunctionName("PostSymbolsApi")]
   public async Task<IActionResult> PostSymbolsApi(
-      [HttpTrigger(AuthorizationLevel.Function, "post", Route = "v1/SymbolsApi")] HttpRequest req,
+      [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "v1/SymbolsApi")] HttpRequest req,
       ILogger log)
   {
     log.LogInformation("Processing request to update Symbols API.");
@@ -58,7 +57,7 @@ public class SymbolsFunction : BaseFunctions
 
   [FunctionName("CreateSymbol")]
   public async Task<IActionResult> CreateSymbol(
-      [HttpTrigger(AuthorizationLevel.Function, "post", Route = "v1/CreateSymbol")] HttpRequest req,
+      [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "v1/CreateSymbol")] HttpRequest req,
       ILogger log)
   {
     log.LogInformation("Processing request to create a new Symbol.");
@@ -74,7 +73,7 @@ public class SymbolsFunction : BaseFunctions
   [FunctionName("DeleteSymbol")]
   [AllowAnonymous]
   public async Task<IActionResult> DeletePost(
-      [HttpTrigger(AuthorizationLevel.Function, "delete", Route = "v1/DeleteSymbols/{id}")] HttpRequest req,
+      [HttpTrigger(AuthorizationLevel.Anonymous, "delete", Route = "v1/DeleteSymbols/{id}")] HttpRequest req,
       Guid id,
       ILogger log)
   {
@@ -87,7 +86,7 @@ public class SymbolsFunction : BaseFunctions
 
   [FunctionName("UpdateSymbol")]
   public async Task<IActionResult> UpdateSymbol(
-      [HttpTrigger(AuthorizationLevel.Function, "patch", Route = "v1/UpdateSymbol/{id}")] HttpRequest req,
+      [HttpTrigger(AuthorizationLevel.Anonymous, "patch", Route = "v1/UpdateSymbol/{id}")] HttpRequest req,
       ILogger log)
   {
     log.LogInformation("Processing request to update a Symbol.");
@@ -111,7 +110,7 @@ public class SymbolsFunction : BaseFunctions
 
   [FunctionName("UpdateSymbolFromApi")]
   public async Task<IActionResult> UpdateSymbolFromApi(
-      [HttpTrigger(AuthorizationLevel.Function, "patch", Route = "v1/UpdateSymbolFromApi")] HttpRequest req,
+      [HttpTrigger(AuthorizationLevel.Anonymous, "patch", Route = "v1/UpdateSymbolFromApi")] HttpRequest req,
       ILogger log)
   {
     log.LogInformation("Processing request to update Symbol from API.");
@@ -133,9 +132,9 @@ public class SymbolsFunction : BaseFunctions
     return CreateResponse(result);
   }
 
-  [FunctionName("GetSymbolsApi")]
+  [FunctionName("SymbolsApi")]
   public async Task<IActionResult> GetSymbolsApi(
-      [HttpTrigger(AuthorizationLevel.Function, "get", Route = "v1/SymbolsApi")] HttpRequest req,
+      [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "v1/SymbolsApi")] HttpRequest req,
       ILogger log)
   {
     log.LogInformation("Processing GET request for Symbols.");

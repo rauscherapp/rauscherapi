@@ -90,7 +90,7 @@ namespace RauscherFunctionsAPI
     [FunctionName("CreateEventRegistry")]
     [AllowAnonymous]
     public async Task<IActionResult> CreateEventRegistry(
-        [HttpTrigger(AuthorizationLevel.Function, "post", Route = "v1/EventRegistry")] HttpRequest req,
+        [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "v1/EventRegistry")] HttpRequest req,
         ILogger log)
     {
       log.LogInformation("Processing POST request to create Event Registry.");
@@ -105,7 +105,7 @@ namespace RauscherFunctionsAPI
     [FunctionName("UpdateEventRegistry")]
     [AllowAnonymous]
     public async Task<IActionResult> UpdateEventRegistry(
-        [HttpTrigger(AuthorizationLevel.Function, "patch", Route = "v1/EventRegistry/{id}")] HttpRequest req,
+        [HttpTrigger(AuthorizationLevel.Anonymous, "patch", Route = "v1/EventRegistry/{id}")] HttpRequest req,
         Guid id,
         ILogger log)
     {
@@ -121,7 +121,7 @@ namespace RauscherFunctionsAPI
     [FunctionName("DeleteEventRegistry")]
     [AllowAnonymous]
     public async Task<IActionResult> DeleteEventRegistry(
-        [HttpTrigger(AuthorizationLevel.Function, "delete", Route = "v1/EventRegistry/{id}")] HttpRequest req,
+        [HttpTrigger(AuthorizationLevel.Anonymous, "delete", Route = "v1/EventRegistry/{id}")] HttpRequest req,
         Guid id,
         ILogger log)
     {

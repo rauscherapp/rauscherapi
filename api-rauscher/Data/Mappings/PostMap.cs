@@ -36,6 +36,9 @@ namespace Data.Mappings
 			.HasColumnName("FolderId");			
 			builder.Property(e => e.Language)
 			.HasColumnName("Language");
+
+			builder.Property(e => e.ImgUrl)
+			.HasColumnName("ImgUrl");
 			
 		}
 	}

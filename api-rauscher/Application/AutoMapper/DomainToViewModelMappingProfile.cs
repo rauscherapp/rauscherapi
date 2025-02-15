@@ -1,7 +1,7 @@
+using APIs.Security.JWT;
 using Application.ViewModels;
 using AutoMapper;
 using Domain.Models;
-using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using System;
 using System.Globalization;
 using System.Linq;
@@ -14,25 +14,25 @@ namespace Application.AutoMapper
     {
       //ConfigureDomainToViewModel 
       CreateMap<EventRegistry, EventRegistryViewModel>()
-        .ForMember(dest => dest.EventRegistryId, opt => opt.MapFrom(src => src.Id))
-        .ForMember(dest => dest.EventName, opt => opt.MapFrom(src => src.EventName))
-        .ForMember(dest => dest.EventDescription, opt => opt.MapFrom(src => src.EventDescription))
-        .ForMember(dest => dest.EventType, opt => opt.MapFrom(src => src.EventType))
-        .ForMember(dest => dest.EventDate, opt => opt.MapFrom(src => src.EventDate))
-        .ForMember(dest => dest.EventLocation, opt => opt.MapFrom(src => src.EventLocation))
-        .ForMember(dest => dest.EventLink, opt => opt.MapFrom(src => src.EventLink))
-        .ForMember(dest => dest.EventDateMonth, opt => opt.MapFrom(src => src.EventDate.ToString("MMM").ToUpper()))
-        .ForMember(dest => dest.EventDateDay, opt => opt.MapFrom(src => src.EventDate.Day.ToString()))
-        .ForMember(dest => dest.EventDateHour, opt => opt.MapFrom(src => src.EventDate.ToString("hh:mm tt").ToUpper()))
-        .ForMember(dest => dest.EventDateYear, opt => opt.MapFrom(src => src.EventDate.Year.ToString()));
+        .ForMember(dest => dest.eventRegistryId, opt => opt.MapFrom(src => src.Id))
+        .ForMember(dest => dest.eventName, opt => opt.MapFrom(src => src.EventName))
+        .ForMember(dest => dest.eventDescription, opt => opt.MapFrom(src => src.EventDescription))
+        .ForMember(dest => dest.eventType, opt => opt.MapFrom(src => src.EventType))
+        .ForMember(dest => dest.eventDate, opt => opt.MapFrom(src => src.EventDate))
+        .ForMember(dest => dest.eventLocation, opt => opt.MapFrom(src => src.EventLocation))
+        .ForMember(dest => dest.eventLink, opt => opt.MapFrom(src => src.EventLink))
+        .ForMember(dest => dest.eventDateMonth, opt => opt.MapFrom(src => src.EventDate.ToString("MMM").ToUpper()))
+        .ForMember(dest => dest.eventDateDay, opt => opt.MapFrom(src => src.EventDate.Day.ToString()))
+        .ForMember(dest => dest.eventDateHour, opt => opt.MapFrom(src => src.EventDate.ToString("hh:mm tt").ToUpper()))
+        .ForMember(dest => dest.eventDateYear, opt => opt.MapFrom(src => src.EventDate.Year.ToString()));
 
       CreateMap<AppParameters, AppParametersViewModel>();
-        CreateMap<CommoditiesRate, CommoditiesRateViewModel>()
-            .ForMember(dest => dest.FullVariationPricePercent, opt => opt.MapFrom<FullVariationPricePercentResolver>())
-            .ForMember(dest => dest.TimestampDate, opt => opt.MapFrom<TimestampToDateTimeResolver>())
-            .ForMember(dest => dest.FormattedPrice, opt => opt.MapFrom<CurrencyResolver>());
+      CreateMap<CommoditiesRate, CommoditiesRateViewModel>()
+          .ForMember(dest => dest.FullVariationPricePercent, opt => opt.MapFrom<FullVariationPricePercentResolver>())
+          .ForMember(dest => dest.TimestampDate, opt => opt.MapFrom<TimestampToDateTimeResolver>())
+          .ForMember(dest => dest.FormattedPrice, opt => opt.MapFrom<CurrencyResolver>());
 
-
+      CreateMap<Token, TokenViewModel>();
       CreateMap<Symbols, SymbolsViewModel>()
         .ForMember(dest => dest.lastRate, opt => opt.MapFrom(src => src.CommoditiesRates.OrderByDescending(cr => cr.Timestamp).FirstOrDefault()));
       CreateMap<ApiCredentials, ApicredentialsViewModel>();
@@ -61,10 +61,10 @@ public class TimestampToDateTimeResolver : IValueResolver<CommoditiesRate, objec
   protected DateTime date;
   public string Resolve(CommoditiesRate source, object destination, string destMember, ResolutionContext context)
   {
-    
+
     if (source.Timestamp.HasValue)
     {
-      
+
       if (source.Timestamp.Value > 10000000000)
       {
         date = DateTimeOffset.FromUnixTimeMilliseconds(source.Timestamp.Value).DateTime;
@@ -73,7 +73,7 @@ public class TimestampToDateTimeResolver : IValueResolver<CommoditiesRate, objec
       {
         date = DateTimeOffset.FromUnixTimeSeconds(source.Timestamp.Value).DateTime;
       }
-      
+
       return $"{date.ToString("HH:mm:ss")} UTC";
     }
     return null;

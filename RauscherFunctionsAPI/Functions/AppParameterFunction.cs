@@ -66,7 +66,7 @@ public class AppParameterFunction : BaseFunctions
 
   [FunctionName("CreateAppParameter")]
   public async Task<IActionResult> CreateAppParameter(
-      [HttpTrigger(AuthorizationLevel.Function, "post", Route = "v1/AppParameter")] HttpRequest req,
+      [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "v1/AppParameter")] HttpRequest req,
       ILogger log)
   {
     log.LogInformation("Processing POST request to create a new AppParameter.");
@@ -89,7 +89,7 @@ public class AppParameterFunction : BaseFunctions
 
   [FunctionName("UpdateAppParameter")]
   public async Task<IActionResult> UpdateAppParameter(
-      [HttpTrigger(AuthorizationLevel.Function, "put", Route = "v1/UpdateAppParameter/{id}")] HttpRequest req,
+      [HttpTrigger(AuthorizationLevel.Anonymous, "put", Route = "v1/UpdateAppParameter/{id}")] HttpRequest req,
       Guid id,
       ILogger log)
   {
@@ -113,7 +113,7 @@ public class AppParameterFunction : BaseFunctions
 
   [FunctionName("DeleteAppParameter")]
   public async Task<IActionResult> DeleteAppParameter(
-      [HttpTrigger(AuthorizationLevel.Function, "delete", Route = "v1/AppParameter/{id}")] HttpRequest req,
+      [HttpTrigger(AuthorizationLevel.Anonymous, "delete", Route = "v1/AppParameter/{id}")] HttpRequest req,
       Guid id,
       ILogger log)
   {

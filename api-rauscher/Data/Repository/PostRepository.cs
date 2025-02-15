@@ -2,6 +2,7 @@ using Data.Context;
 using Domain.Models;
 using Domain.QueryParameters;
 using Domain.Repositories;
+using MailKit.Search;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 using System;
@@ -25,20 +26,20 @@ namespace Data.Repository
 			    return Post.FirstOrDefault();
 		}
 		
-		public async Task<PagedList<Post>> ListarPosts(PostParameters parameters)
+		public async Task<IQueryable<Post>> ListarPosts(PostParameters parameters)
 		{
 			var post = Db.Posts
 			.AsQueryable();
 
-			if(!string.IsNullOrEmpty(parameters.Language))
-        post = post.Where(x => x.Language.Equals(parameters.Language));
+			if(!string.IsNullOrEmpty(parameters.language))
+        post = post.Where(x => x.Language.Equals(parameters.language));
 
       if (!string.IsNullOrWhiteSpace(parameters.OrderBy))
 			    post = post.ApplySort(parameters.OrderBy);
 			
-			return PagedList<Post>.Create(post, parameters.PageNumber, parameters.PageSize);
+			return post.AsQueryable();
 		}
-    public async Task<PagedList<Post>> ListarPostsByFolderId(PostParameters parameters, Guid folderId)
+    public async Task<IQueryable<Post>> ListarPostsByFolderId(PostParameters parameters, Guid folderId)
     {
       // Assuming Db.Posts is an IQueryable<Post>
       var query = Db.Posts
@@ -50,15 +51,25 @@ namespace Data.Repository
         query = query.Where(post => post.Visible);
       }
 
-      if (!string.IsNullOrEmpty(parameters.Language))
-        query = query.Where(x => x.Language.Equals(parameters.Language));
+      if (!string.IsNullOrEmpty(parameters.language))
+        query = query.Where(x => x.Language.Equals(parameters.language));
 
+      if (!string.IsNullOrWhiteSpace(parameters.SearchQuery))
+      {
+        if (!parameters.SearchQuery.Equals("null"))
+        {
+          var searchQuery = parameters.SearchQuery.ToLower();
+          query = query.Where(s => s.Title.ToLower().Contains(searchQuery)
+                                     || s.Language.ToLower().Contains(searchQuery)
+                                     || s.Content.ToLower().Contains(searchQuery));
+        }
+      }
       if (!string.IsNullOrWhiteSpace(parameters.OrderBy))
       {
         query = query.ApplySort(parameters.OrderBy); // Assuming ApplySort is an extension method
       }
 
-      return PagedList<Post>.Create(query, parameters.PageNumber, parameters.PageSize);
+      return query.AsQueryable();
     }
   }
 }

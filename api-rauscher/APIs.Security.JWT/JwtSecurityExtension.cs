@@ -1,78 +1,79 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
-namespace APIs.Security.JWT;
-
-public static class JwtSecurityExtension
+namespace APIs.Security.JWT
 {
+  public static class JwtSecurityExtension
+  {
     public static IServiceCollection AddJwtSecurity(
         this IServiceCollection services,
         TokenConfigurations tokenConfigurations)
     {
-        // Ativando a utilização do ASP.NET Identity, a fim de
-        // permitir a recuperação de seus objetos via injeção de
-        // dependências
-        services.AddIdentity<ApplicationUser, IdentityRole>(options =>
-        {
-          // Configurações de senha
-          options.Password.RequireDigit = false; // Requer dígitos (0-9)
-          options.Password.RequireLowercase = false; // Requer letras minúsculas (a-z)
-          options.Password.RequireUppercase = false; // Requer letras maiúsculas (A-Z)
-          options.Password.RequireNonAlphanumeric = false; // Requer caracteres especiais
-          options.Password.RequiredLength = 3; // Comprimento mínimo da senha
-          options.Password.RequiredUniqueChars = 1; // Requer número mínimo de caracteres únicos
+      // Configuração do ASP.NET Identity
+      services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+      {
+        // Configurações de senha
+        options.Password.RequireDigit = false;
+        options.Password.RequireLowercase = false;
+        options.Password.RequireUppercase = false;
+        options.Password.RequireNonAlphanumeric = false;
+        options.Password.RequiredLength = 3;
+        options.Password.RequiredUniqueChars = 1;
+      })
+      .AddEntityFrameworkStores<ApiSecurityDbContext>()
+      .AddDefaultTokenProviders();
 
-        })
-            .AddEntityFrameworkStores<ApiSecurityDbContext>()
-            .AddDefaultTokenProviders();
+      // Configurando a dependência para a classe de validação
+      services.AddScoped<IAccessManager, AccessManager>();
+      services.AddScoped<JwtSecurityExtensionEvents>();
 
-        // Configurando a dependência para a classe de validação
-        // de credenciais e geração de tokens
-        services.AddScoped<AccessManager>();
-        services.AddScoped<JwtSecurityExtensionEvents>();
+      // Configuração da assinatura de tokens
+      var signingConfigurations = new SigningConfigurations(tokenConfigurations.SecretJwtKey!);
+      services.AddSingleton(signingConfigurations);
+      services.AddSingleton(tokenConfigurations);
 
-        var signingConfigurations = new SigningConfigurations(
-            tokenConfigurations.SecretJwtKey!);
-        services.AddSingleton(signingConfigurations);
+      // Configuração da autenticação
+      services.AddAuthentication(authOptions =>
+      {
+        authOptions.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        authOptions.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+      })
+      .AddJwtBearer(bearerOptions =>
+      {
+        var paramsValidation = bearerOptions.TokenValidationParameters;
+        paramsValidation.IssuerSigningKey = signingConfigurations.Key;
+        paramsValidation.ValidAudience = tokenConfigurations.Audience;
+        paramsValidation.ValidIssuer = tokenConfigurations.Issuer;
 
-        services.AddSingleton(tokenConfigurations);
+        // Validações de segurança
+        paramsValidation.ValidateIssuerSigningKey = true;
+        paramsValidation.ValidateLifetime = true;
 
-        services.AddAuthentication(authOptions =>
-        {
-            authOptions.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-            authOptions.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-        }).AddJwtBearer(bearerOptions =>
-        {
-            var paramsValidation = bearerOptions.TokenValidationParameters;
-            paramsValidation.IssuerSigningKey = signingConfigurations.Key;
-            paramsValidation.ValidAudience = tokenConfigurations.Audience;
-            paramsValidation.ValidIssuer = tokenConfigurations.Issuer;
+        // Tempo de tolerância para a expiração do token
+        paramsValidation.ClockSkew = TimeSpan.Zero;
 
-            // Valida a assinatura de um token recebido
-            paramsValidation.ValidateIssuerSigningKey = true;
+        bearerOptions.EventsType = typeof(JwtSecurityExtensionEvents);
+      }).AddScheme<AuthenticationSchemeOptions, WebJobsAuthHandler>(
+    "WebJobsAuthLevel",
+    "WebJobsAuthLevel",
+    options => { }); 
 
-            // Verifica se um token recebido ainda é válido
-            paramsValidation.ValidateLifetime = true;
 
-            // Tempo de tolerância para a expiração de um token (utilizado
-            // caso haja problemas de sincronismo de horário entre diferentes
-            // computadores envolvidos no processo de comunicação)
-            paramsValidation.ClockSkew = TimeSpan.Zero;
+      // Configuração de autorização
+      services.AddAuthorization(auth =>
+      {
+        auth.AddPolicy("Bearer", new AuthorizationPolicyBuilder()
+            .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
+            .RequireAuthenticatedUser()
+            .Build());
+      });
 
-            bearerOptions.EventsType = typeof(JwtSecurityExtensionEvents);
-        });
-
-        // Ativa o uso do token como forma de autorizar o acesso
-        // a recursos deste projeto
-        services.AddAuthorization(auth =>
-        {
-            auth.AddPolicy("Bearer", new AuthorizationPolicyBuilder()
-                .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme‌​)
-                .RequireAuthenticatedUser().Build());
-        });
-
-        return services;
+      return services;
     }
+  }
 }

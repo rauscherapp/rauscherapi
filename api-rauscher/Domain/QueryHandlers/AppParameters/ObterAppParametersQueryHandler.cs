@@ -3,6 +3,7 @@ using Domain.Queries;
 using Domain.Repositories;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -19,9 +20,17 @@ namespace Domain.QueryHandlers
     }
     public async Task<AppParameters> Handle(ObterAppParametersQuery request, CancellationToken cancellationToken)
     {
-      _logger.LogInformation("Handling: {MethodName}", nameof(Handle));
-
-      return _appParametersRepository.ObterAppParameters();
+      _logger.LogInformation("Handling: ObterAppParametersQueryHandler");
+      try
+      {
+        return _appParametersRepository.ObterAppParameters();
+      }
+      catch (Exception ex)
+      {
+        _logger.LogError($"ERROR:{ex.Message}");
+        _logger.LogError($"ERROR:{ex.InnerException}");
+        return null;
+      }
 
     }
   }

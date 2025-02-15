@@ -64,6 +64,7 @@ namespace Worker
               services.Configure<BancoCentralOptions>(configuration.GetSection("BancoCentralApi"));
               services.Configure<YahooFinanceOptions>(configuration.GetSection("YahooFinanceApi"));
               services.Configure<ParametersOptions>(configuration.GetSection("ParametersOptions"));
+              services.AddTransient<IConfigureOptions<ParametersOptions>, ConfigureParametersOptions>();
               //services.AddHttpClient<CommoditiesRepository>()
               //        .AddTransientHttpErrorPolicy(p => p.WaitAndRetryAsync(3, _ => TimeSpan.FromSeconds(2)));
               services.AddDependencyInjectionSetup(); // Certifique-se de ter um método de extensão para isso

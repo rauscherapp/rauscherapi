@@ -13,7 +13,8 @@ namespace Domain.Events
 		string aUTHOR,
 		Boolean? vISIBLE,
 		DateTime? pUBLISHEDAT,
-		Guid folderid
+		Guid folderid,
+		string language
 		)
 		{
 			ID = iD;
@@ -24,6 +25,7 @@ namespace Domain.Events
 			VISIBLE = vISIBLE;
 			PUBLISHEDAT = pUBLISHEDAT;
 			Folderid = folderid;
+			language = language;
 		}
 		public Guid ID { get; set; }
 		public string TITLE { get; set; }

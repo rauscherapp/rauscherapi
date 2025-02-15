@@ -13,9 +13,10 @@ namespace Domain.Models
     public DateTime? PublishedAt { get; private set; }
     public Guid FolderId { get; private set; }
     public string Language { get; private set; }
+    public string ImgUrl { get; private set; }
 
     // Constructor for creating a new Post
-    public Post(Guid id, string title, DateTime createdDate, string content, string author, bool visible, Guid folderId, string language)
+    public Post(Guid id, string title, DateTime createdDate, string content, string author, bool visible, Guid folderId, string language, string imgUrl = null)
     {
       Id = id;
       SetTitle(title);
@@ -25,9 +26,15 @@ namespace Domain.Models
       Visible = visible;
       FolderId = folderId;
       Language = language;
+      ImgUrl = imgUrl;
     }
 
     // Methods to change the properties
+
+    public void SetLanguage(string language)
+    {
+      Language = language;
+    }
     public void SetTitle(string title)
     {
       Title = title;
@@ -51,6 +58,10 @@ namespace Domain.Models
     {
       PublishedAt = publishDate;
       Visible = true;
+    }
+    public void SetImageUrl(string url)
+    {
+      ImgUrl = url;
     }
 
     // Additional methods for other business logic

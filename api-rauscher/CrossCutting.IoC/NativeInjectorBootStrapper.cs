@@ -62,7 +62,7 @@ namespace CrossCutting.IoC
       });
 
       // Domain Bus (Mediator)
-      services.AddSingleton<IMediatorHandler, InMemoryBus>();
+      services.AddScoped<IMediatorHandler, InMemoryBus>();
       services.AddTransient<IEventBusRabbitMQ, EventBusRabbitMQ>();
       services.AddTransient<IPropertyCheckerService, PropertyCheckerService>();
 
@@ -125,7 +125,7 @@ namespace CrossCutting.IoC
       services.AddTransient<IRequestHandler<ObterApiCredentialsQuery, ApiCredentials>, ObterApiCredentialsQueryHandler>();
       services.AddTransient<IRequestHandler<ListarApiCredentialsQuery, PagedList<ApiCredentials>>, ListarApiCredentialsQueryHandler>();
       services.AddTransient<IRequestHandler<ObterPostQuery, Post>, ObterPostQueryHandler>();
-      services.AddTransient<IRequestHandler<ListarPostQuery, PagedList<Post>>, ListarPostQueryHandler>();
+      services.AddTransient<IRequestHandler<ListarPostQuery, IQueryable<Post>>, ListarPostQueryHandler>();
       services.AddTransient<IRequestHandler<ListarFolderQuery, PagedList<Folder>>, ListarFolderQueryHandler>();
       services.AddTransient<IRequestHandler<ObterAboutUsQuery, AboutUs>, ObterAboutUsQueryHandler>();
 

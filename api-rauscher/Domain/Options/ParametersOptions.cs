@@ -14,5 +14,14 @@
     public string EmailPassword { get; set; }
     public string SmtpServer { get; set; }
     public int SmtpPort { get; set; }
+    public string MarketOpeningHour { get; set; }
+    public string MarketClosingHour { get; set; }
+    public bool YahooFinanceApiOn { get; set; }
+    public bool CommoditiesApiOn { get; set; }
+    public int MinutesIntervalJob { get; set; }
+    public string WhatsappNumber { get; set; }
+    public string ContactNumber { get; set; }
+    public string InstagramUrl { get; set; }
+    public string WebSiteUrl { get; set; }
   }
 }

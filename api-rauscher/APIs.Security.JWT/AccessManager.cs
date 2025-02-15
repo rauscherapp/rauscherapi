@@ -6,21 +6,18 @@ using System.Security.Principal;
 
 namespace APIs.Security.JWT;
 
-public class AccessManager
+public class AccessManager : IAccessManager
 {
-  private UserManager<ApplicationUser> _userManager;
-  private SignInManager<ApplicationUser> _signInManager;
-  private SigningConfigurations _signingConfigurations;
-  private TokenConfigurations _tokenConfigurations;
+  private readonly UserManager<ApplicationUser> _userManager;
+  private readonly SigningConfigurations _signingConfigurations;
+  private readonly TokenConfigurations _tokenConfigurations;
 
   public AccessManager(
       UserManager<ApplicationUser> userManager,
-      SignInManager<ApplicationUser> signInManager,
       SigningConfigurations signingConfigurations,
       TokenConfigurations tokenConfigurations)
   {
     _userManager = userManager;
-    _signInManager = signInManager;
     _signingConfigurations = signingConfigurations;
     _tokenConfigurations = tokenConfigurations;
   }
@@ -29,27 +26,13 @@ public class AccessManager
   {
     bool credenciaisValidas = false;
     var userResponse = new UserResponse();
-    if (user is not null && !String.IsNullOrWhiteSpace(user.Email))
+
+    if (!string.IsNullOrWhiteSpace(user.Email))
     {
-      // Verifica a existência do usuário nas tabelas do
-      // ASP.NET Core Identity
-      var userIdentity = await _userManager
-          .FindByEmailAsync(user.Email);
-      if (userIdentity is not null)
+      var userIdentity = await _userManager.FindByEmailAsync(user.Email);
+      if (userIdentity != null && await _userManager.CheckPasswordAsync(userIdentity, user.Password!))
       {
-        // Efetua o login com base no Id do usuário e sua senha
-        var resultadoLogin = await _signInManager
-            .CheckPasswordSignInAsync(userIdentity, user.Password!, false);
-        if (resultadoLogin.Succeeded)
-        {
-          // Verifica se o usuário em questão possui
-          // a role Acesso-APIs
-          credenciaisValidas = _userManager.IsInRoleAsync(
-              userIdentity, Roles.ROLE_ACESSO_APIS!).Result;
-        }
-        user.Avatar = userIdentity.Avatar;
-        user.Status = userIdentity.Status;
-        user.Name = userIdentity.NomeCompleto;
+        credenciaisValidas = await _userManager.IsInRoleAsync(userIdentity, Roles.ROLE_ACESSO_APIS);
         userResponse.Email = userIdentity.Email;
         userResponse.Name = userIdentity.NomeCompleto;
         userResponse.HasValidStripeSubscription = userIdentity.HasValidStripeSubscription;
@@ -58,13 +41,14 @@ public class AccessManager
 
     return (userResponse, credenciaisValidas);
   }
+
   public async Task<bool> CreateUser(UserRequest userRequest)
   {
     bool userCreated = false;
-    var userResponse = await _userManager.FindByEmailAsync(userRequest.Email!);
-    if (userResponse is not null)
+    var existingUser = await _userManager.FindByEmailAsync(userRequest.Email!);
+    if (existingUser != null)
     {
-      await DeleteUser(userResponse);
+      await _userManager.DeleteAsync(existingUser);
     }
 
     var user = new ApplicationUser()
@@ -76,29 +60,16 @@ public class AccessManager
 
     if (userRequest.Password != null)
     {
-      var resultado = await _userManager
-                .CreateAsync(user, userRequest.Password);
+      var resultado = await _userManager.CreateAsync(user, userRequest.Password);
 
       if (resultado.Succeeded)
       {
         userCreated = true;
-        _userManager.AddToRoleAsync(user, Roles.ROLE_ACESSO_APIS).Wait();
+        await _userManager.AddToRoleAsync(user, Roles.ROLE_ACESSO_APIS);
       }
     }
 
     return userCreated;
-  }
-
-  public async Task<bool> DeleteUser(ApplicationUser applicationUser)
-  {
-    bool userRemoved = false;
-    var resultado = await _userManager
-              .DeleteAsync(applicationUser);
-    if (resultado.Succeeded)
-    {
-      userRemoved = true;
-    }
-    return userRemoved;
   }
 
   public async Task<bool> CheckSubscription(UserRequest userRequest)
@@ -108,20 +79,16 @@ public class AccessManager
   }
 
 
-
   public Token GenerateToken(UserResponse user)
   {
-    ClaimsIdentity identity = new(
-        new GenericIdentity(user.Email!, "Login"),
-        new[] {
-                        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString("N")),
-                        new Claim(JwtRegisteredClaimNames.UniqueName, user.Email!)
-        }
-    );
+    var identity = new ClaimsIdentity(new GenericIdentity(user.Email!, "Login"), new[]
+    {
+      new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString("N")),
+      new Claim(JwtRegisteredClaimNames.UniqueName, user.Email!)
+    });
 
-    DateTime dataCriacao = DateTime.Now;
-    DateTime dataExpiracao = dataCriacao +
-        TimeSpan.FromSeconds(_tokenConfigurations.Seconds);
+    var dataCriacao = DateTime.UtcNow;
+    var dataExpiracao = dataCriacao.AddSeconds(_tokenConfigurations.Seconds);
 
     var handler = new JwtSecurityTokenHandler();
     var securityToken = handler.CreateToken(new SecurityTokenDescriptor
@@ -133,14 +100,13 @@ public class AccessManager
       NotBefore = dataCriacao,
       Expires = dataExpiracao
     });
-    var token = handler.WriteToken(securityToken);
 
-    return new()
+    return new Token
     {
       Authenticated = true,
       Created = dataCriacao.ToString("yyyy-MM-dd HH:mm:ss"),
       Expiration = dataExpiracao.ToString("yyyy-MM-dd HH:mm:ss"),
-      AccessToken = token,
+      AccessToken = handler.WriteToken(securityToken),
       Message = "OK",
       User = user
     };

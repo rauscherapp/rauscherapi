@@ -21,10 +21,10 @@ namespace Worker
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-      _hubConnection = new HubConnectionBuilder()
-        .WithUrl("http://awsrestapiespuri.us-east-2.elasticbeanstalk.com/CommoditiesTradeHub").Build();
+      //_hubConnection = new HubConnectionBuilder()
+      //  .WithUrl("http://awsrestapiespuri.us-east-2.elasticbeanstalk.com/CommoditiesTradeHub").Build();
 
-      await _hubConnection.StartAsync(stoppingToken);
+      //await _hubConnection.StartAsync(stoppingToken);
 
       _logger.LogInformation("SignalR Hub connection started");
       while (!stoppingToken.IsCancellationRequested)
@@ -72,11 +72,11 @@ namespace Worker
             var data = await symbolsAppService.ListarSymbolsWithRateForWorker(new Domain.QueryParameters.SymbolsParameters() { SymbolType = "commodity", OrderBy = "Appvisible desc" });
 
             // Envia os dados para o Hub
-            await _hubConnection.InvokeAsync("SendCommodities", data, stoppingToken);
+            //await _hubConnection.InvokeAsync("SendCommodities", data, stoppingToken);
 
             data = await symbolsAppService.ListarSymbolsWithRateForWorker(new Domain.QueryParameters.SymbolsParameters() { SymbolType = "exchange", OrderBy = "Appvisible desc" });
             // Envia os dados para o Hub
-            await _hubConnection.InvokeAsync("SendExchanges", data, stoppingToken);
+            //await _hubConnection.InvokeAsync("SendExchanges", data, stoppingToken);
 
             // Espera pelo intervalo especificado nos parâmetros
             await Task.Delay(TimeSpan.FromMilliseconds(minutesIntervalJob), stoppingToken);

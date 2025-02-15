@@ -28,7 +28,15 @@ namespace RauscherFunctionsAPI
       options.EmailPassword = optionsEntity.EmailPassword;
       options.SmtpServer = optionsEntity.SmtpServer;
       options.SmtpPort = optionsEntity.SmtpPort;
-
+      options.MarketOpeningHour = optionsEntity.MarketOpeningHour;
+      options.MarketClosingHour = optionsEntity.MarketClosingHour;
+      options.YahooFinanceApiOn = optionsEntity.YahooFinanceApiOn;
+      options.CommoditiesApiOn = optionsEntity.CommoditiesApiOn;
+      options.MinutesIntervalJob = optionsEntity.MinutesIntervalJob;
+      options.WhatsappNumber = optionsEntity.WhatsappNumber;
+      options.ContactNumber = optionsEntity.ContactNumber;
+      options.InstagramUrl = optionsEntity.InstagramUrl;
+      options.WebSiteUrl = optionsEntity.WebSiteUrl;
     }
   }
 }

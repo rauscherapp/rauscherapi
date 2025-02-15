@@ -2,6 +2,7 @@
 using Application.Interfaces;
 using Application.ViewModels;
 using AutoMapper;
+using Data.YahooFinanceApi.Api.Model;
 using Domain.Core.Bus;
 using Domain.Core.Notifications;
 using Domain.QueryParameters;
@@ -46,13 +47,14 @@ namespace RauscherFunctionsAPI
       log.LogInformation("Processing GET request for Posts.");
 
       var queryParameters = req.GetQueryParameterDictionary();
-      var parameters = JsonSerializer.Deserialize<PostParameters>(JsonSerializer.Serialize(queryParameters));
+      var bindParameters = new BindParameters();
+      var parameters = bindParameters.BindQueryParameters<PostParameters>(queryParameters);
 
       var posts = await _postAppService.ListarPost(parameters);
       var result = _mapper.Map<IEnumerable<PostViewModel>>(posts.Data).ShapeData(parameters.Fields);
 
       req.HttpContext.Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(posts.PaginationMetadata));
-      return CreateResponse(result);
+      return CreateResponseList(posts.PaginationMetadata, result);
     }
 
     [FunctionName("GetPostById")]
@@ -71,7 +73,7 @@ namespace RauscherFunctionsAPI
     [FunctionName("CreatePost")]
     [AllowAnonymous]
     public async Task<IActionResult> CreatePost(
-        [HttpTrigger(AuthorizationLevel.Function, "post", Route = "v1/CreatePost")] HttpRequest req,
+        [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "v1/CreatePost")] HttpRequest req,
         ILogger log)
     {
       log.LogInformation("Processing POST request to create a new Post.");
@@ -86,7 +88,7 @@ namespace RauscherFunctionsAPI
     [FunctionName("UpdatePost")]
     [AllowAnonymous]
     public async Task<IActionResult> UpdatePost(
-        [HttpTrigger(AuthorizationLevel.Function, "patch", Route = "v1/Post/{id}")] HttpRequest req,
+        [HttpTrigger(AuthorizationLevel.Anonymous, "patch", Route = "v1/UpdatePost/{id}")] HttpRequest req,
         Guid id,
         ILogger log)
     {
@@ -102,7 +104,7 @@ namespace RauscherFunctionsAPI
     [FunctionName("DeletePost")]
     [AllowAnonymous]
     public async Task<IActionResult> DeletePost(
-        [HttpTrigger(AuthorizationLevel.Function, "delete", Route = "v1/Post/{id}")] HttpRequest req,
+        [HttpTrigger(AuthorizationLevel.Anonymous, "delete", Route = "v1/Post/{id}")] HttpRequest req,
         Guid id,
         ILogger log)
     {
@@ -111,5 +113,31 @@ namespace RauscherFunctionsAPI
       var result = await _postAppService.ExcluirPost(id);
       return CreateResponse(result);
     }
+    [FunctionName("UploadPostImage")]
+    public async Task<IActionResult> UploadPostImage(
+        [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "v1/Post/{id}/UploadImage")] HttpRequest req,
+        Guid id,
+        ILogger log)
+    {
+      log.LogInformation($"Processing image upload for Post ID: {id}");
+
+      var formCollection = await req.ReadFormAsync();
+      var file = formCollection.Files["image"];
+
+      if (file == null)
+      {
+        return CreateResponse(false);
+      }
+
+      var imageUrl = await _postAppService.UploadPostImage(id, file);
+
+      if (imageUrl)
+      {
+        return CreateResponse(false);
+      }
+
+      return CreateResponse(new { ImageUrl = imageUrl });
+    }
+
   }
 }

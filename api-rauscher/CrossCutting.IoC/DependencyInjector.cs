@@ -1,7 +1,15 @@
 ﻿using Application.Interfaces;
 using Application.Services;
+using Data.BancoCentral.Api.Infrastructure;
+using Data.BancoCentral.Api.Interfaces;
+using Data.Commodities.Api.Infrastructure;
+using Data.Commodities.Api.Interfaces;
 using Data.Repository;
 using Data.UoW;
+using Data.YahooFinanceApi.Api.Infrastructure;
+using Data.YahooFinanceApi.Api.Interfaces;
+using Domain.Adapters.Providers;
+using Domain.Adapters.Vendors;
 using Domain.CommandHandlers;
 using Domain.CommandHandlers.Apicredentials;
 using Domain.Commands;
@@ -12,8 +20,13 @@ using Domain.Queries;
 using Domain.QueryHandlers;
 using Domain.QueryParameters;
 using Domain.Repositories;
+using Infrastructure.BancoCentral;
+using Infrastructure.Commodities;
+using Infrastructure.RateProvider.Providers;
+using Infrastructure.YahooFinance;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
+using StripeApi.Service;
 using System.Linq;
 
 namespace CrossCutting.IoC
@@ -34,6 +47,8 @@ namespace CrossCutting.IoC
       services.AddTransient<IPostAppService, PostAppService>();
       services.AddTransient<IFolderAppService, FolderAppService>();
       services.AddTransient<IEmailService, EmailSenderAppService>();
+      services.AddTransient<IStripeCustomerService, StripeCustomerService>();
+      services.AddTransient<IStripeSessionService, StripeSessionService>();
 
 
       //Commands
@@ -64,6 +79,7 @@ namespace CrossCutting.IoC
       services.AddTransient<IRequestHandler<GerarSecretAndApiKeyCommand, bool>, GerarSecretAndApiKeyCommandHandler>();
       services.AddTransient<IRequestHandler<AtualizarAboutUsCommand, bool>, AtualizarAboutUsCommandHandler>();
       services.AddTransient<IRequestHandler<AtualizarOHLCCommoditiesRateCommand, bool>, AtualizarOHLCCommoditiesRateCommandHandler>();
+      services.AddTransient<IRequestHandler<UploadPostImageCommand, bool>, UploadPostImageCommandHandler>();
 
       //Queries
       services.AddTransient<IRequestHandler<ListarSymbolsWithRateQuery, PagedList<Symbols>>, ListarSymbolsWithRateQueryHandler>();
@@ -79,9 +95,23 @@ namespace CrossCutting.IoC
       services.AddTransient<IRequestHandler<ObterApiCredentialsQuery, ApiCredentials>, ObterApiCredentialsQueryHandler>();
       services.AddTransient<IRequestHandler<ListarApiCredentialsQuery, PagedList<ApiCredentials>>, ListarApiCredentialsQueryHandler>();
       services.AddTransient<IRequestHandler<ObterPostQuery, Post>, ObterPostQueryHandler>();
-      services.AddTransient<IRequestHandler<ListarPostQuery, PagedList<Post>>, ListarPostQueryHandler>();
+      services.AddTransient<IRequestHandler<ListarPostQuery, IQueryable<Post>>, ListarPostQueryHandler>();
       services.AddTransient<IRequestHandler<ListarFolderQuery, PagedList<Folder>>, ListarFolderQueryHandler>();
       services.AddTransient<IRequestHandler<ObterAboutUsQuery, AboutUs>, ObterAboutUsQueryHandler>();
+
+      services.AddTransient<IRateProvider, RateProvider>();
+      services.AddTransient<IVendorRateAdapters, RatesAdapter>();
+      services.AddTransient<IVendorRateAdapters, YahooRatesAdapter>();
+      services.AddTransient<IVendorRateAdapters, CommodititesRatesAdapter>();
+      services.AddTransient<ITradeReadRepository, Data.BancoCentral.Api.Service.TradeReadRepository>();
+      services.AddTransient<ITradeReadRepository, Data.YahooFinanceApi.Api.Service.TradeReadRepository>();
+      services.AddTransient<ITradeReadRepository, Data.Commodities.Api.Service.TradeReadRepository>();
+
+      services.AddTransient<IBancoCentralAPI, BancoCentralAPI>();
+      services.AddTransient<IYahooFinanceAPI, YahooFinanceAPI>();
+      services.AddTransient<ICommoditiesAPI, CommoditiesAPI>();
+      services.AddTransient<ICommodityOpenHighLowCloseRepository, CommodityOpenHighLowCloseRepository>();
+      services.AddTransient<IRequestHandler<CadastrarCommoditiesRateCommand, bool>, CadastrarCommoditiesRateCommandHandler>();
 
       //Repository
       services.AddTransient<IAppParametersRepository, AppParametersRepository>();

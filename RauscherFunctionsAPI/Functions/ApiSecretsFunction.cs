@@ -26,7 +26,7 @@ namespace RauscherFunctionsAPI
 
     [FunctionName("PostSecret")]
     public async Task<IActionResult> Secret(
-        [HttpTrigger(AuthorizationLevel.Function, "post", Route = "v1/Secrets")] HttpRequest req,
+        [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "v1/Secrets")] HttpRequest req,
         ILogger log)
     {
       log.LogInformation("Processing POST request for Secrets.");

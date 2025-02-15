@@ -29,9 +29,8 @@ namespace RauscherFunctionsAPI
     }
 
     [FunctionName("PatchAboutUs")]
-    [AllowAnonymous]
     public async Task<IActionResult> Patch(
-        [HttpTrigger(AuthorizationLevel.Function, "patch", Route = "v1/AboutUs")] HttpRequest req,
+        [HttpTrigger(AuthorizationLevel.Anonymous, "patch", Route = "v1/AboutUs")] HttpRequest req,
         ILogger log)
     {
       log.LogInformation("Processing PATCH request for AboutUs.");
@@ -44,7 +43,6 @@ namespace RauscherFunctionsAPI
     }
 
     [FunctionName("GetAboutUs")]
-    [AllowAnonymous]
     public async Task<IActionResult> Get(
         [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "v1/AboutUs")] HttpRequest req,
         ILogger log)

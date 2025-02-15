@@ -30,7 +30,7 @@ public class EmailFunction : BaseFunctions
 
   [FunctionName("SendEmail")]
   public async Task<IActionResult> SendEmail(
-      [HttpTrigger(AuthorizationLevel.Function, "post", Route = "v1/Email/SendEmail")] HttpRequest req,
+      [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "v1/Email/SendEmail")] HttpRequest req,
       ILogger log)
   {
     log.LogInformation("Processing request to send email.");

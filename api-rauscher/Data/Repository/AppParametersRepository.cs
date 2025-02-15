@@ -1,7 +1,9 @@
 using Data.Context;
 using Domain.Models;
+using Domain.QueryHandlers;
 using Domain.QueryParameters;
 using Domain.Repositories;
+using Microsoft.Extensions.Logging;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -9,8 +11,10 @@ namespace Data.Repository
 {
   public class AppParametersRepository : Repository<AppParameters>, IAppParametersRepository
   {
-    public AppParametersRepository(RauscherDbContext context) : base(context)
+    private readonly ILogger<AppParametersRepository> _logger;
+    public AppParametersRepository(RauscherDbContext context, ILogger<AppParametersRepository> logger) : base(context)
     {
+      _logger = logger;
     }
     public AppParameters ObterAppParameters()
     {
@@ -21,6 +25,7 @@ namespace Data.Repository
 
     public async Task<PagedList<AppParameters>> ListarAppParameterss(AppParametersParameters parameters)
     {
+      _logger.LogInformation("Handling: {MethodName}", nameof(ListarAppParameterss));
       var appParameters = Db.AppParameters
       .AsQueryable();
 

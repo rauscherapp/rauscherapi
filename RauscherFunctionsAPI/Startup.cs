@@ -1,7 +1,11 @@
-﻿using Aplication.Provider;
+﻿using APIs.Security.JWT;
+using Aplication.Provider;
 using Application.Interfaces;
 using Application.Services;
 using CrossCutting.Bus;
+using Data.BancoCentral.Api.Options;
+using Data.Commoditites.Api.Options;
+using Data.YahooFinanceApi.Api.Options;
 using Domain.Core.Bus;
 using Domain.Core.Notifications;
 using Domain.Interfaces;
@@ -20,6 +24,7 @@ using RauscherFunctionsAPI;
 using RauscherFunctionsAPI.Configurations;
 using Serilog;
 using Stripe;
+using StripeApi.Options;
 using System.IO;
 using System.Reflection;
 
@@ -50,10 +55,14 @@ namespace MyFunctionApp
         options.AddPolicy("AllowSpecificOrigins",
             builder =>
             {
-              builder.WithOrigins("http://localhost:4200")
-                     .AllowAnyHeader()
-                     .AllowAnyMethod()
-                     .AllowCredentials();
+              builder.WithOrigins(
+                "http://localhost:4200",
+                "https://delightful-mushroom-0d4bdaa0f.5.azurestaticapps.net",
+                "http://delightful-mushroom-0d4bdaa0f.5.azurestaticapps.net"
+                )
+              .AllowAnyHeader()
+              .AllowAnyMethod()
+              .AllowCredentials();
             });
       });
 
@@ -76,8 +85,6 @@ namespace MyFunctionApp
       builder.Services.AddTransient<IPropertyCheckerService, PropertyCheckerService>();
       builder.Services.AddTransient<IAppParametersOptionsProvider, AppParametersOptionsProvider>();
 
-
-
       builder.Services.AddScoped<IHttpContextAccessor, HttpContextAccessor>();
       builder.Services.AddDatabaseSetup(Configuration);
 
@@ -95,8 +102,37 @@ namespace MyFunctionApp
 
       builder.Services.AddScoped<IUriAppService, UriAppService>();
       builder.Services.AddDependencyInjectionSetup();
+      builder.Services.Configure<CommoditiesApiOptions>(Configuration.GetSection("CommoditiesApi"));
+      builder.Services.Configure<StripeApiOptions>(Configuration.GetSection("StripeApi"));
+      builder.Services.Configure<BancoCentralOptions>(Configuration.GetSection("BancoCentralApi"));
+      builder.Services.Configure<YahooFinanceOptions>(Configuration.GetSection("YahooFinanceApi"));
+      builder.Services.Configure<ParametersOptions>(Configuration.GetSection("ParametersOptions"));
+
+      builder.Services.AddHttpClient<Data.BancoCentral.Api.Infrastructure.BancoCentralAPI>();
+
+      builder.Services.AddHttpClient<Data.YahooFinanceApi.Api.Infrastructure.YahooFinanceAPI>();
+
+
+      builder.Services.AddHttpClient<Data.Commodities.Api.Infrastructure.CommoditiesAPI>();
+      // Authorization
+      //services.AddOAuth2Configuration();
+      // Creating a mock instance of TokenConfigurations
+      TokenConfigurations tokenConfigurations = new TokenConfigurations
+      {
+        Audience = "rauscher-idei",
+        Issuer = "RauscherApp",
+        Seconds = 3600, // 1 hour in seconds
+      };
+
+      builder.Services.AddLogging(loggingBuilder =>
+          loggingBuilder.AddSerilog(dispose: true));
+
+      tokenConfigurations.GenerateSecretJwtKey();
+
+      builder.Services.AddJwtSecurity(tokenConfigurations);
 
       builder.Services.AddTransient<IAppParametersOptionsProvider, AppParametersOptionsProvider>();
+
       builder.Services.AddTransient<IConfigureOptions<ParametersOptions>, ConfigureParametersOptions>();
 
     }

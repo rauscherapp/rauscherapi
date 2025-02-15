@@ -65,7 +65,6 @@ namespace Domain.CommandHandlers
         }
       }
       Commit();
-
       return await Task.FromResult(true);
     }
   }

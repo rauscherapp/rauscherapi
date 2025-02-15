@@ -1,13 +1,6 @@
 ﻿using APIs.Security.JWT;
-using Application.Interfaces;
 using Data.Context;
-using Domain.Options;
-using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Linq;
 
 namespace Worker.Configurations
 {

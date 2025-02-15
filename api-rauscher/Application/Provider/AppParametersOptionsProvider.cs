@@ -33,7 +33,16 @@ namespace Aplication.Provider
         EmailReceiver = optionsEntity.EmailReceiver,
         EmailPassword = optionsEntity.EmailPassword,
         SmtpServer = optionsEntity.SmtpServer,
-        SmtpPort = optionsEntity.SmtpPort
+        SmtpPort = optionsEntity.SmtpPort,
+        MarketOpeningHour = optionsEntity.MarketOpeningHour,
+        MarketClosingHour = optionsEntity.MarketClosingHour,
+        YahooFinanceApiOn = optionsEntity.YahooFinanceApiOn,
+        CommoditiesApiOn = optionsEntity.CommoditiesApiOn,
+        MinutesIntervalJob = optionsEntity.MinutesIntervalJob,
+        WhatsappNumber = optionsEntity.WhatsappNumber,
+        ContactNumber = optionsEntity.ContactNumber,
+        InstagramUrl = optionsEntity.InstagramUrl,
+        WebSiteUrl = optionsEntity.WebSiteUrl
       };
     }
   }

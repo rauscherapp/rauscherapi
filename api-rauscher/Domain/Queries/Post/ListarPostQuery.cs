@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Domain.Queries
 {
-	public class ListarPostQuery : IRequest<PagedList<Post>>
+	public class ListarPostQuery : IRequest<IQueryable<Post>>
 	{
 		public PostParameters Parameters { get; internal set; }
 		

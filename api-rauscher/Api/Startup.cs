@@ -209,7 +209,7 @@ namespace Api
       app.UseEndpoints(endpoints =>
       {
         endpoints.MapControllers();
-        endpoints.MapHub<CommoditiesTradeHub>("/CommoditiesTradeHub");
+        //endpoints.MapHub<CommoditiesTradeHub>("/CommoditiesTradeHub");
       });
 
       app.UseHealthChecks("/health");
