@@ -15,6 +15,13 @@ namespace Data.Repository
     public SymbolsRepository(RauscherDbContext context) : base(context)
     {
     }
+
+    public async Task UpdateSymbolCode(Symbols symbols)
+    {      
+        Db.Symbolss.Update(symbols);
+        await Db.SaveChangesAsync();
+    }
+
     public async Task<List<Symbols>> FindAllCommodities()
     {
       var Symbols = Db.Symbolss
@@ -22,6 +29,7 @@ namespace Data.Repository
 
       return await Symbols.ToListAsync();
     }
+
     public async Task<List<Symbols>> FindAllExchanges()
     {
       var Symbols = Db.Symbolss
@@ -29,21 +37,16 @@ namespace Data.Repository
 
       return await Symbols.ToListAsync();
     }
+
     public Symbols ObterSymbols(Guid id)
     {
-      var Symbols = Db.Symbolss
-          .Where(c => c.Id == id);
-
-      return Symbols.FirstOrDefault();
+      return Db.Symbolss.FirstOrDefault(c => c.Id == id);
     }
+
     public Symbols ObterSymbolsByCode(string code)
     {
-      var Symbols = Db.Symbolss
-          .Where(c => c.Code == code);
-
-      return Symbols.FirstOrDefault();
+      return Db.Symbolss.FirstOrDefault(c => c.Code == code);
     }
-
 
     public async Task<List<Symbols>> ObterSymbolsAppVisible()
     {
@@ -54,7 +57,7 @@ namespace Data.Repository
     }
 
     public async Task<IQueryable<Symbols>> ListarSymbolss(SymbolsParameters parameters)
-   {
+    {
       if (parameters == null) throw new ArgumentNullException(nameof(parameters));
 
       var symbols = Db.Symbolss
@@ -72,7 +75,6 @@ namespace Data.Repository
         }
       }
 
-
       if (!string.IsNullOrWhiteSpace(parameters.Name))
         symbols = symbols.Where(s => s.Name.ToLower() == parameters.Name.ToLower());
 
@@ -85,25 +87,21 @@ namespace Data.Repository
       if (!string.IsNullOrWhiteSpace(parameters.OrderBy))
         symbols = symbols.ApplySort(parameters.OrderBy);
 
-      // Cria a lista paginada de forma assíncrona
       return symbols.AsQueryable();
     }
 
-
     public async Task<PagedList<Symbols>> GetSymbolsWithLatestRatesAsync(SymbolsParameters parameters)
-    {
+   {
       var symbolsQuery = Db.Symbolss
           .Include(s => s.CommoditiesRates)
           .Where(query => query.Appvisible && query.SymbolType == parameters.SymbolType)
           .AsQueryable();
 
-      // Apply sorting
       if (!string.IsNullOrWhiteSpace(parameters.OrderBy))
       {
         symbolsQuery = symbolsQuery.ApplySort(parameters.OrderBy);
       }
 
-      // Apply pagination
       return PagedList<Symbols>.Create(symbolsQuery, parameters.PageNumber, parameters.PageSize);
     }
   }

@@ -109,7 +109,7 @@ namespace Data.Commodities.Api.Infrastructure
           // Usar LINQ para filtrar as chaves que não começam com "USD" e removê-las
           foreach (var key in result.Data.Rates.Where(key => key.Key.StartsWith("USD")).ToList())
           {
-            result.Data.Rates.Remove(key.Key);
+              result.Data.Rates.Remove(key.Key);
           }
         }
 

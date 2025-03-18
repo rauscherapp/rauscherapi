@@ -5,6 +5,7 @@ using Data.BancoCentral.Api.Interfaces;
 using Data.Commodities.Api.Infrastructure;
 using Data.Commodities.Api.Interfaces;
 using Data.Repository;
+using Data.Stripe.Api.Service;
 using Data.UoW;
 using Data.YahooFinanceApi.Api.Infrastructure;
 using Data.YahooFinanceApi.Api.Interfaces;
@@ -49,6 +50,7 @@ namespace CrossCutting.IoC
       services.AddTransient<IEmailService, EmailSenderAppService>();
       services.AddTransient<IStripeCustomerService, StripeCustomerService>();
       services.AddTransient<IStripeSessionService, StripeSessionService>();
+      services.AddTransient<IStripeSubscriptionService, StripeSubscriptionService>();
 
 
       //Commands

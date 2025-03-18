@@ -9,6 +9,7 @@ using Data.Context;
 using Data.EventSourcing;
 using Data.Repository;
 using Data.Repository.EventSourcing;
+using Data.Stripe.Api.Service;
 using Data.UoW;
 using Data.YahooFinanceApi.Api.Infrastructure;
 using Data.YahooFinanceApi.Api.Interfaces;
@@ -78,6 +79,7 @@ namespace CrossCutting.IoC
       services.AddTransient<IFolderAppService, FolderAppService>();
       services.AddTransient<IStripeCustomerService, StripeCustomerService>();
       services.AddTransient<IStripeSessionService, StripeSessionService>();
+      services.AddTransient<IStripeSubscriptionService, StripeSubscriptionService>();
       services.AddTransient<IUriAppService, UriAppService>();
       services.AddTransient<IEmailService, EmailSenderAppService>();
       services.AddTransient<IYahooFinanceRepository, YahooFinanceRepository>();

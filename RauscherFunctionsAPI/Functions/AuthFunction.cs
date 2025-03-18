@@ -92,5 +92,29 @@ namespace RauscherFunctionsAPI
 
       return CreateResponse(hasSubscription);
     }
+
+    [FunctionName("DeleteAccount")]
+    public async Task<IActionResult> DeleteAccount(
+        [HttpTrigger(AuthorizationLevel.Anonymous, "delete", Route = "v1/auth/deleteAccount")] HttpRequest req,
+        ILogger log)
+    {
+      log.LogInformation("Processing account deletion request.");
+
+      var requestBody = await new StreamReader(req.Body).ReadToEndAsync();
+      var request = JsonSerializer.Deserialize<UserRequest>(requestBody);
+
+      if (request == null || string.IsNullOrEmpty(request.Email))
+      {
+        return CreateResponse(new { message = "Invalid request. Email is required." });
+      }
+
+      var success = await _authService.DeleteAccount(request.Email);
+
+      if (success)
+      {
+        return CreateResponse(new { message = "Account successfully deleted." });
+      }
+      return CreateResponse(new { message = "Account not found or could not be deleted." });
+    }
   }
 }

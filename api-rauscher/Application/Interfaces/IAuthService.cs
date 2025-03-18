@@ -14,5 +14,6 @@ namespace Application.Interfaces
     Task<bool> CheckSubscription(UserRequest model);
     Task<bool> SuccesfullSubscriptionUserUpdate(string email);
     Task<bool> CancelledSubscriptionUserUpdate(string customerId);
+    Task<bool> DeleteAccount(string email);
   }
 }

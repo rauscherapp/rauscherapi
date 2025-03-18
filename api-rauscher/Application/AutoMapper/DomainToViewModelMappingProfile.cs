@@ -1,6 +1,7 @@
 using APIs.Security.JWT;
 using Application.ViewModels;
 using AutoMapper;
+using Domain.Enum;
 using Domain.Models;
 using System;
 using System.Globalization;
@@ -85,16 +86,18 @@ public class CurrencyResolver : IValueResolver<CommoditiesRate, object, string>
   protected DateTime date;
   public string Resolve(CommoditiesRate source, object destination, string destMember, ResolutionContext context)
   {
+    // Obtém todos os nomes do enum Currency e verifica se alguma está contida no SymbolCode
+    bool isCurrency = Enum.GetNames(typeof(Currency))
+                          .Any(currency => source.SymbolCode.IndexOf(currency, StringComparison.OrdinalIgnoreCase) >= 0);
 
-    if (source.SymbolCode.Equals("PTAX"))
+    if (isCurrency)
     {
-      // Custom formatting to ensure no rounding occurs
-      decimal value = source.Price;
-      string formattedValue = $"{new CultureInfo("en-US").NumberFormat.CurrencySymbol} {value.ToString("0.0000", new CultureInfo("en-US"))}";
-      return formattedValue;
+      // Formata com 4 casas decimais
+      return $"${source.Price.ToString("0.0000", new CultureInfo("en-US"))}";
     }
     else
     {
+      // Formata como moeda padrão (duas casas decimais)
       return source.Price.ToString("C", new CultureInfo("en-US"));
     }
   }

@@ -93,6 +93,10 @@ namespace Domain.QueryParameters
       {
         parameters.language = language;
       }
+      if (queryParameters.TryGetValue("source", out var source))
+      {
+        parameters.source = source;
+      }
 
       if (queryParameters.TryGetValue("visible", out var appVisibleString) && bool.TryParse(appVisibleString, out var appVisible))
       {

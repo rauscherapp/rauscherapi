@@ -14,19 +14,22 @@ namespace Domain.CommandHandlers
           IRequestHandler<AtualizarTabelaSymbolsAPICommand, bool>
   {
     private readonly ISymbolsRepository _symbolsRepository;
+
     private readonly IMediatorHandler Bus;
 
     public AtualizarTabelaSymbolsAPICommandHandler(ISymbolsRepository symbolsRepository,
                                                  IUnitOfWork uow,
                                                  IMediatorHandler bus,
-                                                 INotificationHandler<DomainNotification> notifications) : base(uow, bus, notifications)
+                                                 INotificationHandler<DomainNotification> notifications,
+                                                 ICommoditiesApi commoditiesRepository) : base(uow, bus, notifications)
     {
       _symbolsRepository = symbolsRepository;
       Bus = bus;
+
     }
     public async Task<bool> Handle(AtualizarTabelaSymbolsAPICommand message, CancellationToken cancellationToken)
     {
-      //var symbolsApi = await _commoditiesRepository.GetSymbolsAsync();
+      
       var existingSymbols = await _symbolsRepository.FindAllCommodities(); // Obter todos os symbols existentes no banco de dados.
 
       _symbolsRepository.RemoveAll(existingSymbols);

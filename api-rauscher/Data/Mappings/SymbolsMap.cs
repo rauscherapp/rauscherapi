@@ -15,7 +15,8 @@ namespace Data.Mappings
       .HasColumnName("Id");
 
       builder.Property(e => e.Code)
-      .HasColumnName("Code");
+      .HasColumnName("Code")
+      .IsRequired(false);
 
       builder.Property(e => e.Name)
       .HasColumnName("Name");
@@ -31,6 +32,9 @@ namespace Data.Mappings
 
       builder.Property(e => e.Appvisible)
       .HasColumnName("AppVisible");
+
+      builder.HasIndex(e => e.Code)
+          .IsUnique(false);
 
     }
   }

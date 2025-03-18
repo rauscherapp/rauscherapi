@@ -55,7 +55,8 @@ public class AccessManager : IAccessManager
     {
       Email = userRequest.Email,
       EmailConfirmed = true,
-      UserName = userRequest.Email
+      UserName = userRequest.Email,
+      HasValidStripeSubscription = true
     };
 
     if (userRequest.Password != null)

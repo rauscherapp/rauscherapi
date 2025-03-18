@@ -43,7 +43,12 @@ namespace Data.Mappings
 
       builder.Property(e => e.Isup)
 			.HasColumnName("isUp");
-			
-		}
+
+			builder.HasOne<Symbols>()
+					.WithMany(s => s.CommoditiesRates)
+					.HasForeignKey(c => c.SymbolCode)
+					.OnDelete(DeleteBehavior.SetNull);
+
+    }
 	}
 }

@@ -12,7 +12,7 @@ namespace StripeApi.Service
     {
       _stripeClient = new StripeClient(parameters.Value.StripeApiSecret);
     }
-    public async Task<Customer> GetCustomerByEmailAsync(string customerId)
+    public async Task<Customer> GetCustomerByIdAsync(string customerId)
     {
       var service = new CustomerService(_stripeClient);
       var customer = await service.GetAsync(customerId);

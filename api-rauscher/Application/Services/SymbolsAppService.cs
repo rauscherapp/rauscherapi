@@ -6,7 +6,6 @@ using Domain.Commands;
 using Domain.Models;
 using Domain.Queries;
 using Domain.QueryParameters;
-using Domain.Repositories;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using System;

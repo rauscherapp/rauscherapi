@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Stripe;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Application.Services
@@ -16,19 +17,21 @@ namespace Application.Services
   {
     private readonly IStripeSessionService _stripeSessionClient;
     private readonly IStripeCustomerService _stripeCustomerService;
-    private readonly IAccessManager _accessManager; // Agora usa a interface
+    private readonly IStripeSubscriptionService _stripeSubscriptionService;
+    private readonly IAccessManager _accessManager;
     IOptionsSnapshot<ParametersOptions> _parameters;
     private readonly IMapper _mapper;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly string _priceId;
 
     public AuthService(
-        IAccessManager accessManager, // Injeção correta
+        IAccessManager accessManager,
         IOptionsSnapshot<ParametersOptions> parameters,
         IStripeSessionService stripeSessionClient,
         UserManager<ApplicationUser> userManager,
         IStripeCustomerService stripeCustomerService,
-        IMapper mapper)
+        IMapper mapper,
+        IStripeSubscriptionService stripeSubscriptionService)
     {
       _accessManager = accessManager ?? throw new ArgumentNullException(nameof(accessManager));
       _parameters = parameters ?? throw new ArgumentNullException("parameters error");
@@ -37,6 +40,7 @@ namespace Application.Services
       _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
       _stripeCustomerService = stripeCustomerService ?? throw new ArgumentNullException(nameof(stripeCustomerService));
       _mapper = mapper;
+      _stripeSubscriptionService = stripeSubscriptionService;
     }
 
     public async Task<(bool IsValid, TokenViewModel Token)> Register(UserRequest model)
@@ -132,24 +136,53 @@ namespace Application.Services
 
     public async Task<bool> SuccesfullSubscriptionUserUpdate(string customerId)
     {
-      var customer = await _stripeCustomerService.GetCustomerByEmailAsync(customerId);
+      var customer = await _stripeCustomerService.GetCustomerByIdAsync(customerId);
       var user = await _userManager.FindByEmailAsync(customer.Email);
       if (user == null) return false;
 
       user.HasValidStripeSubscription = true;
+      user.CustomerIdStripe = customerId;
       await _userManager.UpdateAsync(user);
       return user.HasValidStripeSubscription;
     }
 
     public async Task<bool> CancelledSubscriptionUserUpdate(string customerId)
     {
-      var customer = await _stripeCustomerService.GetCustomerByEmailAsync(customerId);
+      var customer = await _stripeCustomerService.GetCustomerByIdAsync(customerId);
       var user = await _userManager.FindByEmailAsync(customer.Email);
-      if (user == null) return false;
+      if (user == null) return true;
 
       user.HasValidStripeSubscription = false;
       await _userManager.UpdateAsync(user);
       return user.HasValidStripeSubscription;
     }
+    public async Task<bool> DeleteAccount(string email)
+    {
+      var user = await _userManager.FindByEmailAsync(email);
+
+      if (user == null)
+      {
+        return false;
+      }
+
+      try
+      {
+        var subscriptions = await _stripeSubscriptionService.ListAllSubscriptionsFromCustomer(user.CustomerIdStripe);
+        if (subscriptions is not null && subscriptions.Any())
+        {
+          foreach (var sub in subscriptions)
+          {
+            await _stripeSubscriptionService.CancelCustomerSubscription(sub.Id);
+          }
+        }
+      }
+      catch (Exception ex)
+      {
+        throw new Exception($"Erro ao cancelar assinatura do Stripe: {ex.Message}");
+      }
+      var result = await _userManager.DeleteAsync(user);
+      return result.Succeeded;
+    }
+
   }
 }

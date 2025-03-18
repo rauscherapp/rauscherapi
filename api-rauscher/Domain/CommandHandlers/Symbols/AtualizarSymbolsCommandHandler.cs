@@ -38,6 +38,7 @@ namespace Domain.CommandHandlers
       symbols.FriendlyName = message.FriendlyName;
       symbols.SymbolType = message.SymbolType;
       symbols.Appvisible = message.Appvisible;
+      symbols.Vendor = message.Vendor;
 
       _symbolsRepository.Update(symbols);
 

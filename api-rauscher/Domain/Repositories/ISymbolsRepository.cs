@@ -17,5 +17,6 @@ namespace Domain.Repositories
     Task<PagedList<Symbols>> GetSymbolsWithLatestRatesAsync(SymbolsParameters parameters);
     Task<List<Symbols>> FindAllCommodities();
     Task<List<Symbols>> FindAllExchanges();
+    Task UpdateSymbolCode(Symbols symbols);
   }
 }

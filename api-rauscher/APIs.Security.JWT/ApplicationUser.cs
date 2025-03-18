@@ -8,6 +8,7 @@ public class ApplicationUser : IdentityUser
     public string? NomeCompleto { get; set; }
     public string? Avatar { get; set; }
     public string? Status { get; set; }
+    public string? CustomerIdStripe { get; set; }
     public DateTime? DataNascimento { get; set; }
     public Boolean HasValidStripeSubscription { get; set; }
     public int UserType{ get; set; }
