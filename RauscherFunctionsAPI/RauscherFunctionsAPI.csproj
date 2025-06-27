@@ -1,0 +1,61 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<AzureFunctionsVersion>v4</AzureFunctionsVersion>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<None Remove="appsettings.json" />
+		<None Remove="appsettings.Production.json" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Content Include="appsettings.Production.json">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		  <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+		  <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+		</Content>
+		<Content Include="appsettings.json">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+			<ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+			<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+		</Content>
+	</ItemGroup>
+
+	<ItemGroup>
+		<!-- Atualize os pacotes para versões compatíveis -->
+		<PackageReference Include="AutoMapper" Version="13.0.1" />
+		<PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="11.1.0" />
+		<PackageReference Include="Microsoft.ApplicationInsights.WorkerService" Version="2.21.0" />
+		<PackageReference Include="Microsoft.Azure.Functions.Extensions" Version="1.1.0" />
+		<!-- Atualizado para versão mais recente -->
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
+		<!-- Versão ajustada -->
+		<PackageReference Include="Microsoft.Extensions.Logging" Version="6.0.0" />
+		<!-- Versão ajustada -->
+		<PackageReference Include="Microsoft.Extensions.Options" Version="6.0.0" />
+		<!-- Versão ajustada -->
+		<PackageReference Include="Microsoft.NET.Sdk.Functions" Version="4.5.0" />
+		<PackageReference Include="Serilog" Version="2.12.0" />
+		<PackageReference Include="Serilog.Extensions.Logging" Version="3.1.0" />
+		<PackageReference Include="Serilog.Sinks.ApplicationInsights" Version="4.0.0" />
+		<PackageReference Include="Serilog.Sinks.Console" Version="4.0.1" />
+		<PackageReference Include="System.Memory.Data" Version="6.0.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\api-rauscher\APIs.Security.JWT\APIs.Security.JWT.csproj" />
+		<ProjectReference Include="..\api-rauscher\Application\Application.csproj" />
+		<ProjectReference Include="..\api-rauscher\CrossCutting.IoC\CrossCutting.IoC.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Update="host.json">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="local.settings.json">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<CopyToPublishDirectory>Never</CopyToPublishDirectory>
+		</None>
+	</ItemGroup>
+</Project>

@@ -37,7 +37,7 @@ namespace Domain.CommandHandlers
       CommoditiesRate.Timestamp = message.Timestamp;
       CommoditiesRate.BaseCurrency = message.Base;
       CommoditiesRate.Date = message.Date;
-      CommoditiesRate.Code = message.Code;
+      CommoditiesRate.SymbolCode = message.Code;
       CommoditiesRate.Unit = message.Unit;
       CommoditiesRate.Price = message.Price;
       CommoditiesRate.Variationprice = message.Variationprice;

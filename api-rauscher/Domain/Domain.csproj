@@ -8,27 +8,32 @@
 	<NoWarn>1701;1702</NoWarn>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove="Commands\Rate\**" />
+    <Compile Remove="EventHandlers\**" />
+    <EmbeddedResource Remove="Commands\Rate\**" />
+    <EmbeddedResource Remove="EventHandlers\**" />
+    <None Remove="Commands\Rate\**" />
+    <None Remove="EventHandlers\**" />
+  </ItemGroup>
+
 	<ItemGroup>
+		<PackageReference Include="Azure.Storage.Blobs" Version="12.23.0" />
 		<PackageReference Include="FluentValidation" Version="11.0.1" />
 		<PackageReference Include="FluentValidation.AspNetCore" Version="11.0.1" />
 		<PackageReference Include="MediatR" Version="10.0.1" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.1" />
-		<PackageReference Include="System.Linq.Dynamic.Core" Version="1.2.18" />
+		<PackageReference Include="Serilog" Version="2.11.0" />
+		<PackageReference Include="Stripe.net" Version="44.9.0" />
 		<PackageReference Include="RabbitMQ.Client" Version="6.3.0" />
+		<PackageReference Include="MailKit" Version="3.0.0" />
+		<PackageReference Include="System.Memory.Data" Version="6.0.0" />
 	</ItemGroup>
 
   <ItemGroup>
 	<ProjectReference Include="..\CrossCutting.Bus\CrossCutting.Bus.csproj" />
 	<ProjectReference Include="..\Domain.Core\Domain.Core.csproj" />
 	<ProjectReference Include="..\Domain.Core\Domain.Core.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-	<Folder Include="Commands\Rate\" />
-	<Folder Include="EventHandlers\" />
-	<Folder Include="Events\" />
-	<Folder Include="Events\" />
-	<Folder Include="NewFolder\" />
   </ItemGroup>
   
 </Project>

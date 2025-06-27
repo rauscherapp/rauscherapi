@@ -1,100 +1,95 @@
-﻿using System.IdentityModel.Tokens.Jwt;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Principal;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.IdentityModel.Tokens;
 
 namespace APIs.Security.JWT;
 
-public class AccessManager
+public class AccessManager : IAccessManager
 {
-  private UserManager<ApplicationUser> _userManager;
-  private SignInManager<ApplicationUser> _signInManager;
-  private SigningConfigurations _signingConfigurations;
-  private TokenConfigurations _tokenConfigurations;
+  private readonly UserManager<ApplicationUser> _userManager;
+  private readonly SigningConfigurations _signingConfigurations;
+  private readonly TokenConfigurations _tokenConfigurations;
 
   public AccessManager(
       UserManager<ApplicationUser> userManager,
-      SignInManager<ApplicationUser> signInManager,
       SigningConfigurations signingConfigurations,
       TokenConfigurations tokenConfigurations)
   {
     _userManager = userManager;
-    _signInManager = signInManager;
     _signingConfigurations = signingConfigurations;
     _tokenConfigurations = tokenConfigurations;
   }
 
-  public (User?, bool) ValidateCredentials(User user)
+  public async Task<(UserResponse? user, bool isValid)> ValidateCredentials(UserRequest user)
   {
     bool credenciaisValidas = false;
-    if (user is not null && !String.IsNullOrWhiteSpace(user.Email))
+    var userResponse = new UserResponse();
+
+    if (!string.IsNullOrWhiteSpace(user.Email))
     {
-      // Verifica a existência do usuário nas tabelas do
-      // ASP.NET Core Identity
-      var userIdentity = _userManager
-          .FindByEmailAsync(user.Email).Result;
-      if (userIdentity is not null)
+      var userIdentity = await _userManager.FindByEmailAsync(user.Email);
+      if (userIdentity != null && await _userManager.CheckPasswordAsync(userIdentity, user.Password!))
       {
-        // Efetua o login com base no Id do usuário e sua senha
-        var resultadoLogin = _signInManager
-            .CheckPasswordSignInAsync(userIdentity, user.Password!, false)
-            .Result;
-        if (resultadoLogin.Succeeded)
-        {
-          // Verifica se o usuário em questão possui
-          // a role Acesso-APIs
-          credenciaisValidas = _userManager.IsInRoleAsync(
-              userIdentity, Roles.ROLE_ACESSO_APIS!).Result;
-        }
-        user.Avatar = userIdentity.Avatar;
-        user.Status = userIdentity.Status;
-        user.Name = userIdentity.NomeCompleto;
+        credenciaisValidas = await _userManager.IsInRoleAsync(userIdentity, Roles.ROLE_ACESSO_APIS);
+        userResponse.Email = userIdentity.Email;
+        userResponse.Name = userIdentity.NomeCompleto;
+        userResponse.HasValidStripeSubscription = userIdentity.HasValidStripeSubscription;
       }
     }
 
-    return (user, credenciaisValidas);
+    return (userResponse, credenciaisValidas);
   }
-  public bool CreateUser(User userRequest)
+
+  public async Task<bool> CreateUser(UserRequest userRequest)
   {
     bool userCreated = false;
-    if (_userManager.FindByEmailAsync(userRequest.Email!).Result == null)
+    var existingUser = await _userManager.FindByEmailAsync(userRequest.Email!);
+    if (existingUser != null)
     {
-      var user = new ApplicationUser()
-      {
-        Email = userRequest.Email,
-        EmailConfirmed = true,
-        Documento = "34337013857"
-      };
+      await _userManager.DeleteAsync(existingUser);
+    }
 
-      if (userRequest.Password != null)
-      {
-        var resultado = _userManager
-                  .CreateAsync(user, userRequest.Password).Result;
+    var user = new ApplicationUser()
+    {
+      Email = userRequest.Email,
+      EmailConfirmed = true,
+      UserName = userRequest.Email,
+      HasValidStripeSubscription = true
+    };
 
-        if (resultado.Succeeded)
-        {
-          userCreated = true;
-          _userManager.AddToRoleAsync(user, Roles.ROLE_ACESSO_APIS).Wait();
-        }
+    if (userRequest.Password != null)
+    {
+      var resultado = await _userManager.CreateAsync(user, userRequest.Password);
+
+      if (resultado.Succeeded)
+      {
+        userCreated = true;
+        await _userManager.AddToRoleAsync(user, Roles.ROLE_ACESSO_APIS);
       }
     }
+
     return userCreated;
   }
 
-  public Token GenerateToken(User user)
+  public async Task<bool> CheckSubscription(UserRequest userRequest)
   {
-    ClaimsIdentity identity = new(
-        new GenericIdentity(user.Email!, "Login"),
-        new[] {
-                        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString("N")),
-                        new Claim(JwtRegisteredClaimNames.UniqueName, user.Email!)
-        }
-    );
+    var user = await _userManager.FindByEmailAsync(userRequest.Email!);
+    return user?.HasValidStripeSubscription ?? false;
+  }
 
-    DateTime dataCriacao = DateTime.Now;
-    DateTime dataExpiracao = dataCriacao +
-        TimeSpan.FromSeconds(_tokenConfigurations.Seconds);
+
+  public Token GenerateToken(UserResponse user)
+  {
+    var identity = new ClaimsIdentity(new GenericIdentity(user.Email!, "Login"), new[]
+    {
+      new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString("N")),
+      new Claim(JwtRegisteredClaimNames.UniqueName, user.Email!)
+    });
+
+    var dataCriacao = DateTime.UtcNow;
+    var dataExpiracao = dataCriacao.AddSeconds(_tokenConfigurations.Seconds);
 
     var handler = new JwtSecurityTokenHandler();
     var securityToken = handler.CreateToken(new SecurityTokenDescriptor
@@ -106,14 +101,13 @@ public class AccessManager
       NotBefore = dataCriacao,
       Expires = dataExpiracao
     });
-    var token = handler.WriteToken(securityToken);
 
-    return new()
+    return new Token
     {
       Authenticated = true,
       Created = dataCriacao.ToString("yyyy-MM-dd HH:mm:ss"),
       Expiration = dataExpiracao.ToString("yyyy-MM-dd HH:mm:ss"),
-      AccessToken = token,
+      AccessToken = handler.WriteToken(securityToken),
       Message = "OK",
       User = user
     };

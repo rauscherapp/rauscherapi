@@ -23,24 +23,32 @@ namespace Data.Mappings
 			builder.Property(e => e.Date)
 			.HasColumnName("Date");
 			
-			builder.Property(e => e.Code)
-			.HasColumnName("Code");
+			builder.Property(e => e.SymbolCode)
+			.HasColumnName("SymbolCode");
 			
 			builder.Property(e => e.Unit)
 			.HasColumnName("Unit");
 			
 			builder.Property(e => e.Price)
-			.HasColumnName("Price");
+			.HasColumnName("Price")
+      .HasColumnType("decimal(18, 4)"); 
 			
 			builder.Property(e => e.Variationprice)
-			.HasColumnName("VariationPrice");
+			.HasColumnName("VariationPrice")
+      .HasColumnType("decimal(18, 4)"); 
 			
 			builder.Property(e => e.Variationpricepercent)
-			.HasColumnName("VariationPricePercent");
-			
-			builder.Property(e => e.Isup)
+			.HasColumnName("VariationPricePercent")
+      .HasColumnType("decimal(18, 4)");
+
+      builder.Property(e => e.Isup)
 			.HasColumnName("isUp");
-			
-		}
+
+			builder.HasOne<Symbols>()
+					.WithMany(s => s.CommoditiesRates)
+					.HasForeignKey(c => c.SymbolCode)
+					.OnDelete(DeleteBehavior.SetNull);
+
+    }
 	}
 }

@@ -6,7 +6,7 @@ namespace Domain.Commands
 	public abstract class CommoditiesRateCommand : Command
 	{
 		public Guid Id { get; set; }
-		public int Timestamp { get; set; }
+		public long Timestamp { get; set; }
 		public string Base { get; set; }
 		public DateTime? Date { get; set; }
 		public string Code { get; set; }

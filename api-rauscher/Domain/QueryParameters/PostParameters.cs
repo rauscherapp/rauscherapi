@@ -12,6 +12,8 @@ namespace Domain.QueryParameters
 		public string AUTHOR { get; set; }
 		public Boolean? VISIBLE { get; set; }
 		public DateTime? PUBLISHEDAT { get; set; }
-		public Guid Folderid { get; set; }
+		public string FolderName { get; set; }
+		public string language { get; set; }
+		public string source { get; set; } = "";
 	}
 }

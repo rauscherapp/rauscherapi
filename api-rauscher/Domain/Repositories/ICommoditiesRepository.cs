@@ -8,9 +8,10 @@ using System.Threading.Tasks;
 
 namespace Domain.Repositories
 {
-  public interface ICommoditiesRepository  
+  public interface ICommoditiesApi  
   {
     Task<IEnumerable<Symbols>> GetSymbolsAsync();
     Task<IEnumerable<CommoditiesRate>> GetLatestCommodityRatesAsync(string baseCurrency, IEnumerable<string> symbols);
+    Task<CommodityOpenHighLowClose> GetOHLCAsync(string symbol);
   }
 }

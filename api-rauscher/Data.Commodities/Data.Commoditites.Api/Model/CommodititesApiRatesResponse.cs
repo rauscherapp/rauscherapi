@@ -21,3 +21,19 @@ public class CommoditiesApiRatesResponse
   [JsonPropertyName("unit")]
   public Dictionary<string, string>? Unit { get; set; }
 }
+
+public class CommoditiesApiRatesResponseMapped
+{
+  [JsonPropertyName("success")]
+  public bool Success { get; set; }
+  [JsonPropertyName("timestamp")]
+  public int Timestamp { get; set; }
+  [JsonPropertyName("base")]
+  public string Base { get; set; }
+  [JsonPropertyName("date")]
+  public DateTime Date { get; set; }
+  [JsonPropertyName("rates")]
+  public Dictionary<string, double>? Rates { get; set; }
+  [JsonPropertyName("unit")]
+  public Dictionary<string, string>? Unit { get; set; }
+}

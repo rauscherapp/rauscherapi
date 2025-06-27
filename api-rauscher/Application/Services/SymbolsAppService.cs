@@ -73,6 +73,24 @@ namespace Application.Services
 
       return PaginationHelpers.CreatePaginatedResponse(viewModelPagedList, parameters, "Mostrar", _uriAppService);
     }
+    public async Task<PagedResponse<SymbolsViewModel>> ListarSymbolsWithRate(SymbolsParameters parameters)
+    {
+      _logger.LogInformation("Handling: {MethodName}", nameof(ListarSymbols));
+      var data = await _mediator.Send(new ListarSymbolsWithRateQuery(parameters));
+      var resultadoDB = data.Select(x => _mapper.Map<Symbols, SymbolsViewModel>(x));
+
+      var viewModelPagedList = PagedList<SymbolsViewModel>.Create(resultadoDB.AsQueryable(), parameters.PageNumber, parameters.PageSize);
+
+      return PaginationHelpers.CreatePaginatedResponse(viewModelPagedList, parameters, "Mostrar", _uriAppService);
+    }
+
+    public async Task<IEnumerable<SymbolsViewModel>> ListarSymbolsWithRateForWorker(SymbolsParameters parameters)
+    {
+      _logger.LogInformation("Handling: {MethodName}", nameof(ListarSymbols));
+      var data = await _mediator.Send(new ListarSymbolsWithRateQuery(parameters));
+      var resultadoDB = data.Select(x => _mapper.Map<Symbols, SymbolsViewModel>(x)).Where(last => last.lastRate != null);
+      return resultadoDB;
+    }
     public async Task<SymbolsViewModel> ObterSymbols(Guid Symbols)
     {
       _logger.LogInformation("Handling: {MethodName}", nameof(ObterSymbols));

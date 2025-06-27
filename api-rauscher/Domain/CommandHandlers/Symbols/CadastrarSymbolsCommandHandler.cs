@@ -32,10 +32,13 @@ namespace Domain.CommandHandlers
         NotifyValidationErrors(message);
         return Task.FromResult(false);
       }
-      var symbols = new Symbols(message.Code,
+      var symbols = new Symbols(message.Id,
+        message.Code,
         message.Name,
         message.Appvisible,
-        message.FriendlyName
+        message.FriendlyName,
+        message.SymbolType,
+        message.Vendor
         );
 
       _symbolsRepository.Add(symbols);

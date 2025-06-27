@@ -35,6 +35,9 @@ namespace Domain.CommandHandlers
 
       post.SetTitle(message.TITLE);
       post.SetContent(message.CONTENT);
+      post.SetAuthor(message.AUTHOR);
+      post.SetVisible(message.VISIBLE);
+      post.SetLanguage(message.Language);
 
       _postRepository.Update(post);
 
@@ -43,12 +46,13 @@ namespace Domain.CommandHandlers
         Bus.RaiseEvent(new AtualizarPostEvent(
           message.ID,
           message.TITLE,
-          message.CREATEDATE,
+          message.CREATEDDATE,
           message.CONTENT,
           message.AUTHOR,
           message.VISIBLE,
           message.PUBLISHEDAT,
-          message.Folderid
+          message.Folderid,
+          message.Language
           ));
       }
 

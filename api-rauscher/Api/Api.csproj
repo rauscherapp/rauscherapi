@@ -16,11 +16,14 @@
 		<PackageReference Include="Marvin.Cache.Headers" Version="6.1.0" />
 		<PackageReference Include="MediatR" Version="10.0.1" />
 		<PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="10.0.1" />
+		<PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.22.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.4" />
 		<PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="6.0.4" />
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.4" />
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.1.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer" Version="5.0.0" />
+		<PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.1.0" />
+		<PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="8.0.7" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.26" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.26">
 			<PrivateAssets>all</PrivateAssets>
@@ -28,9 +31,6 @@
 		</PackageReference>
 		<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.3" />
 		<PackageReference Include="RabbitMQ.Client" Version="6.3.0" />
-
-		<PackageReference Include="Serilog" Version="2.11.0" />
-		<PackageReference Include="Serilog.Enrichers.ClientInfo" Version="1.1.4" />
 		<PackageReference Include="Serilog.Enrichers.Demystifier" Version="1.0.2" />
 		<PackageReference Include="Serilog.Exceptions" Version="8.1.0" />
 		<PackageReference Include="Serilog.Extensions.Hosting" Version="4.2.0" />
@@ -47,10 +47,11 @@
 		<PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="6.5.0" />
 		<PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.5.0" />
 		<PackageReference Include="Swashbuckle.AspNetCore.SwaggerUi" Version="6.5.0" />
+		<PackageReference Include="System.Linq.Dynamic.Core" Version="1.4.2" />
 	</ItemGroup>
   
   <ItemGroup>
-	<ProjectReference Include="..\..\..\rauscherapp\APIs.Security.JWT\APIs.Security.JWT.csproj" />
+	<ProjectReference Include="..\APIs.Security.JWT\APIs.Security.JWT.csproj" />
 	<ProjectReference Include="..\Application\Application.csproj" />
 	<ProjectReference Include="..\CrossCutting.Bus\CrossCutting.Bus.csproj" />
 	<ProjectReference Include="..\CrossCutting.IoC\CrossCutting.IoC.csproj" />
@@ -60,6 +61,12 @@
 	<Content Update="appsettings.json">
 	  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	</Content>
+  </ItemGroup>
+  
+  <ItemGroup>
+    <None Update="Api.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup> 
   
 </Project>

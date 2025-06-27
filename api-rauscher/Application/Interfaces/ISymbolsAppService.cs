@@ -2,6 +2,7 @@ using Application.Helpers;
 using Application.ViewModels;
 using Domain.QueryParameters;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Application.Interfaces
@@ -14,5 +15,7 @@ namespace Application.Interfaces
     Task<SymbolsViewModel> ObterSymbols(Guid Symbols);
     Task<PagedResponse<SymbolsViewModel>> ListarSymbols(SymbolsParameters parameters);
     Task<SymbolsViewModel> AtualizarSymbolsApi(SymbolsViewModel SymbolsViewModel);
+    Task<PagedResponse<SymbolsViewModel>> ListarSymbolsWithRate(SymbolsParameters parameters);
+    Task<IEnumerable<SymbolsViewModel>> ListarSymbolsWithRateForWorker(SymbolsParameters parameters);
   }
 }
