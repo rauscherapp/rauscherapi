@@ -81,7 +81,7 @@ namespace CrossCutting.IoC
       services.AddTransient<IRequestHandler<GerarSecretAndApiKeyCommand, bool>, GerarSecretAndApiKeyCommandHandler>();
       services.AddTransient<IRequestHandler<AtualizarAboutUsCommand, bool>, AtualizarAboutUsCommandHandler>();
       services.AddTransient<IRequestHandler<AtualizarOHLCCommoditiesRateCommand, bool>, AtualizarOHLCCommoditiesRateCommandHandler>();
-      services.AddTransient<IRequestHandler<UploadPostImageCommand, bool>, UploadPostImageCommandHandler>();
+      //services.AddTransient<IRequestHandler<UploadPostImageCommand, bool>, UploadPostImageCommandHandler>();
 
       //Queries
       services.AddTransient<IRequestHandler<ListarSymbolsWithRateQuery, PagedList<Symbols>>, ListarSymbolsWithRateQueryHandler>();
