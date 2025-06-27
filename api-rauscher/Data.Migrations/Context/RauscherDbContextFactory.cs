@@ -1,4 +1,5 @@
 using Data.Context;
+using Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
@@ -18,7 +19,7 @@ namespace Data.Migrations.Context
 
             var optionsBuilder = new DbContextOptionsBuilder<RauscherDbContext>();
             optionsBuilder.UseSqlServer(
-                configuration.GetConnectionString("DefaultConnection"),
+                "Server=localhost,1433;Database=RauscherApp-Dev;User Id=sa; Password=!@Lexos_Hub-Admin12;TrustServerCertificate=true;",
                 b => b.MigrationsAssembly("Data.Migrations")
                 );
             return new RauscherDbContext(optionsBuilder.Options);
