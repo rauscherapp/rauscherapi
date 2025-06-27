@@ -1,0 +1,9 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Data\Data.csproj" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.26" />
+  </ItemGroup>
+</Project>
