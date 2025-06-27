@@ -17,8 +17,10 @@ namespace Data.Migrations.Context
                 .Build();
 
             var optionsBuilder = new DbContextOptionsBuilder<RauscherDbContext>();
-            optionsBuilder.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
-
+            optionsBuilder.UseSqlServer(
+                configuration.GetConnectionString("DefaultConnection"),
+                b => b.MigrationsAssembly("Data.Migrations")
+                );
             return new RauscherDbContext(optionsBuilder.Options);
         }
     }
