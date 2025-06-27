@@ -6,7 +6,8 @@ API Rauscher Traders
 Para gerar uma nova migration e aplicá-la no banco de dados execute os comandos abaixo a partir da pasta `api-rauscher`:
 
 ```bash
-dotnet ef migrations add <NomeDaMigration> --project Data.Migrations --startup-project Api
+# exemplo para a primeira migration
+dotnet ef migrations add InitialCreate --project Data.Migrations --startup-project Api
 dotnet ef database update --project Data.Migrations --startup-project Api
 ```
 
