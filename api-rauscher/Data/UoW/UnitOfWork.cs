@@ -1,5 +1,6 @@
-﻿using Data.Context;
+using Data.Context;
 using Domain.Interfaces;
+using Microsoft.Extensions.Logging;
 using System;
 
 namespace Data.UoW
@@ -7,10 +8,12 @@ namespace Data.UoW
   public class UnitOfWork : IUnitOfWork
   {
     private readonly RauscherDbContext _context;
+    private readonly ILogger<UnitOfWork> _logger;
 
-    public UnitOfWork(RauscherDbContext context)
+    public UnitOfWork(RauscherDbContext context, ILogger<UnitOfWork> logger)
     {
       _context = context;
+      _logger = logger;
     }
 
     public bool Commit()
@@ -21,7 +24,7 @@ namespace Data.UoW
       }
       catch (Exception e)
       {
-        Console.WriteLine(e.InnerException);
+        _logger.LogError(e, "Error committing changes to the database");
         throw;
       }
     }
