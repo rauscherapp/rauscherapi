@@ -50,11 +50,19 @@ namespace RauscherFunctionsAPI
       var bindParameters = new BindParameters();
       var parameters = bindParameters.BindQueryParameters<PostParameters>(queryParameters);
 
-      var posts = await _postAppService.ListarPost(parameters);
-      var result = _mapper.Map<IEnumerable<PostViewModel>>(posts.Data).ShapeData(parameters.Fields);
+      try
+      {
+        var posts = await _postAppService.ListarPost(parameters);
+        var result = _mapper.Map<IEnumerable<PostViewModel>>(posts.Data).ShapeData(parameters.Fields);
 
-      req.HttpContext.Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(posts.PaginationMetadata));
-      return CreateResponseList(posts.PaginationMetadata, result);
+        req.HttpContext.Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(posts.PaginationMetadata));
+        return CreateResponseList(posts.PaginationMetadata, result);
+      }
+      catch (Exception ex)
+      {
+        log.LogError($"Error listing posts: {ex.Message}");
+        return new StatusCodeResult(StatusCodes.Status500InternalServerError);
+      }
     }
 
     [FunctionName("GetPostById")]
@@ -66,8 +74,16 @@ namespace RauscherFunctionsAPI
     {
       log.LogInformation($"Processing GET request for Post with ID: {id}");
 
-      var result = await _postAppService.ObterPost(id);
-      return CreateResponse(result);
+      try
+      {
+        var result = await _postAppService.ObterPost(id);
+        return CreateResponse(result);
+      }
+      catch (Exception ex)
+      {
+        log.LogError($"Error getting post by ID: {ex.Message}");
+        return new StatusCodeResult(StatusCodes.Status500InternalServerError);
+      }
     }
 
     [FunctionName("CreatePost")]
@@ -81,8 +97,16 @@ namespace RauscherFunctionsAPI
       var requestBody = await new StreamReader(req.Body).ReadToEndAsync();
       var postViewModel = JsonSerializer.Deserialize<PostViewModel>(requestBody);
 
-      var result = await _postAppService.CadastrarPost(postViewModel);
-      return CreateResponse(result);
+      try
+      {
+        var result = await _postAppService.CadastrarPost(postViewModel);
+        return CreateResponse(result);
+      }
+      catch (Exception ex)
+      {
+        log.LogError($"Error creating post: {ex.Message}");
+        return new StatusCodeResult(StatusCodes.Status500InternalServerError);
+      }
     }
 
     [FunctionName("UpdatePost")]
@@ -97,8 +121,16 @@ namespace RauscherFunctionsAPI
       var requestBody = await new StreamReader(req.Body).ReadToEndAsync();
       var postViewModel = JsonSerializer.Deserialize<PostViewModel>(requestBody);
 
-      var result = await _postAppService.AtualizarPost(postViewModel);
-      return CreateResponse(result);
+      try
+      {
+        var result = await _postAppService.AtualizarPost(postViewModel);
+        return CreateResponse(result);
+      }
+      catch (Exception ex)
+      {
+        log.LogError($"Error updating post: {ex.Message}");
+        return new StatusCodeResult(StatusCodes.Status500InternalServerError);
+      }
     }
 
     [FunctionName("DeletePost")]
@@ -110,8 +142,16 @@ namespace RauscherFunctionsAPI
     {
       log.LogInformation($"Processing DELETE request to delete Post with ID: {id}");
 
-      var result = await _postAppService.ExcluirPost(id);
-      return CreateResponse(result);
+      try
+      {
+        var result = await _postAppService.ExcluirPost(id);
+        return CreateResponse(result);
+      }
+      catch (Exception ex)
+      {
+        log.LogError($"Error deleting post: {ex.Message}");
+        return new StatusCodeResult(StatusCodes.Status500InternalServerError);
+      }
     }
     [FunctionName("UploadPostImage")]
     public async Task<IActionResult> UploadPostImage(
@@ -129,14 +169,22 @@ namespace RauscherFunctionsAPI
         return CreateResponse(false);
       }
 
-      var imageUrl = await _postAppService.UploadPostImage(id, file);
-
-      if (imageUrl)
+      try
       {
-        return CreateResponse(false);
-      }
+        var imageUrl = await _postAppService.UploadPostImage(id, file);
 
-      return CreateResponse(new { ImageUrl = imageUrl });
+        if (imageUrl)
+        {
+          return CreateResponse(false);
+        }
+
+        return CreateResponse(new { ImageUrl = imageUrl });
+      }
+      catch (Exception ex)
+      {
+        log.LogError($"Error uploading post image: {ex.Message}");
+        return new StatusCodeResult(StatusCodes.Status500InternalServerError);
+      }
     }
 
   }

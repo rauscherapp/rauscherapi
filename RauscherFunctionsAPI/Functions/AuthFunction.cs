@@ -45,9 +45,16 @@ namespace RauscherFunctionsAPI
         return CreateResponse(new { message = "Invalid request body." });
       }
 
-      var result = await _authService.Register(userRequest);
-
-      return new OkObjectResult(result.Token);
+      try
+      {
+        var result = await _authService.Register(userRequest);
+        return new OkObjectResult(result.Token);
+      }
+      catch (Exception ex)
+      {
+        log.LogError($"Error registering user: {ex.Message}");
+        return new StatusCodeResult(StatusCodes.Status500InternalServerError);
+      }
     }
 
     [FunctionName("LoginUser")]
@@ -65,9 +72,16 @@ namespace RauscherFunctionsAPI
         return CreateResponse(new { message = "Invalid request body." });
       }
 
-      var result = await _authService.AppLogin(userRequest);
-
-      return new OkObjectResult(result.Token);
+      try
+      {
+        var result = await _authService.AppLogin(userRequest);
+        return new OkObjectResult(result.Token);
+      }
+      catch (Exception ex)
+      {
+        log.LogError($"Error logging in user: {ex.Message}");
+        return new StatusCodeResult(StatusCodes.Status500InternalServerError);
+      }
     }
 
     [FunctionName("CheckUserSubscription")]
@@ -85,12 +99,20 @@ namespace RauscherFunctionsAPI
         return CreateResponse(new { message = "Invalid request body." });
       }
 
-      var hasSubscription = new HasValidSignatureViewModel
+      try
       {
-        HasValidSignature = await _authService.CheckSubscription(userRequest)
-      };
+        var hasSubscription = new HasValidSignatureViewModel
+        {
+          HasValidSignature = await _authService.CheckSubscription(userRequest)
+        };
 
-      return CreateResponse(hasSubscription);
+        return CreateResponse(hasSubscription);
+      }
+      catch (Exception ex)
+      {
+        log.LogError($"Error checking subscription: {ex.Message}");
+        return new StatusCodeResult(StatusCodes.Status500InternalServerError);
+      }
     }
 
     [FunctionName("DeleteAccount")]
@@ -108,13 +130,21 @@ namespace RauscherFunctionsAPI
         return CreateResponse(new { message = "Invalid request. Email is required." });
       }
 
-      var success = await _authService.DeleteAccount(request.Email);
-
-      if (success)
+      try
       {
-        return CreateResponse(new { message = "Account successfully deleted." });
+        var success = await _authService.DeleteAccount(request.Email);
+
+        if (success)
+        {
+          return CreateResponse(new { message = "Account successfully deleted." });
+        }
+        return CreateResponse(new { message = "Account not found or could not be deleted." });
       }
-      return CreateResponse(new { message = "Account not found or could not be deleted." });
+      catch (Exception ex)
+      {
+        log.LogError($"Error deleting account: {ex.Message}");
+        return new StatusCodeResult(StatusCodes.Status500InternalServerError);
+      }
     }
   }
 }

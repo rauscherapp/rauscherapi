@@ -49,10 +49,18 @@ public class SymbolsFunction : BaseFunctions
     var queryParameters = req.GetQueryParameterDictionary();
     var parameters = JsonSerializer.Deserialize<SymbolsViewModel>(JsonSerializer.Serialize(queryParameters));
 
-    var result1 = await _symbolsAppService.AtualizarSymbolsApi(parameters);
-    var result = await _commoditiesRateAppService.CadastrarCommoditiesRate(new CommoditiesRateViewModel());
+    try
+    {
+      var result1 = await _symbolsAppService.AtualizarSymbolsApi(parameters);
+      var result = await _commoditiesRateAppService.CadastrarCommoditiesRate(new CommoditiesRateViewModel());
 
-    return CreateResponse(result);
+      return CreateResponse(result);
+    }
+    catch (Exception ex)
+    {
+      log.LogError($"Error updating Symbols API: {ex.Message}");
+      return new StatusCodeResult(StatusCodes.Status500InternalServerError);
+    }
   }
 
   [FunctionName("CreateSymbol")]
@@ -65,9 +73,17 @@ public class SymbolsFunction : BaseFunctions
     var requestBody = await new StreamReader(req.Body).ReadToEndAsync();
     var symbolViewModel = JsonSerializer.Deserialize<SymbolsViewModel>(requestBody);
 
-    var result = await _symbolsAppService.CadastrarSymbols(symbolViewModel);
+    try
+    {
+      var result = await _symbolsAppService.CadastrarSymbols(symbolViewModel);
 
-    return CreateResponse(result);
+      return CreateResponse(result);
+    }
+    catch (Exception ex)
+    {
+      log.LogError($"Error creating Symbol: {ex.Message}");
+      return new StatusCodeResult(StatusCodes.Status500InternalServerError);
+    }
   }
 
   [FunctionName("DeleteSymbol")]
@@ -79,8 +95,16 @@ public class SymbolsFunction : BaseFunctions
   {
     log.LogInformation($"Processing DELETE request to delete Symbol with ID: {id}");
 
-    var result = await _symbolsAppService.ExcluirSymbols(id);
-    return CreateResponse(result);
+    try
+    {
+      var result = await _symbolsAppService.ExcluirSymbols(id);
+      return CreateResponse(result);
+    }
+    catch (Exception ex)
+    {
+      log.LogError($"Error deleting Symbol: {ex.Message}");
+      return new StatusCodeResult(StatusCodes.Status500InternalServerError);
+    }
   }
 
 
@@ -103,9 +127,17 @@ public class SymbolsFunction : BaseFunctions
       });
     }
 
-    var result = await _symbolsAppService.AtualizarSymbols(symbolViewModel);
+    try
+    {
+      var result = await _symbolsAppService.AtualizarSymbols(symbolViewModel);
 
-    return CreateResponse(result);
+      return CreateResponse(result);
+    }
+    catch (Exception ex)
+    {
+      log.LogError($"Error updating Symbol: {ex.Message}");
+      return new StatusCodeResult(StatusCodes.Status500InternalServerError);
+    }
   }
 
   [FunctionName("UpdateSymbolFromApi")]
@@ -127,9 +159,17 @@ public class SymbolsFunction : BaseFunctions
       });
     }
 
-    var result = await _symbolsAppService.AtualizarSymbolsApi(symbolViewModel);
+    try
+    {
+      var result = await _symbolsAppService.AtualizarSymbolsApi(symbolViewModel);
 
-    return CreateResponse(result);
+      return CreateResponse(result);
+    }
+    catch (Exception ex)
+    {
+      log.LogError($"Error updating Symbol from API: {ex.Message}");
+      return new StatusCodeResult(StatusCodes.Status500InternalServerError);
+    }
   }
 
   [FunctionName("SymbolsApi")]
@@ -143,10 +183,18 @@ public class SymbolsFunction : BaseFunctions
     var bindParameters = new BindParameters();
     var parameters = bindParameters.BindQueryParameters<SymbolsParameters>(queryParameters);
 
-    var symbols = await _symbolsAppService.ListarSymbols(parameters);
-    req.HttpContext.Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(symbols.PaginationMetadata));
+    try
+    {
+      var symbols = await _symbolsAppService.ListarSymbols(parameters);
+      req.HttpContext.Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(symbols.PaginationMetadata));
 
-    var result = _mapper.Map<IEnumerable<SymbolsViewModel>>(symbols.Data).ShapeData(parameters.Fields);
-    return CreateResponseList(symbols.PaginationMetadata, result);
+      var result = _mapper.Map<IEnumerable<SymbolsViewModel>>(symbols.Data).ShapeData(parameters.Fields);
+      return CreateResponseList(symbols.PaginationMetadata, result);
+    }
+    catch (Exception ex)
+    {
+      log.LogError($"Error getting Symbols: {ex.Message}");
+      return new StatusCodeResult(StatusCodes.Status500InternalServerError);
+    }
   }
 }
