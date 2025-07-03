@@ -17,6 +17,7 @@ namespace RauscherFunctionsAPI
     [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "ping")] HttpRequest req,
     ILogger log)
         {
+            log.LogInformation("Iniciando ping");
             return new OkObjectResult(new { status = "ok", time = DateTime.UtcNow });
         }
     }
