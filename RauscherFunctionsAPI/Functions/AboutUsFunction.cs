@@ -21,12 +21,10 @@ namespace RauscherFunctionsAPI
   {
     private readonly IAboutUsAppService _aboutUsAppService;
     private readonly IMediatorHandler _bus;
-    private readonly IMapper _mapper;
-    public AboutUsFunction(IAboutUsAppService aboutUsAppService, IMediatorHandler bus, IMapper mapper, INotificationHandler<DomainNotification> notifications) : base(notifications, bus)
+    public AboutUsFunction(IAboutUsAppService aboutUsAppService, IMediatorHandler bus, INotificationHandler<DomainNotification> notifications) : base(notifications, bus)
     {
       _aboutUsAppService = aboutUsAppService;
       _bus = bus;
-      _mapper = mapper;
     }
 
     [FunctionName("PatchAboutUs")]
