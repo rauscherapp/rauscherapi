@@ -56,18 +56,27 @@ namespace RauscherFunctionsAPI
         [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "v1/AboutUs")] HttpRequest req,
         ILogger log)
     {
-      log.LogInformation("Processing GET request for AboutUs.");
+            log.LogInformation("Iniciando GetAboutUs");
 
-      try
-      {
-        var result = await _aboutUsAppService.ObterAboutUs();
-        return CreateResponse(result);
-      }
-      catch (Exception ex)
-      {
-        log.LogError($"Error getting AboutUs: {ex.Message}");
-        return new StatusCodeResult(StatusCodes.Status500InternalServerError);
-      }
-    }
+            try
+            {
+                var result = await _aboutUsAppService.ObterAboutUs();
+
+                if (result == null)
+                {
+                    log.LogWarning("AboutUs não encontrado.");
+                    return new NotFoundObjectResult(new { success = false, message = "Dados não encontrados" });
+                }
+
+                log.LogInformation("Tipo do resultado: " + result.GetType().Name);
+
+                return new OkObjectResult(new { success = true, data = result });
+            }
+            catch (Exception ex)
+            {
+                log.LogError(ex, "Erro inesperado em GetAboutUs");
+                return new StatusCodeResult(500);
+            }
+        }
   }
 }
