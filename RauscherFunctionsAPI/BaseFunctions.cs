@@ -41,7 +41,7 @@ namespace RauscherFunctionsAPI
         return new OkObjectResult(new
         {
           success = true,
-          data = result
+            data = result ?? new { }
         });
       }
 
