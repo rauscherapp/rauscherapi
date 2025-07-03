@@ -34,11 +34,16 @@ namespace RauscherFunctionsAPI
       // Read query parameters
       var document = req.Query["document"];
 
-      // Call the service to generate the credentials
-      var result = await _apiCredentialsAppService.GerarApiCredentials(document);
-
-      // Return the response
-      return CreateResponse(result);
+      try
+      {
+        var result = await _apiCredentialsAppService.GerarApiCredentials(document);
+        return CreateResponse(result);
+      }
+      catch (Exception ex)
+      {
+        log.LogError($"Error generating API credentials: {ex.Message}");
+        return new StatusCodeResult(StatusCodes.Status500InternalServerError);
+      }
     }
   }
 }

@@ -29,11 +29,13 @@ namespace RauscherFunctionsAPI
 
       using (var scope = _serviceProvider.CreateScope())
       {
-        var appParametersAppService = scope.ServiceProvider.GetRequiredService<IAppParametersAppService>();
-        var appParametersResult = await appParametersAppService.ObterAppParameters();
-        log.LogInformation(System.Text.Json.JsonSerializer.Serialize(appParametersResult));
-        var commoditiesRateAppService = scope.ServiceProvider.GetRequiredService<ICommoditiesRateAppService>();
-        var symbolsAppService = scope.ServiceProvider.GetRequiredService<ISymbolsAppService>();
+        try
+        {
+          var appParametersAppService = scope.ServiceProvider.GetRequiredService<IAppParametersAppService>();
+          var appParametersResult = await appParametersAppService.ObterAppParameters();
+          log.LogInformation(System.Text.Json.JsonSerializer.Serialize(appParametersResult));
+          var commoditiesRateAppService = scope.ServiceProvider.GetRequiredService<ICommoditiesRateAppService>();
+          var symbolsAppService = scope.ServiceProvider.GetRequiredService<ISymbolsAppService>();
 
         TimeSpan marketOpeningHour = TimeSpan.Parse(appParametersResult.MarketOpeningHour);
         TimeSpan marketClosingHour = TimeSpan.Parse(appParametersResult.MarketClosingHour);
@@ -70,6 +72,11 @@ namespace RauscherFunctionsAPI
         else
         {
           log.LogInformation("Market closed. WorkerFunction will wait for the next interval.");
+        }
+        }
+        catch (Exception ex)
+        {
+          log.LogError($"Error executing WorkerFunction: {ex.Message}");
         }
       }
     }

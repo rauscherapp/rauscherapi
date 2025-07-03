@@ -45,11 +45,19 @@ public class AppParameterFunction : BaseFunctions
     var parameters = new AppParametersParameters();
     // Optionally: parse query parameters from request to populate 'parameters'
 
-    var appParameters = await _appParameterAppService.ListarAppParameters(parameters);
-    var result = _mapper.Map<IEnumerable<AppParametersViewModel>>(appParameters.Data).ShapeData(parameters.Fields);
+    try
+    {
+      var appParameters = await _appParameterAppService.ListarAppParameters(parameters);
+      var result = _mapper.Map<IEnumerable<AppParametersViewModel>>(appParameters.Data).ShapeData(parameters.Fields);
 
-    req.HttpContext.Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(appParameters.PaginationMetadata));
-    return CreateResponse(result);
+      req.HttpContext.Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(appParameters.PaginationMetadata));
+      return CreateResponse(result);
+    }
+    catch (Exception ex)
+    {
+      log.LogError($"Error listing AppParameters: {ex.Message}");
+      return new StatusCodeResult(StatusCodes.Status500InternalServerError);
+    }
   }
 
   [FunctionName("GetAppParameterById")]
@@ -60,8 +68,16 @@ public class AppParameterFunction : BaseFunctions
   {
     log.LogInformation($"Processing GET request for AppParameter with ID: {id}");
 
-    var result = await _appParameterAppService.ObterAppParameters();
-    return CreateResponse(result);
+    try
+    {
+      var result = await _appParameterAppService.ObterAppParameters();
+      return CreateResponse(result);
+    }
+    catch (Exception ex)
+    {
+      log.LogError($"Error getting AppParameter: {ex.Message}");
+      return new StatusCodeResult(StatusCodes.Status500InternalServerError);
+    }
   }
 
   [FunctionName("CreateAppParameter")]
@@ -83,8 +99,16 @@ public class AppParameterFunction : BaseFunctions
       });
     }
 
-    var result = await _appParameterAppService.CadastrarAppParameters(appParameterViewModel);
-    return CreateResponse(result);
+    try
+    {
+      var result = await _appParameterAppService.CadastrarAppParameters(appParameterViewModel);
+      return CreateResponse(result);
+    }
+    catch (Exception ex)
+    {
+      log.LogError($"Error creating AppParameter: {ex.Message}");
+      return new StatusCodeResult(StatusCodes.Status500InternalServerError);
+    }
   }
 
   [FunctionName("UpdateAppParameter")]
@@ -107,8 +131,16 @@ public class AppParameterFunction : BaseFunctions
       });
     }
 
-    var result = await _appParameterAppService.AtualizarAppParameters(appParameterViewModel);
-    return CreateResponse(result);
+    try
+    {
+      var result = await _appParameterAppService.AtualizarAppParameters(appParameterViewModel);
+      return CreateResponse(result);
+    }
+    catch (Exception ex)
+    {
+      log.LogError($"Error updating AppParameter: {ex.Message}");
+      return new StatusCodeResult(StatusCodes.Status500InternalServerError);
+    }
   }
 
   [FunctionName("DeleteAppParameter")]
@@ -128,7 +160,15 @@ public class AppParameterFunction : BaseFunctions
       });
     }
 
-    var result = await _appParameterAppService.ExcluirAppParameters(id);
-    return CreateResponse(result);
+    try
+    {
+      var result = await _appParameterAppService.ExcluirAppParameters(id);
+      return CreateResponse(result);
+    }
+    catch (Exception ex)
+    {
+      log.LogError($"Error deleting AppParameter: {ex.Message}");
+      return new StatusCodeResult(StatusCodes.Status500InternalServerError);
+    }
   }
 }

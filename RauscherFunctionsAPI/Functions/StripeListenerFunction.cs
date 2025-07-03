@@ -50,15 +50,31 @@ public class StripeListenerFunction
     if (stripeEvent.Type == "customer.subscription.deleted")
     {
       var session = stripeEvent.Data.Object as Stripe.Subscription;
-      await _authService.CancelledSubscriptionUserUpdate(session.CustomerId);
-      log.LogInformation($"Processed customer.subscription.deleted event for Customer ID: {session.CustomerId}");
+      try
+      {
+        await _authService.CancelledSubscriptionUserUpdate(session.CustomerId);
+        log.LogInformation($"Processed customer.subscription.deleted event for Customer ID: {session.CustomerId}");
+      }
+      catch (Exception ex)
+      {
+        log.LogError($"Error handling subscription.deleted: {ex.Message}");
+        return new StatusCodeResult(StatusCodes.Status500InternalServerError);
+      }
     }
 
     if (stripeEvent.Type == "customer.subscription.created")
     {
       var session = stripeEvent.Data.Object as Stripe.Subscription;
-      await _authService.SuccesfullSubscriptionUserUpdate(session.CustomerId);
-      log.LogInformation($"Processed customer.subscription.created event for Customer ID: {session.CustomerId}");
+      try
+      {
+        await _authService.SuccesfullSubscriptionUserUpdate(session.CustomerId);
+        log.LogInformation($"Processed customer.subscription.created event for Customer ID: {session.CustomerId}");
+      }
+      catch (Exception ex)
+      {
+        log.LogError($"Error handling subscription.created: {ex.Message}");
+        return new StatusCodeResult(StatusCodes.Status500InternalServerError);
+      }
     }
 
     return new OkResult();

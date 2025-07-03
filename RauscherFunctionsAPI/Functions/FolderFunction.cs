@@ -45,11 +45,19 @@ public class FolderFunction : BaseFunctions
     var parameters = new FolderParameters();
     // Optionally: parse query parameters from request to populate 'parameters'
 
-    var folders = await _folderAppService.ListarFolder(parameters);
-    var result = _mapper.Map<IEnumerable<FolderViewModel>>(folders.Data).ShapeData(parameters.Fields);
+    try
+    {
+      var folders = await _folderAppService.ListarFolder(parameters);
+      var result = _mapper.Map<IEnumerable<FolderViewModel>>(folders.Data).ShapeData(parameters.Fields);
 
-    req.HttpContext.Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(folders.PaginationMetadata));
-    return CreateResponse(result);
+      req.HttpContext.Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(folders.PaginationMetadata));
+      return CreateResponse(result);
+    }
+    catch (Exception ex)
+    {
+      log.LogError($"Error listing Folders: {ex.Message}");
+      return new StatusCodeResult(StatusCodes.Status500InternalServerError);
+    }
   }
 
   [FunctionName("GetFolderById")]
@@ -60,8 +68,16 @@ public class FolderFunction : BaseFunctions
   {
     log.LogInformation($"Processing GET request for Folder with ID: {id}");
 
-    var result = await _folderAppService.ObterFolder(id);
-    return CreateResponse(result);
+    try
+    {
+      var result = await _folderAppService.ObterFolder(id);
+      return CreateResponse(result);
+    }
+    catch (Exception ex)
+    {
+      log.LogError($"Error getting Folder by ID: {ex.Message}");
+      return new StatusCodeResult(StatusCodes.Status500InternalServerError);
+    }
   }
 
   [FunctionName("CreateFolder")]
@@ -83,8 +99,16 @@ public class FolderFunction : BaseFunctions
       });
     }
 
-    var result = await _folderAppService.CadastrarFolder(folderViewModel);
-    return CreateResponse(result);
+    try
+    {
+      var result = await _folderAppService.CadastrarFolder(folderViewModel);
+      return CreateResponse(result);
+    }
+    catch (Exception ex)
+    {
+      log.LogError($"Error creating Folder: {ex.Message}");
+      return new StatusCodeResult(StatusCodes.Status500InternalServerError);
+    }
   }
 
   [FunctionName("UpdateFolder")]
@@ -107,8 +131,16 @@ public class FolderFunction : BaseFunctions
       });
     }
 
-    var result = await _folderAppService.AtualizarFolder(folderViewModel);
-    return CreateResponse(result);
+    try
+    {
+      var result = await _folderAppService.AtualizarFolder(folderViewModel);
+      return CreateResponse(result);
+    }
+    catch (Exception ex)
+    {
+      log.LogError($"Error updating Folder: {ex.Message}");
+      return new StatusCodeResult(StatusCodes.Status500InternalServerError);
+    }
   }
 
   [FunctionName("DeleteFolder")]
@@ -128,7 +160,15 @@ public class FolderFunction : BaseFunctions
       });
     }
 
-    var result = await _folderAppService.ExcluirFolder(id);
-    return CreateResponse(result);
+    try
+    {
+      var result = await _folderAppService.ExcluirFolder(id);
+      return CreateResponse(result);
+    }
+    catch (Exception ex)
+    {
+      log.LogError($"Error deleting Folder: {ex.Message}");
+      return new StatusCodeResult(StatusCodes.Status500InternalServerError);
+    }
   }
 }

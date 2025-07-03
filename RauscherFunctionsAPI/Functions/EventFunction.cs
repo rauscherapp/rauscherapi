@@ -49,12 +49,20 @@ namespace RauscherFunctionsAPI
       // Parse query parameters as needed
       var parameters = new EventRegistryParameters();
 
-      var events = await _eventAppService.ListarEventRegistry(parameters);
+      try
+      {
+        var events = await _eventAppService.ListarEventRegistry(parameters);
 
-      req.HttpContext.Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(events.PaginationMetadata));
-      var result = _mapper.Map<IEnumerable<EventRegistryViewModel>>(events.Data).ShapeData(parameters.Fields);
+        req.HttpContext.Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(events.PaginationMetadata));
+        var result = _mapper.Map<IEnumerable<EventRegistryViewModel>>(events.Data).ShapeData(parameters.Fields);
 
-      return CreateResponse(result);
+        return CreateResponse(result);
+      }
+      catch (Exception ex)
+      {
+        log.LogError($"Error getting Event Registry list: {ex.Message}");
+        return new StatusCodeResult(StatusCodes.Status500InternalServerError);
+      }
     }
 
     [FunctionName("GetEventRegistryApp")]
@@ -66,12 +74,20 @@ namespace RauscherFunctionsAPI
       log.LogInformation("Processing GET request for Event Registry App.");
 
       var parameters = new EventRegistryParameters();
-      var events = await _eventAppService.ListarEventRegistryApp(parameters);
+      try
+      {
+        var events = await _eventAppService.ListarEventRegistryApp(parameters);
 
-      req.HttpContext.Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(events.PaginationMetadata));
-      var result = _mapper.Map<IEnumerable<EventRegistryViewModel>>(events.Data).ShapeData(parameters.Fields);
+        req.HttpContext.Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(events.PaginationMetadata));
+        var result = _mapper.Map<IEnumerable<EventRegistryViewModel>>(events.Data).ShapeData(parameters.Fields);
 
-      return CreateResponse(result);
+        return CreateResponse(result);
+      }
+      catch (Exception ex)
+      {
+        log.LogError($"Error getting Event Registry App list: {ex.Message}");
+        return new StatusCodeResult(StatusCodes.Status500InternalServerError);
+      }
     }
 
     [FunctionName("GetEventRegistryById")]
@@ -83,8 +99,16 @@ namespace RauscherFunctionsAPI
     {
       log.LogInformation($"Processing GET request for Event Registry with ID: {id}");
 
-      var result = await _eventAppService.ObterEventRegistry(id);
-      return CreateResponse(result);
+      try
+      {
+        var result = await _eventAppService.ObterEventRegistry(id);
+        return CreateResponse(result);
+      }
+      catch (Exception ex)
+      {
+        log.LogError($"Error getting Event Registry by ID: {ex.Message}");
+        return new StatusCodeResult(StatusCodes.Status500InternalServerError);
+      }
     }
 
     [FunctionName("CreateEventRegistry")]
@@ -98,8 +122,16 @@ namespace RauscherFunctionsAPI
       var requestBody = await new StreamReader(req.Body).ReadToEndAsync();
       var eventViewModel = JsonSerializer.Deserialize<EventRegistryViewModel>(requestBody);
 
-      var result = await _eventAppService.CadastrarEventRegistry(eventViewModel);
-      return CreateResponse(result);
+      try
+      {
+        var result = await _eventAppService.CadastrarEventRegistry(eventViewModel);
+        return CreateResponse(result);
+      }
+      catch (Exception ex)
+      {
+        log.LogError($"Error creating Event Registry: {ex.Message}");
+        return new StatusCodeResult(StatusCodes.Status500InternalServerError);
+      }
     }
 
     [FunctionName("UpdateEventRegistry")]
@@ -114,8 +146,16 @@ namespace RauscherFunctionsAPI
       var requestBody = await new StreamReader(req.Body).ReadToEndAsync();
       var eventRegistryViewModel = JsonSerializer.Deserialize<EventRegistryViewModel>(requestBody);
 
-      var result = await _eventAppService.AtualizarEventRegistry(eventRegistryViewModel);
-      return CreateResponse(result);
+      try
+      {
+        var result = await _eventAppService.AtualizarEventRegistry(eventRegistryViewModel);
+        return CreateResponse(result);
+      }
+      catch (Exception ex)
+      {
+        log.LogError($"Error updating Event Registry: {ex.Message}");
+        return new StatusCodeResult(StatusCodes.Status500InternalServerError);
+      }
     }
 
     [FunctionName("DeleteEventRegistry")]
@@ -127,8 +167,16 @@ namespace RauscherFunctionsAPI
     {
       log.LogInformation($"Processing DELETE request to delete Event Registry with ID: {id}");
 
-      var result = await _eventAppService.ExcluirEventRegistry(id);
-      return CreateResponse(result);
+      try
+      {
+        var result = await _eventAppService.ExcluirEventRegistry(id);
+        return CreateResponse(result);
+      }
+      catch (Exception ex)
+      {
+        log.LogError($"Error deleting Event Registry: {ex.Message}");
+        return new StatusCodeResult(StatusCodes.Status500InternalServerError);
+      }
     }
   }
 }

@@ -38,8 +38,16 @@ namespace RauscherFunctionsAPI
       // Read request body and bind to AboutUsViewModel
       var parameters = await System.Text.Json.JsonSerializer.DeserializeAsync<AboutUsViewModel>(req.Body);
 
-      var result = await _aboutUsAppService.AtualizarAboutUs(parameters);
-      return CreateResponse(result);
+      try
+      {
+        var result = await _aboutUsAppService.AtualizarAboutUs(parameters);
+        return CreateResponse(result);
+      }
+      catch (Exception ex)
+      {
+        log.LogError($"Error updating AboutUs: {ex.Message}");
+        return new StatusCodeResult(StatusCodes.Status500InternalServerError);
+      }
     }
 
     [FunctionName("GetAboutUs")]
@@ -49,8 +57,16 @@ namespace RauscherFunctionsAPI
     {
       log.LogInformation("Processing GET request for AboutUs.");
 
-      var result = await _aboutUsAppService.ObterAboutUs();
-      return CreateResponse(result);
+      try
+      {
+        var result = await _aboutUsAppService.ObterAboutUs();
+        return CreateResponse(result);
+      }
+      catch (Exception ex)
+      {
+        log.LogError($"Error getting AboutUs: {ex.Message}");
+        return new StatusCodeResult(StatusCodes.Status500InternalServerError);
+      }
     }
   }
 }
