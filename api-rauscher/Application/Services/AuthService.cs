@@ -6,6 +6,7 @@ using Domain.Interfaces;
 using Domain.Options;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Logging;
 using Stripe;
 using System;
 using System.Linq;
@@ -23,6 +24,7 @@ namespace Application.Services
     private readonly IMapper _mapper;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly string _priceId;
+    private readonly ILogger<AuthService> _logger;
 
     public AuthService(
         IAccessManager accessManager,
@@ -31,7 +33,8 @@ namespace Application.Services
         UserManager<ApplicationUser> userManager,
         IStripeCustomerService stripeCustomerService,
         IMapper mapper,
-        IStripeSubscriptionService stripeSubscriptionService)
+        IStripeSubscriptionService stripeSubscriptionService,
+        ILogger<AuthService> logger)
     {
       _accessManager = accessManager ?? throw new ArgumentNullException(nameof(accessManager));
       _parameters = parameters ?? throw new ArgumentNullException("parameters error");
@@ -41,6 +44,7 @@ namespace Application.Services
       _stripeCustomerService = stripeCustomerService ?? throw new ArgumentNullException(nameof(stripeCustomerService));
       _mapper = mapper;
       _stripeSubscriptionService = stripeSubscriptionService;
+      _logger = logger;
     }
 
     public async Task<(bool IsValid, TokenViewModel Token)> Register(UserRequest model)
@@ -79,7 +83,8 @@ namespace Application.Services
         }
         catch (StripeException e)
         {
-          throw new Exception($"Error Stripe {e.Message}");
+          _logger.LogError(e, "Error Stripe {Message}", e.Message);
+          throw;
         }
 
       }
@@ -128,7 +133,8 @@ namespace Application.Services
         }
         catch (StripeException e)
         {
-          throw new Exception($"Error Stripe {e.Message}");
+          _logger.LogError(e, "Error Stripe {Message}", e.Message);
+          throw;
         }
       }
       return (true, tokenMapped);
