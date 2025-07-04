@@ -22,7 +22,7 @@ namespace RauscherFunctionsAPI
 
     [FunctionName("WorkerFunction")]
     public async Task Run(
-        [TimerTrigger("*/6000 * * * * *")] TimerInfo timer,
+        [TimerTrigger("*/30 * * * * *")] TimerInfo timer,
         ILogger log)
     {
       log.LogInformation($"WorkerFunction executing at: {DateTime.UtcNow}");
