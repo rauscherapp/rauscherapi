@@ -23,6 +23,7 @@ namespace RauscherFunctionsAPI
     public AboutUsFunction(IAboutUsAppService aboutUsAppService, IMediatorHandler bus, INotificationHandler<DomainNotification> notifications) : base(notifications, bus)
     {
       _aboutUsAppService = aboutUsAppService;
+      Console.WriteLine("Construtor da AboutUsFunction chamado com sucesso");
     }
 
     [FunctionName("PatchAboutUs")]
@@ -32,7 +33,6 @@ namespace RauscherFunctionsAPI
     {
       log.LogInformation("Processing PATCH request for AboutUs.");
 
-      // Read request body and bind to AboutUsViewModel
       var parameters = await System.Text.Json.JsonSerializer.DeserializeAsync<AboutUsViewModel>(req.Body);
 
       try
