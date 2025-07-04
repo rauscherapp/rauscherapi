@@ -49,7 +49,7 @@ namespace RauscherFunctionsAPI
 
     [FunctionName("GetAboutUs")]
     public async Task<IActionResult> Get(
-        [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "AboutUs")] HttpRequest req,
+        [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "v1/AboutUs")] HttpRequest req,
         ILogger log)
     {
             log.LogInformation("Iniciando GetAboutUs");
