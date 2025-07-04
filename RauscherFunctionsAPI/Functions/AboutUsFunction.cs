@@ -20,11 +20,9 @@ namespace RauscherFunctionsAPI
   public class AboutUsFunction : BaseFunctions
   {
     private readonly IAboutUsAppService _aboutUsAppService;
-    private readonly IMediatorHandler _bus;
     public AboutUsFunction(IAboutUsAppService aboutUsAppService, IMediatorHandler bus, INotificationHandler<DomainNotification> notifications) : base(notifications, bus)
     {
       _aboutUsAppService = aboutUsAppService;
-      _bus = bus;
     }
 
     [FunctionName("PatchAboutUs")]
