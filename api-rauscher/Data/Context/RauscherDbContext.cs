@@ -38,7 +38,7 @@ namespace Data.Context
             .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}.json", optional: true)
             .Build();
 
-        optionsBuilder.UseSqlServer(config.GetConnectionString("DefaultConnection"));
+        optionsBuilder.UseNpgsql(config.GetConnectionString("DefaultConnection"));
       }
     }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
