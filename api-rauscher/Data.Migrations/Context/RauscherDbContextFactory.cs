@@ -17,7 +17,7 @@ namespace Data.Migrations.Context
                 .AddJsonFile("appsettings.json", optional: false)
                 .Build();
 
-            var connectionString = "Host=rauscher-db.database.windows.net;Port=5432;Database=db_rauscher;Username=adminsql;Password=Rauscher@2025*;";
+            var connectionString = "Host=167.71.90.85;Username=rauscheradmin;Password=R4u$Ch3R*2025;Database=rauscherdb";
 
             var optionsBuilder = new DbContextOptionsBuilder<RauscherDbContext>();
             optionsBuilder.UseNpgsql(connectionString,
