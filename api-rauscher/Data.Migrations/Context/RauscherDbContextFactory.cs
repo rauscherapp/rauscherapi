@@ -17,10 +17,10 @@ namespace Data.Migrations.Context
                 .AddJsonFile("appsettings.json", optional: false)
                 .Build();
 
-            var connectionString = "Server=tcp:rauscher-db.database.windows.net,1433;Initial Catalog=db_rauscher;Persist Security Info=False;User ID=adminsql;Password=Rauscher@2025*;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
+            var connectionString = "Host=localhost;Port=5432;Database=rauscherdb;Username=postgres;Password=postgres";
 
             var optionsBuilder = new DbContextOptionsBuilder<RauscherDbContext>();
-            optionsBuilder.UseSqlServer(connectionString,
+            optionsBuilder.UseNpgsql(connectionString,
                 b => b.MigrationsAssembly("Data.Migrations"));
 
             return new RauscherDbContext(optionsBuilder.Options);
