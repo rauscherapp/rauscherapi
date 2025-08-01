@@ -18,12 +18,12 @@ namespace Api.Configurations
       if (services == null) throw new ArgumentNullException(nameof(services));
 
       services.AddDbContext<EventStoreSQLContext>(options =>
-          options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+          options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
 
       services.AddDbContext<RauscherDbContext>(options =>
-          options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+          options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
       services.AddDbContext<ApiSecurityDbContext>(options =>
-          options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+          options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
     }
   }
 }
