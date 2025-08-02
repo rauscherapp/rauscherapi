@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using Azure.Storage.Blobs;
-using Application.Interfaces;
+using Domain.Interfaces;
 using Microsoft.Extensions.Configuration;
 
 namespace Application.Services
@@ -23,12 +23,12 @@ namespace Application.Services
       _containerClient = new BlobContainerClient(connectionString, containerName);
     }
 
-    public async Task DeleteAsync(string blobPath)
+    public async Task<bool> DeleteAsync(string blobPath)
     {
       if (string.IsNullOrWhiteSpace(blobPath))
         throw new ArgumentException("Blob path cannot be null or empty.", nameof(blobPath));
 
-      await _containerClient.DeleteBlobIfExistsAsync(blobPath);
+      return await _containerClient.DeleteBlobIfExistsAsync(blobPath);
     }
   }
 }
