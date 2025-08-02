@@ -10,6 +10,8 @@ namespace Domain.Commands
       ID = id;
     }
 
+    public Guid PostId { get; }
+
     public override bool IsValid()
     {
       ValidationResult = new DeletePostImageCommandValidation().Validate(this);
