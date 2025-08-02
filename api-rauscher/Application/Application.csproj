@@ -17,9 +17,10 @@
 		<PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
 		<PackageReference Include="System.Linq.Dynamic.Core" Version="1.4.2" />
 		<PackageReference Include="System.ServiceModel.Primitives" Version="4.9.0" />
-		<PackageReference Include="MailKit" Version="3.0.0" />
-		<PackageReference Include="MimeKit" Version="3.0.0" />
-	</ItemGroup>
+                <PackageReference Include="MailKit" Version="3.0.0" />
+                <PackageReference Include="MimeKit" Version="3.0.0" />
+                <PackageReference Include="Azure.Storage.Blobs" Version="12.23.0" />
+        </ItemGroup>
 
   <ItemGroup>
 	<ProjectReference Include="..\APIs.Security.JWT\APIs.Security.JWT.csproj" />

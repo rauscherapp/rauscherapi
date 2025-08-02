@@ -51,6 +51,7 @@ namespace CrossCutting.IoC
       services.AddTransient<IStripeCustomerService, StripeCustomerService>();
       services.AddTransient<IStripeSessionService, StripeSessionService>();
       services.AddTransient<IStripeSubscriptionService, StripeSubscriptionService>();
+      services.AddTransient<IAzureBlobService, AzureBlobService>();
 
 
       //Commands
