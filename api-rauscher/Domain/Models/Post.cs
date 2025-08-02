@@ -63,7 +63,5 @@ namespace Domain.Models
     {
       ImgUrl = url;
     }
-
-    // Additional methods for other business logic
   }
 }

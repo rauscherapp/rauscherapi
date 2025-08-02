@@ -38,6 +38,7 @@ namespace Domain.CommandHandlers
       post.SetAuthor(message.AUTHOR);
       post.SetVisible(message.VISIBLE);
       post.SetLanguage(message.Language);
+      post.SetImageUrl(message.ImgUrl);
 
       _postRepository.Update(post);
 

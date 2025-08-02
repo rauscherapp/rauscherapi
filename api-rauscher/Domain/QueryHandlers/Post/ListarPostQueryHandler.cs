@@ -39,10 +39,10 @@ namespace Domain.QueryHandlers
         };
 
         // Traduzir o parâmetro folder
-        var folderInEnglish = request.Parameters.folder;
-        if (translationDictionary.ContainsKey(folderInEnglish.ToLower()))
+        var folderInEnglish = request.Parameters.folder.ToLower();
+        if (translationDictionary.ContainsKey(folderInEnglish))
         {
-          folderInEnglish = translationDictionary[folderInEnglish.ToLower()];
+          folderInEnglish = translationDictionary[folderInEnglish];
         }
 
         var folderId = _folderRepository.GetFoldersBySlug(folderInEnglish).ID;

@@ -46,7 +46,7 @@ namespace Domain.CommandHandlers
         return false;
       }
 
-      var containerClient = _blobServiceClient.GetBlobContainerClient("posts");
+      var containerClient = _blobServiceClient.GetBlobContainerClient("imagens");
       await containerClient.CreateIfNotExistsAsync(cancellationToken: cancellationToken);
 
       var fileName = $"{Guid.NewGuid()}{Path.GetExtension(message.File.FileName)}";
