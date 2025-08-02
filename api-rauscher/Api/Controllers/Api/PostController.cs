@@ -112,5 +112,23 @@ namespace Api.Controllers
       var result = await _postAppService.ExcluirPost(id);
       return CreateResponse(result);
     }
+
+    [HttpDelete("Post/{id}/Image")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [AllowAnonymous]
+    public async Task<IActionResult> DeletePostImage(Guid id)
+    {
+      if (!IsValidOperation())
+      {
+        return BadRequest(new
+        {
+          success = false,
+          errors = GetNotificationMessages()
+        });
+      }
+
+      var result = await _postAppService.DeletePostImage(id);
+      return CreateResponse(result);
+    }
   }
 }
