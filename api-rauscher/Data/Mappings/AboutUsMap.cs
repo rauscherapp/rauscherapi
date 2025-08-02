@@ -10,7 +10,10 @@ namespace Data.Mappings
     {
       builder.ToTable("AboutUs");
 
-      builder.HasKey(e => e.Id);
+      builder.Property(e => e.Id)
+                .HasDefaultValueSql("uuid_generate_v4()")
+                .HasColumnName("Id");
+
       builder.Property(e => e.Description)
       .HasColumnName("Description");
     }

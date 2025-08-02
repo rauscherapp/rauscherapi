@@ -28,13 +28,13 @@ namespace RauscherFunctionsAPI.Configurations
 
       // Registrar os contextos de banco de dados no container de dependências
       services.AddDbContext<EventStoreSQLContext>(options =>
-          options.UseSqlServer(connectionString));
+          options.UseNpgsql(connectionString));
 
       services.AddDbContext<RauscherDbContext>(options =>
-          options.UseSqlServer(connectionString));
+          options.UseNpgsql(connectionString));
 
       services.AddDbContext<ApiSecurityDbContext>(options =>
-          options.UseSqlServer(connectionString));
+          options.UseNpgsql(connectionString));
     }
   }
 }

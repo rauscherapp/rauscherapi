@@ -3,6 +3,7 @@ using System;
 using Data.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Data.Migrations.Migrations
 {
     [DbContext(typeof(RauscherDbContext))]
-    partial class RauscherDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250801203636_AutoIncrementAboutUs")]
+    partial class AutoIncrementAboutUs
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -26,9 +28,7 @@ namespace Data.Migrations.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid")
-                        .HasColumnName("Id")
-                        .HasDefaultValueSql("uuid_generate_v4()");
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Base")
                         .IsRequired()
@@ -75,13 +75,13 @@ namespace Data.Migrations.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid")
-                        .HasColumnName("Id")
-                        .HasDefaultValueSql("uuid_generate_v4()");
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Description")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("text")
-                        .HasColumnName("Description");
+                        .HasColumnName("Description")
+                        .HasDefaultValueSql("uuid_generate_v4()");
 
                     b.HasKey("Id");
 
@@ -120,8 +120,7 @@ namespace Data.Migrations.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
-                        .HasColumnName("Id")
-                        .HasDefaultValueSql("uuid_generate_v4()");
+                        .HasColumnName("Id");
 
                     b.Property<string>("CommoditiesApiKey")
                         .HasColumnType("text")
@@ -217,8 +216,7 @@ namespace Data.Migrations.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
-                        .HasColumnName("Id")
-                        .HasDefaultValueSql("uuid_generate_v4()");
+                        .HasColumnName("Id");
 
                     b.Property<string>("BaseCurrency")
                         .HasColumnType("text")
@@ -268,8 +266,7 @@ namespace Data.Migrations.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
-                        .HasColumnName("Id")
-                        .HasDefaultValueSql("uuid_generate_v4()");
+                        .HasColumnName("Id");
 
                     b.Property<DateTime>("EventDate")
                         .HasColumnType("timestamp with time zone")
@@ -309,8 +306,7 @@ namespace Data.Migrations.Migrations
                     b.Property<Guid>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
-                        .HasColumnName("ID")
-                        .HasDefaultValueSql("uuid_generate_v4()");
+                        .HasColumnName("ID");
 
                     b.Property<string>("ICON")
                         .HasColumnType("text")
@@ -334,8 +330,7 @@ namespace Data.Migrations.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
-                        .HasColumnName("ID")
-                        .HasDefaultValueSql("uuid_generate_v4()");
+                        .HasColumnName("ID");
 
                     b.Property<string>("Author")
                         .HasColumnType("text")
@@ -383,8 +378,7 @@ namespace Data.Migrations.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
-                        .HasColumnName("Id")
-                        .HasDefaultValueSql("uuid_generate_v4()");
+                        .HasColumnName("Id");
 
                     b.Property<bool>("Appvisible")
                         .HasColumnType("boolean")

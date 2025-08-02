@@ -3,63 +3,63 @@ using System;
 using Data.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
 namespace Data.Migrations.Migrations
 {
     [DbContext(typeof(RauscherDbContext))]
-    [Migration("20250627151717_MigrationInitial")]
-    partial class MigrationInitial
+    [Migration("20250801201927_InitialCreate")]
+    partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "6.0.26")
-                .HasAnnotation("Relational:MaxIdentifierLength", 128);
+                .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
-            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
+            NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
             modelBuilder.Entity("CommodityOpenHighLowClose", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Base")
                         .IsRequired()
                         .HasMaxLength(3)
-                        .HasColumnType("nvarchar(3)")
+                        .HasColumnType("character varying(3)")
                         .HasColumnName("Base");
 
                     b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("Date");
 
                     b.Property<decimal>("PriceClose")
-                        .HasColumnType("decimal(18,8)")
+                        .HasColumnType("numeric(18,8)")
                         .HasColumnName("PriceClose");
 
                     b.Property<decimal>("PriceHigh")
-                        .HasColumnType("decimal(18,8)")
+                        .HasColumnType("numeric(18,8)")
                         .HasColumnName("PriceHigh");
 
                     b.Property<decimal>("PriceLow")
-                        .HasColumnType("decimal(18,8)")
+                        .HasColumnType("numeric(18,8)")
                         .HasColumnName("PriceLow");
 
                     b.Property<decimal>("PriceOpen")
-                        .HasColumnType("decimal(18,8)")
+                        .HasColumnType("numeric(18,8)")
                         .HasColumnName("PriceOpen");
 
                     b.Property<string>("Symbol")
                         .IsRequired()
                         .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)")
+                        .HasColumnType("character varying(10)")
                         .HasColumnName("Symbol");
 
                     b.Property<long>("Timestamp")
@@ -75,10 +75,10 @@ namespace Data.Migrations.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)")
+                        .HasColumnType("text")
                         .HasColumnName("Description");
 
                     b.HasKey("Id");
@@ -89,23 +89,23 @@ namespace Data.Migrations.Migrations
             modelBuilder.Entity("Domain.Models.ApiCredentials", b =>
                 {
                     b.Property<string>("Apikey")
-                        .HasColumnType("nvarchar(450)")
+                        .HasColumnType("text")
                         .HasColumnName("ApiKey");
 
                     b.Property<string>("Apisecrethash")
-                        .HasColumnType("nvarchar(max)")
+                        .HasColumnType("text")
                         .HasColumnName("ApiSecretHash");
 
                     b.Property<DateTime>("Createdat")
-                        .HasColumnType("datetime2")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("CreatedAt");
 
                     b.Property<bool>("Isactive")
-                        .HasColumnType("bit")
+                        .HasColumnType("boolean")
                         .HasColumnName("IsActive");
 
                     b.Property<DateTime?>("Lastusedat")
-                        .HasColumnType("datetime2")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("LastUsedAt");
 
                     b.HasKey("Apikey");
@@ -117,91 +117,91 @@ namespace Data.Migrations.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
+                        .HasColumnType("uuid")
                         .HasColumnName("Id");
 
                     b.Property<string>("CommoditiesApiKey")
-                        .HasColumnType("nvarchar(max)")
+                        .HasColumnType("text")
                         .HasColumnName("CommoditiesApiKey");
 
                     b.Property<bool>("CommoditiesApiOn")
-                        .HasColumnType("bit")
+                        .HasColumnType("boolean")
                         .HasColumnName("CommoditiesApiOn");
 
                     b.Property<string>("ContactNumber")
-                        .HasColumnType("nvarchar(max)")
+                        .HasColumnType("text")
                         .HasColumnName("ContactNumber");
 
                     b.Property<string>("EmailPassword")
-                        .HasColumnType("nvarchar(max)")
+                        .HasColumnType("text")
                         .HasColumnName("EmailPassword");
 
                     b.Property<string>("EmailReceiver")
-                        .HasColumnType("nvarchar(max)")
+                        .HasColumnType("text")
                         .HasColumnName("EmailReceiver");
 
                     b.Property<string>("EmailSender")
-                        .HasColumnType("nvarchar(max)")
+                        .HasColumnType("text")
                         .HasColumnName("EmailSender");
 
                     b.Property<string>("InstagramUrl")
-                        .HasColumnType("nvarchar(max)")
+                        .HasColumnType("text")
                         .HasColumnName("InstagramUrl");
 
                     b.Property<string>("MarketClosingHour")
-                        .HasColumnType("nvarchar(max)")
+                        .HasColumnType("text")
                         .HasColumnName("MarketClosingHour");
 
                     b.Property<string>("MarketOpeningHour")
-                        .HasColumnType("nvarchar(max)")
+                        .HasColumnType("text")
                         .HasColumnName("MarketOpeningHour");
 
                     b.Property<int>("MinutesIntervalJob")
-                        .HasColumnType("int")
+                        .HasColumnType("integer")
                         .HasColumnName("MinutesIntervalJob");
 
                     b.Property<int>("SmtpPort")
-                        .HasColumnType("int")
+                        .HasColumnType("integer")
                         .HasColumnName("SmtpPort");
 
                     b.Property<string>("SmtpServer")
-                        .HasColumnType("nvarchar(max)")
+                        .HasColumnType("text")
                         .HasColumnName("SmtpServer");
 
                     b.Property<string>("StripeApiClientKey")
-                        .HasColumnType("nvarchar(max)")
+                        .HasColumnType("text")
                         .HasColumnName("StripeApiClientKey");
 
                     b.Property<string>("StripeApiPriceId")
-                        .HasColumnType("nvarchar(max)")
+                        .HasColumnType("text")
                         .HasColumnName("StripeApiPriceId");
 
                     b.Property<string>("StripeApiSecret")
-                        .HasColumnType("nvarchar(max)")
+                        .HasColumnType("text")
                         .HasColumnName("StripeApiSecret");
 
                     b.Property<int>("StripeTrialPeriod")
-                        .HasColumnType("int")
+                        .HasColumnType("integer")
                         .HasColumnName("StripeTrialPeriod");
 
                     b.Property<string>("StripeWebhookSecret")
-                        .HasColumnType("nvarchar(max)")
+                        .HasColumnType("text")
                         .HasColumnName("StripeWebhookSecret");
 
                     b.Property<string>("WebSiteUrl")
-                        .HasColumnType("nvarchar(max)")
+                        .HasColumnType("text")
                         .HasColumnName("WebSiteUrl");
 
                     b.Property<string>("WhatsappNumber")
-                        .HasColumnType("nvarchar(max)")
+                        .HasColumnType("text")
                         .HasColumnName("WhatsappNumber");
 
                     b.Property<string>("YahooFinanceApiKey")
-                        .HasColumnType("nvarchar(max)")
+                        .HasColumnType("text")
                         .HasColumnName("YahooFinanceApiKey");
 
                     b.Property<bool>("YahooFinanceApiOn")
-                        .HasColumnType("bit")
+                        .HasColumnType("boolean")
                         .HasColumnName("YahooFinanceApiOn");
 
                     b.HasKey("Id");
@@ -213,27 +213,27 @@ namespace Data.Migrations.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
+                        .HasColumnType("uuid")
                         .HasColumnName("Id");
 
                     b.Property<string>("BaseCurrency")
-                        .HasColumnType("nvarchar(max)")
+                        .HasColumnType("text")
                         .HasColumnName("Base");
 
                     b.Property<DateTime?>("Date")
-                        .HasColumnType("datetime2")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("Date");
 
                     b.Property<bool>("Isup")
-                        .HasColumnType("bit")
+                        .HasColumnType("boolean")
                         .HasColumnName("isUp");
 
                     b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,4)")
+                        .HasColumnType("numeric(18,4)")
                         .HasColumnName("Price");
 
                     b.Property<string>("SymbolCode")
-                        .HasColumnType("nvarchar(450)")
+                        .HasColumnType("text")
                         .HasColumnName("SymbolCode");
 
                     b.Property<long?>("Timestamp")
@@ -241,15 +241,15 @@ namespace Data.Migrations.Migrations
                         .HasColumnName("Timestamp");
 
                     b.Property<string>("Unit")
-                        .HasColumnType("nvarchar(max)")
+                        .HasColumnType("text")
                         .HasColumnName("Unit");
 
                     b.Property<decimal?>("Variationprice")
-                        .HasColumnType("decimal(18,4)")
+                        .HasColumnType("numeric(18,4)")
                         .HasColumnName("VariationPrice");
 
                     b.Property<decimal?>("Variationpricepercent")
-                        .HasColumnType("decimal(18,4)")
+                        .HasColumnType("numeric(18,4)")
                         .HasColumnName("VariationPricePercent");
 
                     b.HasKey("Id");
@@ -263,35 +263,35 @@ namespace Data.Migrations.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
+                        .HasColumnType("uuid")
                         .HasColumnName("Id");
 
                     b.Property<DateTime>("EventDate")
-                        .HasColumnType("datetime2")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("EventDate");
 
                     b.Property<string>("EventDescription")
-                        .HasColumnType("nvarchar(max)")
+                        .HasColumnType("text")
                         .HasColumnName("EventDescription");
 
                     b.Property<string>("EventLink")
-                        .HasColumnType("nvarchar(max)")
+                        .HasColumnType("text")
                         .HasColumnName("EventLink");
 
                     b.Property<string>("EventLocation")
-                        .HasColumnType("nvarchar(max)")
+                        .HasColumnType("text")
                         .HasColumnName("EventLocation");
 
                     b.Property<string>("EventName")
-                        .HasColumnType("nvarchar(max)")
+                        .HasColumnType("text")
                         .HasColumnName("EventName");
 
                     b.Property<string>("EventType")
-                        .HasColumnType("nvarchar(max)")
+                        .HasColumnType("text")
                         .HasColumnName("EventType");
 
                     b.Property<bool>("Published")
-                        .HasColumnType("bit")
+                        .HasColumnType("boolean")
                         .HasColumnName("Published");
 
                     b.HasKey("Id");
@@ -303,19 +303,19 @@ namespace Data.Migrations.Migrations
                 {
                     b.Property<Guid>("ID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
+                        .HasColumnType("uuid")
                         .HasColumnName("ID");
 
                     b.Property<string>("ICON")
-                        .HasColumnType("nvarchar(max)")
+                        .HasColumnType("text")
                         .HasColumnName("ICON");
 
                     b.Property<string>("SLUG")
-                        .HasColumnType("nvarchar(max)")
+                        .HasColumnType("text")
                         .HasColumnName("SLUG");
 
                     b.Property<string>("TITLE")
-                        .HasColumnType("nvarchar(max)")
+                        .HasColumnType("text")
                         .HasColumnName("TITLE");
 
                     b.HasKey("ID");
@@ -327,43 +327,43 @@ namespace Data.Migrations.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
+                        .HasColumnType("uuid")
                         .HasColumnName("ID");
 
                     b.Property<string>("Author")
-                        .HasColumnType("nvarchar(max)")
+                        .HasColumnType("text")
                         .HasColumnName("AUTHOR");
 
                     b.Property<string>("Content")
-                        .HasColumnType("nvarchar(max)")
+                        .HasColumnType("text")
                         .HasColumnName("CONTENT");
 
                     b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("CREATEDATE");
 
                     b.Property<Guid>("FolderId")
-                        .HasColumnType("uniqueidentifier")
+                        .HasColumnType("uuid")
                         .HasColumnName("FolderId");
 
                     b.Property<string>("ImgUrl")
-                        .HasColumnType("nvarchar(max)")
+                        .HasColumnType("text")
                         .HasColumnName("ImgUrl");
 
                     b.Property<string>("Language")
-                        .HasColumnType("nvarchar(max)")
+                        .HasColumnType("text")
                         .HasColumnName("Language");
 
                     b.Property<DateTime?>("PublishedAt")
-                        .HasColumnType("datetime2")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("PUBLISHEDAT");
 
                     b.Property<string>("Title")
-                        .HasColumnType("nvarchar(max)")
+                        .HasColumnType("text")
                         .HasColumnName("TITLE");
 
                     b.Property<bool>("Visible")
-                        .HasColumnType("bit")
+                        .HasColumnType("boolean")
                         .HasColumnName("VISIBLE");
 
                     b.HasKey("Id");
@@ -375,32 +375,32 @@ namespace Data.Migrations.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
+                        .HasColumnType("uuid")
                         .HasColumnName("Id");
 
                     b.Property<bool>("Appvisible")
-                        .HasColumnType("bit")
+                        .HasColumnType("boolean")
                         .HasColumnName("AppVisible");
 
                     b.Property<string>("Code")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)")
+                        .HasColumnType("text")
                         .HasColumnName("Code");
 
                     b.Property<string>("FriendlyName")
-                        .HasColumnType("nvarchar(max)")
+                        .HasColumnType("text")
                         .HasColumnName("FriendlyName");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)")
+                        .HasColumnType("text")
                         .HasColumnName("Name");
 
                     b.Property<string>("SymbolType")
-                        .HasColumnType("nvarchar(max)")
+                        .HasColumnType("text")
                         .HasColumnName("SYMBOLTYPE");
 
                     b.Property<string>("Vendor")
-                        .HasColumnType("nvarchar(max)")
+                        .HasColumnType("text")
                         .HasColumnName("Vendor");
 
                     b.HasKey("Id");
