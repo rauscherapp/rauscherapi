@@ -1,3 +1,4 @@
+using Azure.Storage.Blobs;
 using Domain.Commands;
 using Domain.Core.Bus;
 using Domain.Core.Notifications;
@@ -17,13 +18,16 @@ namespace Domain.CommandHandlers
   {
     private readonly IPostRepository _postRepository;
     private readonly IMediatorHandler Bus;
+    private readonly BlobServiceClient _blobServiceClient;
 
     public UploadPostImageCommandHandler(IPostRepository postRepository,
+                                         BlobServiceClient blobServiceClient,
                                          IUnitOfWork uow,
                                          IMediatorHandler bus,
                                          INotificationHandler<DomainNotification> notifications) : base(uow, bus, notifications)
     {
       _postRepository = postRepository;
+      _blobServiceClient = blobServiceClient;
       Bus = bus;
     }
 
@@ -42,21 +46,14 @@ namespace Domain.CommandHandlers
         return false;
       }
 
-      var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "uploads", "posts");
-      if (!Directory.Exists(uploadsFolder))
-      {
-        Directory.CreateDirectory(uploadsFolder);
-      }
+      var containerClient = _blobServiceClient.GetBlobContainerClient("posts");
+      await containerClient.CreateIfNotExistsAsync(cancellationToken: cancellationToken);
 
       var fileName = $"{Guid.NewGuid()}{Path.GetExtension(message.File.FileName)}";
-      var filePath = Path.Combine(uploadsFolder, fileName);
+      var blobClient = containerClient.GetBlobClient(fileName);
+      await blobClient.UploadAsync(message.File.OpenReadStream(), cancellationToken);
 
-      using (var stream = new FileStream(filePath, FileMode.Create))
-      {
-        await message.File.CopyToAsync(stream, cancellationToken);
-      }
-
-      post.SetImageUrl(Path.Combine("uploads", "posts", fileName));
+      post.SetImageUrl(blobClient.Uri.AbsoluteUri);
       _postRepository.Update(post);
 
       return Commit();
