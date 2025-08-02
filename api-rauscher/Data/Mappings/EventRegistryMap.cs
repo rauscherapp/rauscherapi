@@ -12,7 +12,8 @@ namespace Data.Mappings
 			
 			builder.HasKey(e => e.Id);
 			builder.Property(e => e.Id)
-			.HasColumnName("Id");
+            .HasDefaultValueSql("uuid_generate_v4()")
+                .HasColumnName("Id");
 			
 			builder.Property(e => e.EventName)
 			.HasColumnName("EventName");

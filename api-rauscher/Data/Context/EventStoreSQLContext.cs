@@ -30,7 +30,7 @@ namespace Data.Context
             .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}.json", optional: true)
             .Build();
 
-        optionsBuilder.UseSqlServer(config.GetConnectionString("DefaultConnection"));
+        optionsBuilder.UseNpgsql(config.GetConnectionString("DefaultConnection"));
       }
     }
 
@@ -40,11 +40,11 @@ namespace Data.Context
       {
         entity.Property(c => c.Id)
                   .HasColumnName("Id")
-                  .HasColumnType("uniqueidentifier");
+                  .HasColumnType("uuid");
 
         entity.Property(c => c.AggregateId)
                   .HasColumnName("AggregateId")
-                  .HasColumnType("uniqueidentifier");
+                  .HasColumnType("uuid");
 
         entity.Property(c => c.TimeStamp)
               .HasColumnName("CreationDate");
@@ -55,11 +55,11 @@ namespace Data.Context
 
         entity.Property(c => c.Data)
                   .HasColumnName("Data")
-                  .HasColumnType("varchar(max)");
+                  .HasColumnType("text");
 
         entity.Property(c => c.ActionUser)
                   .HasColumnName("ActionUser")
-                  .HasColumnType("varchar(max)");
+                  .HasColumnType("text");
       });
 
       OnModelCreatingPartial(modelBuilder);
