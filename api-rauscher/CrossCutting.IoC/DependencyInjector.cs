@@ -26,7 +26,9 @@ using Infrastructure.Commodities;
 using Infrastructure.RateProvider.Providers;
 using Infrastructure.YahooFinance;
 using MediatR;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Azure.Storage.Blobs;
 using StripeApi.Service;
 using System.Linq;
 
@@ -34,8 +36,11 @@ namespace CrossCutting.IoC
 {
   public static class DependencyInjector
   {
-    public static void RegisterDependencies(IServiceCollection services)
+    public static void RegisterDependencies(IServiceCollection services, IConfiguration configuration)
     {
+
+      services.AddSingleton(sp =>
+          new BlobServiceClient(configuration.GetConnectionString("AzureBlobStorage")));
 
       //Services
       services.AddTransient<IAboutUsAppService, AboutUsAppService>();

@@ -101,7 +101,7 @@ namespace MyFunctionApp
       });
 
       builder.Services.AddScoped<IUriAppService, UriAppService>();
-      builder.Services.AddDependencyInjectionSetup();
+      builder.Services.AddDependencyInjectionSetup(Configuration);
       builder.Services.Configure<CommoditiesApiOptions>(Configuration.GetSection("CommoditiesApi"));
       builder.Services.Configure<StripeApiOptions>(Configuration.GetSection("StripeApi"));
       builder.Services.Configure<BancoCentralOptions>(Configuration.GetSection("BancoCentralApi"));
