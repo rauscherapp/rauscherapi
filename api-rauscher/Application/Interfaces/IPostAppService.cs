@@ -13,7 +13,7 @@ namespace Application.Interfaces
 		Task<PostViewModel> CadastrarPost(PostViewModel postViewModel);
 		Task<bool> ExcluirPost(Guid Post);
 		Task<PostViewModel> ObterPost(Guid Post);
-		Task<PagedResponse<PostViewModel>> ListarPost(PostParameters parameters);
-    Task<bool> UploadPostImage(Guid postId, IFormFile file);
+                Task<PagedResponse<PostViewModel>> ListarPost(PostParameters parameters);
+    Task<PostViewModel> UploadPostImage(Guid postId, IFormFile file);
   }
 }
