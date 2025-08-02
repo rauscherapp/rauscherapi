@@ -82,6 +82,7 @@ namespace CrossCutting.IoC
       services.AddTransient<IStripeSubscriptionService, StripeSubscriptionService>();
       services.AddTransient<IUriAppService, UriAppService>();
       services.AddTransient<IEmailService, EmailSenderAppService>();
+      services.AddTransient<IAzureBlobService, AzureBlobService>();
       services.AddTransient<IYahooFinanceRepository, YahooFinanceRepository>();
 
       // Domain - Commands
