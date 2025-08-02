@@ -83,6 +83,7 @@ namespace CrossCutting.IoC
       services.AddTransient<IUriAppService, UriAppService>();
       services.AddTransient<IEmailService, EmailSenderAppService>();
       services.AddTransient<IYahooFinanceRepository, YahooFinanceRepository>();
+      services.AddTransient<IAzureBlobService, AzureBlobService>();
 
       // Domain - Commands
       services.AddTransient<IRequestHandler<SendEmailCommand, bool>, SendEmailCommandHandler>();
@@ -112,6 +113,7 @@ namespace CrossCutting.IoC
       services.AddTransient<IRequestHandler<GerarSecretAndApiKeyCommand, bool>, GerarSecretAndApiKeyCommandHandler>();
       services.AddTransient<IRequestHandler<AtualizarAboutUsCommand, bool>, AtualizarAboutUsCommandHandler>();
       services.AddTransient<IRequestHandler<AtualizarOHLCCommoditiesRateCommand, bool>, AtualizarOHLCCommoditiesRateCommandHandler>();
+      services.AddTransient<IRequestHandler<DeletePostImageCommand, bool>, DeletePostImageCommandHandler>();
 
       // Domain - Queries
       services.AddTransient<IRequestHandler<ListarSymbolsWithRateQuery, PagedList<Symbols>>, ListarSymbolsWithRateQueryHandler>();
