@@ -12,9 +12,10 @@ namespace Data.Mappings
 			
 			builder.HasKey(e => e.Id);
 			builder.Property(e => e.Id)
-			.HasColumnName("ID");
-			
-			builder.Property(e => e.Title)
+            .HasDefaultValueSql("uuid_generate_v4()")
+                .HasColumnName("ID");
+
+            builder.Property(e => e.Title)
 			.HasColumnName("TITLE");
 			
 			builder.Property(e => e.CreatedDate)
