@@ -15,5 +15,6 @@ namespace Domain.Commands
 		public Guid Folderid { get; set; }
 		public string FolderName { get; set; }
 		public string Language { get; set; }
+		public string ImgUrl { get; set; }
 	}
 }

@@ -171,14 +171,14 @@ namespace RauscherFunctionsAPI
 
       try
       {
-        var imageUrl = await _postAppService.UploadPostImage(id, file);
+        var post = await _postAppService.UploadPostImage(id, file);
 
-        if (imageUrl)
+        if (post == null)
         {
           return CreateResponse(false);
         }
 
-        return CreateResponse(new { ImageUrl = imageUrl });
+        return CreateResponse(post);
       }
       catch (Exception ex)
       {

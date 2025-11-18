@@ -16,6 +16,7 @@ using Domain.CommandHandlers.Apicredentials;
 using Domain.Commands;
 using Domain.Commands.Apicredentials;
 using Domain.Interfaces;
+using Domain.Services;
 using Domain.Models;
 using Domain.Queries;
 using Domain.QueryHandlers;
@@ -26,7 +27,9 @@ using Infrastructure.Commodities;
 using Infrastructure.RateProvider.Providers;
 using Infrastructure.YahooFinance;
 using MediatR;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Azure.Storage.Blobs;
 using StripeApi.Service;
 using System.Linq;
 
@@ -34,8 +37,11 @@ namespace CrossCutting.IoC
 {
   public static class DependencyInjector
   {
-    public static void RegisterDependencies(IServiceCollection services)
+    public static void RegisterDependencies(IServiceCollection services, IConfiguration configuration)
     {
+
+      services.AddSingleton(sp =>
+          new BlobServiceClient(configuration.GetConnectionString("AzureBlobStorage")));
 
       //Services
       services.AddTransient<IAboutUsAppService, AboutUsAppService>();
@@ -51,6 +57,7 @@ namespace CrossCutting.IoC
       services.AddTransient<IStripeCustomerService, StripeCustomerService>();
       services.AddTransient<IStripeSessionService, StripeSessionService>();
       services.AddTransient<IStripeSubscriptionService, StripeSubscriptionService>();
+      services.AddTransient<IAzureBlobService, AzureBlobService>();
 
 
       //Commands
@@ -82,6 +89,7 @@ namespace CrossCutting.IoC
       services.AddTransient<IRequestHandler<AtualizarAboutUsCommand, bool>, AtualizarAboutUsCommandHandler>();
       services.AddTransient<IRequestHandler<AtualizarOHLCCommoditiesRateCommand, bool>, AtualizarOHLCCommoditiesRateCommandHandler>();
       services.AddTransient<IRequestHandler<UploadPostImageCommand, bool>, UploadPostImageCommandHandler>();
+      services.AddTransient<IRequestHandler<DeletePostImageCommand, bool>, DeletePostImageCommandHandler>();
 
       //Queries
       services.AddTransient<IRequestHandler<ListarSymbolsWithRateQuery, PagedList<Symbols>>, ListarSymbolsWithRateQueryHandler>();
