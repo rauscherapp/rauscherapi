@@ -92,5 +92,15 @@ namespace Application.Services
       return _mapper.Map<Post, PostViewModel>(post);
     }
 
+    public async Task<bool> DeletePostImage(Guid postId)
+    {
+      _logger.LogInformation("Handling: {MethodName}", nameof(DeletePostImage));
+
+      var command = new DeletePostImageCommand(postId);
+      var result = await _mediator.Send(command);
+
+      return result;
+    }
+
   }
 }

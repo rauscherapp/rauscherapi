@@ -16,6 +16,7 @@ using Domain.CommandHandlers.Apicredentials;
 using Domain.Commands;
 using Domain.Commands.Apicredentials;
 using Domain.Interfaces;
+using Domain.Services;
 using Domain.Models;
 using Domain.Queries;
 using Domain.QueryHandlers;
@@ -88,6 +89,7 @@ namespace CrossCutting.IoC
       services.AddTransient<IRequestHandler<AtualizarAboutUsCommand, bool>, AtualizarAboutUsCommandHandler>();
       services.AddTransient<IRequestHandler<AtualizarOHLCCommoditiesRateCommand, bool>, AtualizarOHLCCommoditiesRateCommandHandler>();
       services.AddTransient<IRequestHandler<UploadPostImageCommand, bool>, UploadPostImageCommandHandler>();
+      services.AddTransient<IRequestHandler<DeletePostImageCommand, bool>, DeletePostImageCommandHandler>();
 
       //Queries
       services.AddTransient<IRequestHandler<ListarSymbolsWithRateQuery, PagedList<Symbols>>, ListarSymbolsWithRateQueryHandler>();
