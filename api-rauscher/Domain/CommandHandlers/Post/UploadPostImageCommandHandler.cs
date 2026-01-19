@@ -3,6 +3,7 @@ using Azure.Storage.Blobs.Models;
 using Domain.Commands;
 using Domain.Core.Bus;
 using Domain.Core.Notifications;
+using Domain.Events;
 using Domain.Interfaces;
 using Domain.Repositories;
 using MediatR;
@@ -39,7 +40,7 @@ namespace Domain.CommandHandlers
                 return false;
             }
 
-            var post = _postRepository.GetById(message.PostId);
+            var post = await _postRepository.ObterPost(message.PostId);
             if (post == null)
             {
                 Bus.RaiseEvent(new DomainNotification(nameof(UploadPostImageCommand), "Post not found."));
@@ -62,7 +63,6 @@ namespace Domain.CommandHandlers
 
             post.SetImageUrl(blobClient.Uri.AbsoluteUri);
             _postRepository.Update(post);
-
             return Commit();
         }
     }

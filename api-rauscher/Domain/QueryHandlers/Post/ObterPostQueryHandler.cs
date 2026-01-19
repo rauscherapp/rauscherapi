@@ -21,7 +21,7 @@ namespace Domain.QueryHandlers
     {
       _logger.LogInformation("Handling: {MethodName} | params: {@Request}", nameof(Handle), request.Id);
 
-      return _postRepository.ObterPost(request.Id);
+      return await _postRepository.ObterPost(request.Id);
 
     }
   }

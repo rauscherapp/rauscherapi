@@ -12,6 +12,7 @@ public class ApiSecurityDbContext : IdentityDbContext<ApplicationUser>
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
+        builder.HasDefaultSchema("public");
         base.OnModelCreating(builder);
     }
 }

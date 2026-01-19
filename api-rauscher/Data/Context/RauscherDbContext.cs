@@ -9,10 +9,6 @@ namespace Data.Context
 {
   public class RauscherDbContext : DbContext
   {
-    public RauscherDbContext()
-    {
-    }
-
     public RauscherDbContext(DbContextOptions<RauscherDbContext> options)
         : base(options)
     {

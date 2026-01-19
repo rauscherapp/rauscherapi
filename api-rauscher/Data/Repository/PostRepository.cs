@@ -18,15 +18,14 @@ namespace Data.Repository
 		public PostRepository(RauscherDbContext context): base(context)
 		{
 		}
-		public Post ObterPost(Guid id)
-		{
-			    var Post = Db.Posts
-			        .Where(c => c.Id == id);
-			
-			    return Post.FirstOrDefault();
-		}
-		
-		public async Task<IQueryable<Post>> ListarPosts(PostParameters parameters)
+        public async Task<Post> ObterPost(Guid id)
+        {
+            return Db.Posts
+                     .AsTracking()
+                     .FirstOrDefault(c => c.Id == id);
+        }
+
+        public async Task<IQueryable<Post>> ListarPosts(PostParameters parameters)
 		{
 			var post = Db.Posts
 			.AsQueryable();
