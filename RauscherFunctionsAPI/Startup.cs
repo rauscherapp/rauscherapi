@@ -114,22 +114,12 @@ namespace MyFunctionApp
 
 
       builder.Services.AddHttpClient<Data.Commodities.Api.Infrastructure.CommoditiesAPI>();
-      // Authorization
-      //services.AddOAuth2Configuration();
-      // Creating a mock instance of TokenConfigurations
-      TokenConfigurations tokenConfigurations = new TokenConfigurations
-      {
-        Audience = "rauscher-idei",
-        Issuer = "RauscherApp",
-        Seconds = 3600, // 1 hour in seconds
-      };
-
       builder.Services.AddLogging(loggingBuilder =>
           loggingBuilder.AddSerilog(dispose: true));
 
-      tokenConfigurations.GenerateSecretJwtKey();
-
-      builder.Services.AddJwtSecurity(tokenConfigurations);
+      // Authorization
+      //services.AddOAuth2Configuration();
+      builder.Services.AddConfiguredJwtSecurity(Configuration);
 
       builder.Services.AddTransient<IAppParametersOptionsProvider, AppParametersOptionsProvider>();
 

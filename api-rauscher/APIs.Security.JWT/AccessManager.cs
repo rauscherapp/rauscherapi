@@ -82,11 +82,22 @@ public class AccessManager : IAccessManager
 
     public Token GenerateToken(UserResponse user)
     {
-        var identity = new ClaimsIdentity(new GenericIdentity(user.Email!, "Login"), new[]
+        var claims = new List<Claim>
         {
-      new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString("N")),
-      new Claim(JwtRegisteredClaimNames.UniqueName, user.Email!)
-    });
+            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString("N")),
+            new Claim(JwtRegisteredClaimNames.UniqueName, user.Email!),
+            new Claim(JwtRegisteredClaimNames.Email, user.Email!),
+            new Claim(ClaimTypes.Email, user.Email!),
+            new Claim(ClaimTypes.Name, user.Email!),
+            new Claim(ClaimTypes.Role, Roles.ROLE_ACESSO_APIS)
+        };
+
+        if (!string.IsNullOrWhiteSpace(user.Name))
+        {
+            claims.Add(new Claim("name", user.Name));
+        }
+
+        var identity = new ClaimsIdentity(new GenericIdentity(user.Email!, "Login"), claims);
 
         var dataCriacao = DateTime.UtcNow;
         var dataExpiracao = dataCriacao.AddSeconds(_tokenConfigurations.Seconds);

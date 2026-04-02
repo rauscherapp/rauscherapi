@@ -42,6 +42,12 @@ namespace Domain.CommandHandlers
                 return false;
             }
 
+            if (string.IsNullOrWhiteSpace(post.ImgUrl))
+            {
+                Bus.RaiseEvent(new DomainNotification(nameof(DeletePostImageCommand), "Post image not found."));
+                return false;
+            }
+
             var result = await _azureBlobService.DeleteAsync(post.ImgUrl);
             if (!result)
             {

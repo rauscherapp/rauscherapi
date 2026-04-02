@@ -187,5 +187,25 @@ namespace RauscherFunctionsAPI
       }
     }
 
+    [FunctionName("DeletePostImage")]
+    public async Task<IActionResult> DeletePostImage(
+        [HttpTrigger(AuthorizationLevel.Anonymous, "delete", Route = "v1/Post/{id}/Image")] HttpRequest req,
+        Guid id,
+        ILogger log)
+    {
+      log.LogInformation($"Processing image delete for Post ID: {id}");
+
+      try
+      {
+        var result = await _postAppService.DeletePostImage(id);
+        return CreateResponse(result);
+      }
+      catch (Exception ex)
+      {
+        log.LogError($"Error deleting post image: {ex.Message}");
+        return new StatusCodeResult(StatusCodes.Status500InternalServerError);
+      }
+    }
+
   }
 }

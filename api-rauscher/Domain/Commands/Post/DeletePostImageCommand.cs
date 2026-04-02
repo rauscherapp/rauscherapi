@@ -8,6 +8,7 @@ namespace Domain.Commands
     public DeletePostImageCommand(Guid id)
     {
       ID = id;
+      PostId = id;
     }
 
     public Guid PostId { get; }

@@ -55,5 +55,29 @@ namespace Application.Tests
             Assert.NotNull(result);
             Assert.Equal(post.ImgUrl, result.ImgUrl);
         }
+
+        [Fact]
+        public async Task DeletePostImage_Returns_True_WhenCommandSucceeds()
+        {
+            var mediator = new Mock<IMediator>();
+            var logger = new Mock<ILogger<PostAppService>>();
+            var uriApp = new Mock<IUriAppService>();
+
+            var mapperConfig = new MapperConfiguration(cfg =>
+            {
+                cfg.CreateMap<Post, PostViewModel>();
+            });
+            var mapper = mapperConfig.CreateMapper();
+
+            var service = new PostAppService(logger.Object, mediator.Object, mapper, uriApp.Object);
+            var postId = Guid.NewGuid();
+
+            mediator.Setup(m => m.Send(It.IsAny<DeletePostImageCommand>(), It.IsAny<CancellationToken>()))
+                    .ReturnsAsync(true);
+
+            var result = await service.DeletePostImage(postId);
+
+            Assert.True(result);
+        }
     }
 }

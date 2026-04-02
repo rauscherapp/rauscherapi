@@ -51,8 +51,12 @@ namespace APIs.Security.JWT
         paramsValidation.ValidIssuer = tokenConfigurations.Issuer;
 
         // Validações de segurança
+        paramsValidation.ValidateIssuer = true;
+        paramsValidation.ValidateAudience = true;
         paramsValidation.ValidateIssuerSigningKey = true;
         paramsValidation.ValidateLifetime = true;
+        paramsValidation.NameClaimType = System.Security.Claims.ClaimTypes.Name;
+        paramsValidation.RoleClaimType = System.Security.Claims.ClaimTypes.Role;
 
         // Tempo de tolerância para a expiração do token
         paramsValidation.ClockSkew = TimeSpan.Zero;

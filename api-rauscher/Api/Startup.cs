@@ -55,22 +55,12 @@ namespace Api
       // AutoMapper Settings
       services.AddAutoMapperSetup();
 
-      // Authorization
-      //services.AddOAuth2Configuration();
-      // Creating a mock instance of TokenConfigurations
-      TokenConfigurations tokenConfigurations = new TokenConfigurations
-      {
-        Audience = "rauscher-idei",
-        Issuer = "RauscherApp",
-        Seconds = 3600, // 1 hour in seconds
-      };
-
       services.AddLogging(loggingBuilder =>
           loggingBuilder.AddSerilog(dispose: true));
 
-      tokenConfigurations.GenerateSecretJwtKey();
-
-      services.AddJwtSecurity(tokenConfigurations);
+      // Authorization
+      //services.AddOAuth2Configuration();
+      services.AddConfiguredJwtSecurity(Configuration);
 
       // Setting DBContexts
       services.AddDatabaseSetup(Configuration);

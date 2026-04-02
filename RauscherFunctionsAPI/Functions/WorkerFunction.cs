@@ -24,61 +24,61 @@ namespace RauscherFunctionsAPI
     public async Task Run(
         [TimerTrigger("*/30 * * * * *")] TimerInfo timer,
         ILogger log)
-    {
-      log.LogInformation($"WorkerFunction executing at: {DateTime.UtcNow}");
-
-      using (var scope = _serviceProvider.CreateScope())
-      {
-        try
         {
-          var appParametersAppService = scope.ServiceProvider.GetRequiredService<IAppParametersAppService>();
-          var appParametersResult = await appParametersAppService.ObterAppParameters();
-          log.LogInformation(System.Text.Json.JsonSerializer.Serialize(appParametersResult));
-          var commoditiesRateAppService = scope.ServiceProvider.GetRequiredService<ICommoditiesRateAppService>();
-          var symbolsAppService = scope.ServiceProvider.GetRequiredService<ISymbolsAppService>();
+            //      log.LogInformation($"WorkerFunction executing at: {DateTime.UtcNow}");
 
-        TimeSpan marketOpeningHour = TimeSpan.Parse(appParametersResult.MarketOpeningHour);
-        TimeSpan marketClosingHour = TimeSpan.Parse(appParametersResult.MarketClosingHour);
-        int minutesIntervalJob = appParametersResult.MinutesIntervalJob;
+            //      using (var scope = _serviceProvider.CreateScope())
+            //      {
+            //        try
+            //        {
+            //          var appParametersAppService = scope.ServiceProvider.GetRequiredService<IAppParametersAppService>();
+            //          var appParametersResult = await appParametersAppService.ObterAppParameters();
+            //          log.LogInformation(System.Text.Json.JsonSerializer.Serialize(appParametersResult));
+            //          var commoditiesRateAppService = scope.ServiceProvider.GetRequiredService<ICommoditiesRateAppService>();
+            //          var symbolsAppService = scope.ServiceProvider.GetRequiredService<ISymbolsAppService>();
 
-        var currentTime = DateTime.Now.TimeOfDay;
-        var currentDate = DateTime.Now.Date;
+            //        TimeSpan marketOpeningHour = TimeSpan.Parse(appParametersResult.MarketOpeningHour);
+            //        TimeSpan marketClosingHour = TimeSpan.Parse(appParametersResult.MarketClosingHour);
+            //        int minutesIntervalJob = appParametersResult.MinutesIntervalJob;
 
-#if DEBUG
-        //marketOpeningHour = TimeSpan.Parse("09:00");
-        //marketClosingHour = TimeSpan.Parse("22:00");
-#endif
-        log.LogInformation("Market Opened. WorkerFunction will execute and update Symbols Rates.");
-        if (currentTime >= marketOpeningHour && currentTime <= marketClosingHour)
-        {
-          if (_lastOHLCUpdateDate != currentDate)
-          {
-            await commoditiesRateAppService.AtualizarOHLCCommoditiesRate();
-            _lastOHLCUpdateDate = currentDate;
-          }
+            //        var currentTime = DateTime.Now.TimeOfDay;
+            //        var currentDate = DateTime.Now.Date;
 
-          await commoditiesRateAppService.RemoverCommoditiesRateAntigos();
-          await commoditiesRateAppService.CadastrarCommoditiesRate(new CommoditiesRateViewModel());
+            //#if DEBUG
+            //        //marketOpeningHour = TimeSpan.Parse("09:00");
+            //        //marketClosingHour = TimeSpan.Parse("22:00");
+            //#endif
+            //        log.LogInformation("Market Opened. WorkerFunction will execute and update Symbols Rates.");
+            //        if (currentTime >= marketOpeningHour && currentTime <= marketClosingHour)
+            //        {
+            //          if (_lastOHLCUpdateDate != currentDate)
+            //          {
+            //            await commoditiesRateAppService.AtualizarOHLCCommoditiesRate();
+            //            _lastOHLCUpdateDate = currentDate;
+            //          }
 
-          var commoditiesData = await symbolsAppService.ListarSymbolsWithRateForWorker(new SymbolsParameters { SymbolType = "commodity", OrderBy = "Appvisible desc" });
+            //          await commoditiesRateAppService.RemoverCommoditiesRateAntigos();
+            //          await commoditiesRateAppService.CadastrarCommoditiesRate(new CommoditiesRateViewModel());
 
-          var exchangesData = await symbolsAppService.ListarSymbolsWithRateForWorker(new SymbolsParameters { SymbolType = "exchange", OrderBy = "Appvisible desc" });
+            //          var commoditiesData = await symbolsAppService.ListarSymbolsWithRateForWorker(new SymbolsParameters { SymbolType = "commodity", OrderBy = "Appvisible desc" });
 
-          log.LogInformation($"Processed {commoditiesData.Count()} commodities and {exchangesData.Count()} exchanges.");
+            //          var exchangesData = await symbolsAppService.ListarSymbolsWithRateForWorker(new SymbolsParameters { SymbolType = "exchange", OrderBy = "Appvisible desc" });
 
-          // Simula um delay baseado no intervalo do job
-          await Task.Delay(TimeSpan.FromMilliseconds(minutesIntervalJob));
+            //          log.LogInformation($"Processed {commoditiesData.Count()} commodities and {exchangesData.Count()} exchanges.");
+
+            //          // Simula um delay baseado no intervalo do job
+            //          await Task.Delay(TimeSpan.FromMilliseconds(minutesIntervalJob));
+            //        }
+            //        else
+            //        {
+            //          log.LogInformation("Market closed. WorkerFunction will wait for the next interval.");
+            //        }
+            //        }
+            //        catch (Exception ex)
+            //        {
+            //          log.LogError($"Error executing WorkerFunction: {ex.Message}");
+            //        }
+            //      }
         }
-        else
-        {
-          log.LogInformation("Market closed. WorkerFunction will wait for the next interval.");
-        }
-        }
-        catch (Exception ex)
-        {
-          log.LogError($"Error executing WorkerFunction: {ex.Message}");
-        }
-      }
     }
-  }
 }
