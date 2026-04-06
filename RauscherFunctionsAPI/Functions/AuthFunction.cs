@@ -10,7 +10,10 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.IO;
+using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -38,23 +41,48 @@ namespace RauscherFunctionsAPI
     {
       log.LogInformation("Processing POST request to register user.");
 
-      var requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-      var userRequest = JsonSerializer.Deserialize<UserRequest>(requestBody);
-
-      if (userRequest == null)
-      {
-        return CreateResponse(new { message = "Invalid request body." });
-      }
-
       try
       {
+        var parseResult = await ParseUserRequestAsync(req);
+        if (parseResult.ErrorResult != null)
+        {
+          return parseResult.ErrorResult;
+        }
+
+        var validationErrors = ValidateAuthRequest(parseResult.Request!);
+        if (validationErrors != null)
+        {
+          return CreateErrorResponse(
+              StatusCodes.Status400BadRequest,
+              "Os dados informados são inválidos.",
+              validationErrors);
+        }
+
+        var userRequest = parseResult.Request!;
         var result = await _authService.Register(userRequest);
-        return new OkObjectResult(result.Token);
+
+        if (!result.IsValid || result.Token == null)
+        {
+          return CreateErrorResponse(
+              StatusCodes.Status400BadRequest,
+              "Os dados informados são inválidos.");
+        }
+
+        return new ObjectResult(result.Token)
+        {
+          StatusCode = StatusCodes.Status201Created
+        };
+      }
+      catch (DuplicateUserException ex)
+      {
+        return CreateErrorResponse(StatusCodes.Status409Conflict, ex.Message);
       }
       catch (Exception ex)
       {
         log.LogError($"Error registering user: {ex.Message}");
-        return new StatusCodeResult(StatusCodes.Status500InternalServerError);
+        return CreateErrorResponse(
+            StatusCodes.Status500InternalServerError,
+            "Ocorreu um erro interno ao processar a requisição.");
       }
     }
 
@@ -65,24 +93,117 @@ namespace RauscherFunctionsAPI
     {
       log.LogInformation("Processing POST request for user login.");
 
-      var requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-      var userRequest = JsonSerializer.Deserialize<UserRequest>(requestBody);
-
-      if (userRequest == null)
-      {
-        return CreateResponse(new { message = "Invalid request body." });
-      }
-
       try
       {
+        var parseResult = await ParseUserRequestAsync(req);
+        if (parseResult.ErrorResult != null)
+        {
+          return parseResult.ErrorResult;
+        }
+
+        var validationErrors = ValidateAuthRequest(parseResult.Request!);
+        if (validationErrors != null)
+        {
+          return CreateErrorResponse(
+              StatusCodes.Status400BadRequest,
+              "Os dados informados são inválidos.",
+              validationErrors);
+        }
+
+        var userRequest = parseResult.Request!;
         var result = await _authService.AppLogin(userRequest);
+
+        if (!result.IsValid || result.Token == null)
+        {
+          return CreateErrorResponse(
+              StatusCodes.Status401Unauthorized,
+              "E-mail ou senha inválidos.");
+        }
+
         return new OkObjectResult(result.Token);
       }
       catch (Exception ex)
       {
         log.LogError($"Error logging in user: {ex.Message}");
-        return new StatusCodeResult(StatusCodes.Status500InternalServerError);
+        return CreateErrorResponse(
+            StatusCodes.Status500InternalServerError,
+            "Ocorreu um erro interno ao processar a requisição.");
       }
+    }
+
+    private static async Task<(UserRequest Request, IActionResult ErrorResult)> ParseUserRequestAsync(HttpRequest req)
+    {
+      try
+      {
+        var requestBody = await new StreamReader(req.Body).ReadToEndAsync();
+        if (string.IsNullOrWhiteSpace(requestBody))
+        {
+          return (new UserRequest(), null);
+        }
+
+        var userRequest = JsonSerializer.Deserialize<UserRequest>(
+            requestBody,
+            new JsonSerializerOptions
+            {
+              PropertyNameCaseInsensitive = true
+            });
+
+        return (userRequest ?? new UserRequest(), null);
+      }
+      catch (JsonException)
+      {
+        return (null, CreateErrorResponse(
+            StatusCodes.Status400BadRequest,
+            "O corpo da requisição está inválido."));
+      }
+    }
+
+    private static IDictionary<string, string[]> ValidateAuthRequest(UserRequest request)
+    {
+      var errors = new Dictionary<string, List<string>>(StringComparer.OrdinalIgnoreCase);
+
+      if (string.IsNullOrWhiteSpace(request.Email))
+      {
+        errors["email"] = new List<string> { "O campo email é obrigatório." };
+      }
+      else if (!new EmailAddressAttribute().IsValid(request.Email))
+      {
+        errors["email"] = new List<string> { "O campo email deve ser um endereço de e-mail válido." };
+      }
+
+      if (string.IsNullOrWhiteSpace(request.Password))
+      {
+        errors["password"] = new List<string> { "O campo password é obrigatório." };
+      }
+
+      if (errors.Count == 0)
+      {
+        return null;
+      }
+
+      var normalizedErrors = new Dictionary<string, string[]>();
+      foreach (var error in errors)
+      {
+        normalizedErrors[error.Key] = error.Value.ToArray();
+      }
+
+      return normalizedErrors;
+    }
+
+    private static IActionResult CreateErrorResponse(
+        int statusCode,
+        string message,
+        IDictionary<string, string[]> errors = null)
+    {
+      return new ObjectResult(new
+      {
+        success = false,
+        message,
+        errors
+      })
+      {
+        StatusCode = statusCode
+      };
     }
 
     [FunctionName("CheckUserSubscription")]

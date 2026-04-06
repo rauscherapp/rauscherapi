@@ -48,7 +48,7 @@ public class AccessManager : IAccessManager
         var existingUser = await _userManager.FindByEmailAsync(userRequest.Email!);
         if (existingUser != null)
         {
-            await _userManager.DeleteAsync(existingUser);
+            throw new DuplicateUserException();
         }
 
         var user = new ApplicationUser()
