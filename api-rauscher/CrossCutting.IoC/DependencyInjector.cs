@@ -4,6 +4,7 @@ using Data.BancoCentral.Api.Infrastructure;
 using Data.BancoCentral.Api.Interfaces;
 using Data.Commodities.Api.Infrastructure;
 using Data.Commodities.Api.Interfaces;
+
 using Data.Repository;
 using Data.Stripe.Api.Service;
 using Data.UoW;

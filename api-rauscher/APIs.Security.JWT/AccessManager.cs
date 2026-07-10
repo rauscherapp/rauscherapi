@@ -35,6 +35,7 @@ public class AccessManager : IAccessManager
                 credenciaisValidas = await _userManager.IsInRoleAsync(userIdentity, Roles.ROLE_ACESSO_APIS);
                 userResponse.Email = userIdentity.Email;
                 userResponse.Name = userIdentity.NomeCompleto;
+                userResponse.UserId = userIdentity.Id;
                 userResponse.HasValidStripeSubscription = userIdentity.HasValidStripeSubscription;
             }
         }
