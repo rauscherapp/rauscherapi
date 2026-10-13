@@ -23,8 +23,6 @@ using Microsoft.Extensions.Options;
 using RauscherFunctionsAPI;
 using RauscherFunctionsAPI.Configurations;
 using Serilog;
-using Stripe;
-using StripeApi.Options;
 using System.IO;
 using System.Reflection;
 
@@ -103,7 +101,6 @@ namespace MyFunctionApp
       builder.Services.AddScoped<IUriAppService, UriAppService>();
       builder.Services.AddDependencyInjectionSetup(Configuration);
       builder.Services.Configure<CommoditiesApiOptions>(Configuration.GetSection("CommoditiesApi"));
-      builder.Services.Configure<StripeApiOptions>(Configuration.GetSection("StripeApi"));
       builder.Services.Configure<BancoCentralOptions>(Configuration.GetSection("BancoCentralApi"));
       builder.Services.Configure<YahooFinanceOptions>(Configuration.GetSection("YahooFinanceApi"));
       builder.Services.Configure<ParametersOptions>(Configuration.GetSection("ParametersOptions"));

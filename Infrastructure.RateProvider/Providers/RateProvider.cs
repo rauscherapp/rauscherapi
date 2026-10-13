@@ -20,29 +20,22 @@ namespace Infrastructure.RateProvider.Providers
     {
       _logger.LogInformation("{method} - Providers", nameof(GetRateAsync));
 
-      // Executa todas as tarefas de forma assíncrona e aguarda a conclusão de todas
-      var vendorsTasks = _vendorRatesAdapter.Select(vendorAssets => vendorAssets.GetRateAsync(symbols));
-      await Task.WhenAll(vendorsTasks);  // Use await aqui
+      // ToList materializa as tarefas: sem ele o Select seria reexecutado e cada fornecedor chamado duas vezes
+      var vendorsTasks = _vendorRatesAdapter.Select(vendorAssets => vendorAssets.GetRateAsync(symbols)).ToList();
+      var vendorsResults = await Task.WhenAll(vendorsTasks);
 
-      var vendorsResults = vendorsTasks.Select(x => x.Result).Where(x => x != null);
-
-      // Processa os resultados das tarefas após aguardar sua conclusão
-      var vendorRates = vendorsResults.Where(x => x != null).SelectMany(x => x).ToList();
-      return vendorRates;
+      return vendorsResults.Where(x => x != null).SelectMany(x => x).ToList();
     }
 
     public async Task<IEnumerable<CommodityOpenHighLowClose>> GetOpeningRateAsync(string date, List<Symbols> symbols)
     {
       _logger.LogInformation("{method} - Providers", nameof(GetOpeningRateAsync));
 
-      // Executa todas as tarefas de forma assíncrona e aguarda a conclusão de todas
-      var vendorsTasks = _vendorRatesAdapter.Select(vendorAssets => vendorAssets.GetOpeningRateAsync(date, symbols));
-      await Task.WhenAll(vendorsTasks);  // Use await aqui
+      // ToList materializa as tarefas: sem ele o Select seria reexecutado e cada fornecedor chamado duas vezes
+      var vendorsTasks = _vendorRatesAdapter.Select(vendorAssets => vendorAssets.GetOpeningRateAsync(date, symbols)).ToList();
+      var vendorsResults = await Task.WhenAll(vendorsTasks);
 
-      var vendorsResults = vendorsTasks.Select(x => x.Result).Where(x => x != null);
-      // Processa os resultados das tarefas após aguardar sua conclusão
-      var openingRates = vendorsResults.Where(x => x != null).SelectMany(x => x);
-      return openingRates;
+      return vendorsResults.Where(x => x != null).SelectMany(x => x).ToList();
     }
   }
 }

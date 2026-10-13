@@ -40,14 +40,14 @@ namespace Application.Services
 			_logger.LogInformation("Handling: {MethodName}", nameof(AtualizarAppParameters));
 			var command = _mapper.Map<AtualizarAppParametersCommand>(AppParametersViewModel);
 			await _mediator.Send(command);
-			return AppParametersViewModel;
+			return MaskSecrets(AppParametersViewModel);
 		}
 		public async Task<AppParametersViewModel> CadastrarAppParameters(AppParametersViewModel AppParametersViewModel)
 		{
 			_logger.LogInformation("Handling: {MethodName}", nameof(CadastrarAppParameters));
 			var command = _mapper.Map<CadastrarAppParametersCommand>(AppParametersViewModel);
 			await _mediator.Send(command);
-			return AppParametersViewModel;
+			return MaskSecrets(AppParametersViewModel);
 		}
 		public async Task<bool> ExcluirAppParameters(Guid appParametersId)
 		{
@@ -60,7 +60,7 @@ namespace Application.Services
 		{
 			_logger.LogInformation("Handling: {MethodName}", nameof(ListarAppParameters));
 			var data = await _mediator.Send(new ListarAppParametersQuery(parameters));
-			var resultadoDB = data.Select(x => _mapper.Map<AppParameters, AppParametersViewModel>(x));
+			var resultadoDB = data.Select(x => MaskSecrets(_mapper.Map<AppParameters, AppParametersViewModel>(x)));
 			
 			var viewModelPagedList = PagedList<AppParametersViewModel>.Create(resultadoDB.AsQueryable(), parameters.PageNumber, parameters.PageSize);
 			
@@ -72,8 +72,21 @@ namespace Application.Services
 			var data = await _mediator.Send(new ObterAppParametersQuery());
 			var resultadoDB = _mapper.Map<AppParameters, AppParametersViewModel>(data);
 			if (resultadoDB == null) return resultadoDB;
-			
-			return resultadoDB;
+
+			return MaskSecrets(resultadoDB);
+		}
+
+		private static AppParametersViewModel MaskSecrets(AppParametersViewModel viewModel)
+		{
+			if (viewModel == null) return null;
+
+			viewModel.StripeApiClientKey = AppParameterSecrets.MaskValue(viewModel.StripeApiClientKey);
+			viewModel.StripeApiSecret = AppParameterSecrets.MaskValue(viewModel.StripeApiSecret);
+			viewModel.StripeWebhookSecret = AppParameterSecrets.MaskValue(viewModel.StripeWebhookSecret);
+			viewModel.CommoditiesApiKey = AppParameterSecrets.MaskValue(viewModel.CommoditiesApiKey);
+			viewModel.YahooFinanceApiKey = AppParameterSecrets.MaskValue(viewModel.YahooFinanceApiKey);
+			viewModel.EmailPassword = AppParameterSecrets.MaskValue(viewModel.EmailPassword);
+			return viewModel;
 		}
 	}
 }

@@ -5,7 +5,6 @@ using Data.BancoCentral.Api.Interfaces;
 using Data.Commodities.Api.Infrastructure;
 using Data.Commodities.Api.Interfaces;
 using Data.Repository;
-using Data.Stripe.Api.Service;
 using Data.UoW;
 using Data.YahooFinanceApi.Api.Infrastructure;
 using Data.YahooFinanceApi.Api.Interfaces;
@@ -30,7 +29,6 @@ using MediatR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Azure.Storage.Blobs;
-using StripeApi.Service;
 using System.Linq;
 
 namespace CrossCutting.IoC
@@ -54,9 +52,6 @@ namespace CrossCutting.IoC
       services.AddTransient<IPostAppService, PostAppService>();
       services.AddTransient<IFolderAppService, FolderAppService>();
       services.AddTransient<IEmailService, EmailSenderAppService>();
-      services.AddTransient<IStripeCustomerService, StripeCustomerService>();
-      services.AddTransient<IStripeSessionService, StripeSessionService>();
-      services.AddTransient<IStripeSubscriptionService, StripeSubscriptionService>();
       services.AddTransient<IAzureBlobService, AzureBlobService>();
 
 
