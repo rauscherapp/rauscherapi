@@ -80,37 +80,6 @@ public class AppParameterFunction : BaseFunctions
     }
   }
 
-  [FunctionName("CreateAppParameter")]
-  public async Task<IActionResult> CreateAppParameter(
-      [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "v1/AppParameter")] HttpRequest req,
-      ILogger log)
-  {
-    log.LogInformation("Processing POST request to create a new AppParameter.");
-
-    var requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-    var appParameterViewModel = JsonSerializer.Deserialize<AppParametersViewModel>(requestBody);
-
-    if (!IsValidOperation())
-    {
-      return new BadRequestObjectResult(new
-      {
-        success = false,
-        errors = GetNotificationMessages()
-      });
-    }
-
-    try
-    {
-      var result = await _appParameterAppService.CadastrarAppParameters(appParameterViewModel);
-      return CreateResponse(result);
-    }
-    catch (Exception ex)
-    {
-      log.LogError($"Error creating AppParameter: {ex.Message}");
-      return new StatusCodeResult(StatusCodes.Status500InternalServerError);
-    }
-  }
-
   [FunctionName("UpdateAppParameter")]
   public async Task<IActionResult> UpdateAppParameter(
       [HttpTrigger(AuthorizationLevel.Anonymous, "put", Route = "v1/UpdateAppParameter/{id}")] HttpRequest req,
@@ -139,35 +108,6 @@ public class AppParameterFunction : BaseFunctions
     catch (Exception ex)
     {
       log.LogError($"Error updating AppParameter: {ex.Message}");
-      return new StatusCodeResult(StatusCodes.Status500InternalServerError);
-    }
-  }
-
-  [FunctionName("DeleteAppParameter")]
-  public async Task<IActionResult> DeleteAppParameter(
-      [HttpTrigger(AuthorizationLevel.Anonymous, "delete", Route = "v1/AppParameter/{id}")] HttpRequest req,
-      Guid id,
-      ILogger log)
-  {
-    log.LogInformation($"Processing DELETE request to delete AppParameter with ID: {id}");
-
-    if (!IsValidOperation())
-    {
-      return new BadRequestObjectResult(new
-      {
-        success = false,
-        errors = GetNotificationMessages()
-      });
-    }
-
-    try
-    {
-      var result = await _appParameterAppService.ExcluirAppParameters(id);
-      return CreateResponse(result);
-    }
-    catch (Exception ex)
-    {
-      log.LogError($"Error deleting AppParameter: {ex.Message}");
       return new StatusCodeResult(StatusCodes.Status500InternalServerError);
     }
   }

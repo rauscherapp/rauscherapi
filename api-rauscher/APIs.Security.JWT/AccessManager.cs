@@ -45,11 +45,10 @@ public class AccessManager : IAccessManager
   public async Task<bool> CreateUser(UserRequest userRequest)
   {
     bool userCreated = false;
+    // Um e-mail já cadastrado nunca é sobrescrito: antes o usuário existente era apagado e recriado com a senha nova
     var existingUser = await _userManager.FindByEmailAsync(userRequest.Email!);
     if (existingUser != null)
-    {
-      await _userManager.DeleteAsync(existingUser);
-    }
+      return false;
 
     var user = new ApplicationUser()
     {

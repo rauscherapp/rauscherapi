@@ -49,6 +49,14 @@ namespace RauscherFunctionsAPI
       try
       {
         var result = await _authService.Register(userRequest);
+        if (!result.IsValid)
+        {
+          return new BadRequestObjectResult(new
+          {
+            success = false,
+            errors = new[] { "Could not create the account." }
+          });
+        }
         return new OkObjectResult(result.Token);
       }
       catch (Exception ex)
@@ -126,20 +134,29 @@ namespace RauscherFunctionsAPI
       var requestBody = await new StreamReader(req.Body).ReadToEndAsync();
       var request = JsonSerializer.Deserialize<UserRequest>(requestBody);
 
-      if (request == null || string.IsNullOrEmpty(request.Email))
+      if (request == null || string.IsNullOrEmpty(request.Email) || string.IsNullOrEmpty(request.Password))
       {
-        return CreateResponse(new { message = "Invalid request. Email is required." });
+        return new BadRequestObjectResult(new
+        {
+          success = false,
+          errors = new[] { "Email and password are required." }
+        });
       }
 
       try
       {
-        var success = await _authService.DeleteAccount(request.Email);
+        var success = await _authService.DeleteAccount(request);
 
         if (success)
         {
           return CreateResponse(new { message = "Account successfully deleted." });
         }
-        return CreateResponse(new { message = "Account not found or could not be deleted." });
+        // Mesma resposta para conta inexistente e senha errada, para não revelar quais e-mails existem
+        return new UnauthorizedObjectResult(new
+        {
+          success = false,
+          errors = new[] { "Invalid credentials." }
+        });
       }
       catch (Exception ex)
       {

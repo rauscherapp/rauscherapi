@@ -3,6 +3,7 @@ using Domain.Core.Bus;
 using Domain.Core.Notifications;
 using Domain.Events;
 using Domain.Interfaces;
+using Domain.Models;
 using Domain.Repositories;
 using MediatR;
 using System.Threading;
@@ -33,14 +34,14 @@ namespace Domain.CommandHandlers
       }
       var appparameters = _appparametersRepository.GetById(message.Id);
       appparameters.Id = message.Id;
-      appparameters.StripeApiClientKey = message.StripeApiClientKey;
-      appparameters.StripeApiSecret = message.StripeApiSecret;
-      appparameters.StripeWebhookSecret = message.StripeWebhookSecret;
+      appparameters.StripeApiClientKey = AppParameterSecrets.Resolve(message.StripeApiClientKey, appparameters.StripeApiClientKey);
+      appparameters.StripeApiSecret = AppParameterSecrets.Resolve(message.StripeApiSecret, appparameters.StripeApiSecret);
+      appparameters.StripeWebhookSecret = AppParameterSecrets.Resolve(message.StripeWebhookSecret, appparameters.StripeWebhookSecret);
       appparameters.StripeApiPriceId = message.StripeApiPriceId;
-      appparameters.CommoditiesApiKey = message.CommoditiesApiKey;
-      appparameters.YahooFinanceApiKey = message.YahooFinanceApiKey;
+      appparameters.CommoditiesApiKey = AppParameterSecrets.Resolve(message.CommoditiesApiKey, appparameters.CommoditiesApiKey);
+      appparameters.YahooFinanceApiKey = AppParameterSecrets.Resolve(message.YahooFinanceApiKey, appparameters.YahooFinanceApiKey);
       appparameters.EmailSender = message.EmailSender;
-      appparameters.EmailPassword = message.EmailPassword;
+      appparameters.EmailPassword = AppParameterSecrets.Resolve(message.EmailPassword, appparameters.EmailPassword);
       appparameters.SmtpServer = message.SmtpServer;
       appparameters.SmtpPort = message.SmtpPort;
       appparameters.EmailReceiver = message.EmailReceiver;
